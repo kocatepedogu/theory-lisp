@@ -1,0 +1,25 @@
+var annotated_dup =
+[
+    [ "builtin_function", "structbuiltin__function.html", null ],
+    [ "cond_case", "structcond__case.html", null ],
+    [ "cond_expr", "structcond__expr.html", null ],
+    [ "data_expr", "structdata__expr.html", null ],
+    [ "definition_expr", "structdefinition__expr.html", null ],
+    [ "evaluation_expr", "structevaluation__expr.html", null ],
+    [ "expr", "structexpr.html", null ],
+    [ "expr_vtable", "structexpr__vtable.html", null ],
+    [ "identifier_expr", "structidentifier__expr.html", null ],
+    [ "if_expr", "structif__expr.html", null ],
+    [ "lambda_expr", "structlambda__expr.html", null ],
+    [ "let_expr", "structlet__expr.html", null ],
+    [ "list", "structlist.html", null ],
+    [ "object", "structobject.html", null ],
+    [ "object_vtable", "structobject__vtable.html", null ],
+    [ "pair", "structpair.html", null ],
+    [ "program_arguments", "structprogram__arguments.html", null ],
+    [ "stack_frame", "structstack__frame.html", null ],
+    [ "token_t", "structtoken__t.html", null ],
+    [ "token_value_t", "uniontoken__value__t.html", null ],
+    [ "var_declaration", "structvar__declaration.html", null ],
+    [ "variable", "structvariable.html", null ]
+];
