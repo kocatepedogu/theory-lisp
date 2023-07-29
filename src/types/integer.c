@@ -19,13 +19,14 @@
 #include "integer.h"
 
 #include <string.h>
+#include <assert.h>
 
 #include "../types/boolean.h"
 #include "../types/error.h"
 #include "../utils/heap-format.h"
 #include "real.h"
 
-static const object_vtable_t integer_vtable = {.copy = copy_integer,
+static const object_vtable_t integer_vtable = {.clone = clone_integer,
                                                .destroy = destroy_integer,
                                                .equals = integer_equals,
                                                .tostring = integer_tostring,
@@ -37,10 +38,19 @@ static const object_vtable_t integer_vtable = {.copy = copy_integer,
 
 static const char integer_type_name[] = "integer";
 
-/* Integer constructor */
+inline bool is_integer(object_t obj) {
+  return strcmp(integer_type_name, obj.type) == 0;
+}
+
+inline integer_t int_value(object_t obj) {
+  assert(is_integer(obj));
+  return *(integer_t *)obj.value;
+}
+
 object_t make_integer(integer_t value) {
   integer_t *int_value = (integer_t *)malloc(sizeof(integer_t));
   *int_value = value;
+
   object_t obj;
   obj.value = int_value;
   obj.type = integer_type_name;
@@ -49,9 +59,11 @@ object_t make_integer(integer_t value) {
   return obj;
 }
 
-object_t copy_integer(object_t other) {
+object_t clone_integer(object_t self) {
+  assert(is_integer(self));
   integer_t *int_value = (integer_t *)malloc(sizeof(integer_t));
-  *int_value = *(integer_t *)other.value;
+  *int_value = *(integer_t *)self.value;
+
   object_t obj;
   obj.value = int_value;
   obj.type = integer_type_name;
@@ -60,29 +72,31 @@ object_t copy_integer(object_t other) {
   return obj;
 }
 
-/* Integer destructor */
-void destroy_integer(object_t val) { free(val.value); }
-
-/* Integer tostring implementation */
-char *integer_tostring(object_t obj) {
-  return heap_format("%ld", int_value(obj));
+void destroy_integer(object_t self) {
+  assert(is_integer(self));
+  free(self.value);
 }
 
-/* Integer equals implementation */
-bool integer_equals(object_t val, object_t other) {
+char *integer_tostring(object_t self) {
+  assert(is_integer(self));
+  return heap_format("%ld", int_value(self));
+}
+
+bool integer_equals(object_t self, object_t other) {
+  assert(is_integer(self));
   if (is_integer(other)) {
-    return int_value(val) == int_value(other);
+    return int_value(self) == int_value(other);
   }
 
   if (is_real(other)) {
-    return (real_t)int_value(val) == real_value(other);
+    return (real_t)int_value(self) == real_value(other);
   }
 
   return false;
 }
 
-/* Integer "+" implementation */
 object_t integer_op_add(object_t self, object_t other) {
+  assert(is_integer(self));
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
@@ -96,8 +110,8 @@ object_t integer_op_add(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-/* Integer "*" implementation */
 object_t integer_op_mul(object_t self, object_t other) {
+  assert(is_integer(self));
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
@@ -110,8 +124,8 @@ object_t integer_op_mul(object_t self, object_t other) {
   return make_error("* operand is not a number.");
 }
 
-/* Integer "-" implementation */
 object_t integer_op_sub(object_t self, object_t other) {
+  assert(is_integer(self));
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
@@ -124,8 +138,8 @@ object_t integer_op_sub(object_t self, object_t other) {
   return make_error("- operand is not a number.");
 }
 
-/* Integer "/" implementation */
 object_t integer_op_div(object_t self, object_t other) {
+  assert(is_integer(self));
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
@@ -138,8 +152,8 @@ object_t integer_op_div(object_t self, object_t other) {
   return make_error("/ operand is not a number.");
 }
 
-/* Integer "<" implementation */
 object_t integer_less(object_t self, object_t other) {
+  assert(is_integer(self));
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
@@ -152,8 +166,4 @@ object_t integer_less(object_t self, object_t other) {
   return make_error("An integer cannot be compared with a non-number value.");
 }
 
-inline bool is_integer(object_t obj) {
-  return strcmp(integer_type_name, obj.type) == 0;
-}
 
-inline integer_t int_value(object_t obj) { return *(integer_t *)obj.value; }

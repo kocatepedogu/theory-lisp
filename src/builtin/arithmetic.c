@@ -42,7 +42,7 @@ object_t builtin_mul(size_t n, object_t *args, stack_frame_ptr sf) {
 object_t builtin_sub(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  object_t result = copy_object(*args);
+  object_t result = clone_object(*args);
   for (size_t i = 1; i < n; i++) {
     assign_object(&result, object_op_sub(result, args[i]));
   }
@@ -52,7 +52,7 @@ object_t builtin_sub(size_t n, object_t *args, stack_frame_ptr sf) {
 object_t builtin_div(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  object_t result = copy_object(*args);
+  object_t result = clone_object(*args);
   for (size_t i = 1; i < n; i++) {
     assign_object(&result, object_op_div(result, args[i]));
   }

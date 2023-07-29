@@ -16,11 +16,13 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file expression.h
+
 #ifndef PARSE_H
 #define PARSE_H
 
 #include "../utils/list.h"
-#include "../types/types.h"
+#include "../types/object.h"
 
 struct stack_frame;
 typedef struct stack_frame *stack_frame_ptr;
@@ -31,6 +33,7 @@ typedef struct expr *exprptr;
 /* Expression vtable */
 typedef struct {
   void (*destructor)(exprptr e);
+  exprptr (*clone)(exprptr e);
   void (*deallocate)(exprptr e);
   char *(*to_string)(exprptr e);
   object_t (*interpret)(exprptr e, stack_frame_ptr ptr);
@@ -49,6 +52,9 @@ typedef expr_t *exprptr;
 
 /* Expression destructor */
 void destroy_expr(exprptr e);
+
+/* Expression clone */
+exprptr clone_expr(exprptr e);
 
 /* Expression "delete" operation */
 void delete_expr(exprptr e);

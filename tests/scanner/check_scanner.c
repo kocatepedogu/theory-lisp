@@ -74,10 +74,12 @@ START_TEST(test_numbers) {
   delete_token_list(tokens);
 } END_TEST
 
+#include <stdio.h>
+
 START_TEST(test_mixed_alphanumeric) {
-  static const char words[] = "123abc xyzt123 iflambda 'symbol";
+  static const char words[] = "123abc \"first string word\" xyzt123 iflambda \"long string\" ";
   list *tokens = scanner(words);
-  ck_assert_uint_eq(list_size(tokens), 6);
+  ck_assert_uint_eq(list_size(tokens), 7);
 
   token_t *t1 = list_get(tokens, 0);
   token_t *t2 = list_get(tokens, 1);
@@ -85,6 +87,7 @@ START_TEST(test_mixed_alphanumeric) {
   token_t *t4 = list_get(tokens, 3);
   token_t *t5 = list_get(tokens, 4);
   token_t *t6 = list_get(tokens, 5);
+  token_t *t7 = list_get(tokens, 6);
 
   ck_assert(t1->type == TOKEN_INTEGER);
   ck_assert_int_eq(t1->value.integer, 123);
@@ -92,16 +95,19 @@ START_TEST(test_mixed_alphanumeric) {
   ck_assert(t2->type == TOKEN_IDENTIFIER);
   ck_assert_str_eq(t2->value.character_sequence, "abc");
 
-  ck_assert(t3->type == TOKEN_IDENTIFIER);
-  ck_assert_str_eq(t3->value.character_sequence, "xyzt123");
+  ck_assert(t3->type == TOKEN_STRING);
+  ck_assert_str_eq(t3->value.character_sequence, "first string word");
 
   ck_assert(t4->type == TOKEN_IDENTIFIER);
-  ck_assert_str_eq(t4->value.character_sequence, "iflambda");
+  ck_assert_str_eq(t4->value.character_sequence, "xyzt123");
 
-  ck_assert(t5->type == TOKEN_SYMBOL);
-  ck_assert_str_eq(t5->value.character_sequence, "symbol");
+  ck_assert(t5->type == TOKEN_IDENTIFIER);
+  ck_assert_str_eq(t5->value.character_sequence, "iflambda");
 
-  ck_assert(t6->type == TOKEN_END_OF_FILE);
+  ck_assert(t6->type == TOKEN_STRING);
+  ck_assert_str_eq(t6->value.character_sequence, "long string");
+
+  ck_assert(t7->type == TOKEN_END_OF_FILE);
 
   delete_token_list(tokens);
 } END_TEST

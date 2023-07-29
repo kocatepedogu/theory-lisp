@@ -25,13 +25,14 @@ static const char data_expr_name[] = "data_expr";
 static const expr_vtable data_expr_vtable = {
   .deallocate = delete_data_expr,
   .destructor = destroy_data_expr,
+  .clone = clone_data_expr,
   .to_string = data_expr_tostring,
   .interpret = interpret_data
 };
 
 void construct_data_expr(exprptr e, object_t obj) {
   data_expr *de = (data_expr *)malloc(sizeof(data_expr));
-  de->obj = copy_object(obj);
+  de->obj = clone_object(obj);
   e->data = de;
   e->vtable = &data_expr_vtable;
   e->expr_name = data_expr_name;
@@ -54,6 +55,20 @@ void delete_data_expr(exprptr e) {
   free(e);
 }
 
+exprptr clone_data_expr(exprptr e) {
+  data_expr *new_de = (data_expr *)malloc(sizeof(data_expr));
+  data_expr *self_de = e->data;
+  new_de->obj = clone_object(self_de->obj);
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_de;
+  new_expr->vtable = &data_expr_vtable;
+  new_expr->expr_name = data_expr_name;
+  new_expr->line_number = e->line_number;
+  new_expr->column_number = e->column_number;
+  return new_expr;
+}
+
 char *data_expr_tostring(exprptr e) {
   data_expr *de = e->data;
   return object_tostring(de->obj);
@@ -69,5 +84,5 @@ bool is_data_expr(exprptr e) {
 
 object_t interpret_data(exprptr e, stack_frame_ptr sf) {
   data_expr *de = e->data;
-  return copy_object(de->obj);
+  return clone_object(de->obj);
 }

@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file identifier_expr.h
+
 #ifndef IDENTIFIER_EXPR_H
 #define IDENTIFIER_EXPR_H
 
@@ -42,6 +44,9 @@ void destroy_identifier_expr(exprptr e);
 
 /* identifier_expr "delete" operation */
 void delete_identifier_expr(exprptr e);
+
+/* identifier_expr clone */
+exprptr clone_identifier_expr(exprptr e);
 
 /* identifier_expr tostring implementation */
 char *identifier_expr_tostring(exprptr e);

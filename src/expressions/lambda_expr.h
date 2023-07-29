@@ -16,11 +16,14 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file lambda_expr.h
+
 #ifndef LAMBDA_EXPR_H
 #define LAMBDA_EXPR_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../utils/list.h"
+#include "../types/procedure.h"
 #include "../interpreter/interpreter.h"
 
 #include <stdbool.h>
@@ -31,6 +34,7 @@ typedef struct expr *exprptr;
 /* (lambda (p1 p2 .. pn) (expr)) */
 typedef struct {
   bool variadic;
+  list captured_vars; /* list of char*'s */
   list params; /* list of char*'s */
   exprptr body;
 } lambda_expr;
@@ -46,6 +50,9 @@ void destroy_lambda_expr(exprptr e);
 
 /* Lambda expression delete operation */
 void delete_lambda_expr(exprptr e);
+
+/* Lambda expression clone */
+exprptr clone_lambda_expr(exprptr e);
 
 /* Adds a formal parameter to the lambda function */
 void lambda_expr_add_param(exprptr e, const char *name);
@@ -63,7 +70,7 @@ bool is_lambda_expr(exprptr e);
 object_t interpret_lambda(exprptr e, stack_frame_ptr sf);
 
 /* evaluates a lambda with arguments */
-object_t call_lambda(exprptr e, size_t number_of_args,
+object_t call_lambda(proc_t *proc, size_t number_of_args,
                          object_t *args, stack_frame_ptr sf);
 
 #endif

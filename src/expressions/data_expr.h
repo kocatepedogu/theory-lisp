@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file data_expr.h
+
 #ifndef DATA_EXPR_H
 #define DATA_EXPR_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
 
@@ -44,6 +46,9 @@ void destroy_data_expr(exprptr e);
 
 /* data_expr "delete" operation */
 void delete_data_expr(exprptr e);
+
+/* data_expr clone */
+exprptr clone_data_expr(exprptr e);
 
 /* data_expr tostring implementation */
 char *data_expr_tostring(exprptr e);

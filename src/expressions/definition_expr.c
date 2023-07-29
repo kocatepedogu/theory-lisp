@@ -23,6 +23,8 @@
 #include "../utils/heap-format.h"
 #include "../scanner/scanner.h"
 #include "../parser/parser.h"
+#include "../types/void.h"
+#include "../types/error.h"
 
 #define ERR_DEF_NAME_IS_NOT_ID \
   "Name is not a valid identifier in define expression"
@@ -34,6 +36,7 @@ static const char definition_expr_name[] = "definition_expr";
 static const expr_vtable definition_expr_vtable = {
   .deallocate = delete_definition_expr,
   .destructor = destroy_definition_expr,
+  .clone = clone_definition_expr,
   .to_string = definition_expr_tostring,
   .interpret = interpret_definition
 };
@@ -63,6 +66,21 @@ void destroy_definition_expr(exprptr e) {
 void delete_definition_expr(exprptr e) {
   destroy_definition_expr(e);
   free(e);
+}
+
+exprptr clone_definition_expr(exprptr e) {
+  definition_expr *self_de = e->data;
+  definition_expr *new_de = (definition_expr *)malloc(sizeof(definition_expr));
+  new_de->name = strdup(self_de->name);
+  new_de->value = clone_expr(self_de->value);
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_de;
+  new_expr->vtable = &definition_expr_vtable;
+  new_expr->expr_name = definition_expr_name;
+  new_expr->column_number = e->column_number;
+  new_expr->line_number = e->line_number;
+  return new_expr;
 }
 
 char *definition_expr_tostring(exprptr e) {
@@ -105,6 +123,11 @@ bool is_definition_expr(exprptr e) {
 object_t interpret_definition(exprptr e, stack_frame_ptr sf) {
   definition_expr *de = e->data;
   object_t value = interpret_expr(de->value, sf);
+  if (is_error(value)) {
+    return value;
+  }
+
   stack_frame_set_global_variable(sf, de->name, value);
-  return value;
+  destroy_object(value);
+  return make_void();
 }

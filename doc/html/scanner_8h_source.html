@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('scanner_8h_source.html',''); initResiz
   <div class="headertitle"><div class="title">scanner.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
+<a href="scanner_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright 2023 Doğu Kocatepe</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This file is part of Theory Lisp.</span></div>
@@ -112,63 +112,89 @@ $(document).ready(function(){initNavTree('scanner_8h_source.html',''); initResiz
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef SCANNER_H</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define SCANNER_H</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;../utils/list.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#define WORD_SIZE 128</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define TOKEN_SIZE 128</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define CHARSEQ_SIZE 128</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  TOKEN_NULL,</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  TOKEN_AMPERSAND,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  TOKEN_IDENTIFIER,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  TOKEN_SYMBOL,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  TOKEN_BOOLEAN,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  TOKEN_INTEGER,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  TOKEN_REAL,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  TOKEN_LEFT_PARENTHESIS,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  TOKEN_RIGHT_PARENTHESIS,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  TOKEN_COND,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  TOKEN_DEFINE,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  TOKEN_IF,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  TOKEN_LAMBDA,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  TOKEN_LET,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  TOKEN_END_OF_FILE</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} token_type_t;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="uniontoken__value__t.html">   48</a></span><span class="keyword">typedef</span> <span class="keyword">union </span>{</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">char</span> character_sequence[CHARSEQ_SIZE];</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">bool</span> boolean;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keywordtype">long</span> integer;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">double</span> real;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <a class="code hl_union" href="uniontoken__value__t.html">token_value_t</a>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="structtoken__t.html">   55</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  token_type_t type;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_union" href="uniontoken__value__t.html">token_value_t</a> value;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordtype">size_t</span> line;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordtype">size_t</span> column;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <a class="code hl_struct" href="structtoken__t.html">token_t</a>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><a class="code hl_struct" href="structlist.html">list</a> *scanner(<span class="keyword">const</span> <span class="keywordtype">char</span> *input);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keywordtype">char</span> *token_tostring(<a class="code hl_struct" href="structtoken__t.html">token_t</a> *token);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keywordtype">void</span> delete_token_list(<a class="code hl_struct" href="structlist.html">list</a>* token_list);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef SCANNER_H</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define SCANNER_H</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;../utils/list.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define WORD_SIZE 128</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#define TOKEN_SIZE 128</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define CHARSEQ_SIZE 128</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69">   32</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae4def7ca080dbd4f6bcaac5a6889a37a">   34</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae4def7ca080dbd4f6bcaac5a6889a37a">TOKEN_NULL</a>,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa3fc977f98b7ca9106ecff5687eeade1">   36</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa3fc977f98b7ca9106ecff5687eeade1">TOKEN_AMPERSAND</a>,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a77b8cd6178f08686df07925a2cbac353">   38</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a77b8cd6178f08686df07925a2cbac353">TOKEN_IDENTIFIER</a>,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69afcaa8f23ed1d21aa5779451ed3c243ef">   40</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69afcaa8f23ed1d21aa5779451ed3c243ef">TOKEN_STRING</a>,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a8caffddda84e7a25800278a2dcf86c26">   42</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a8caffddda84e7a25800278a2dcf86c26">TOKEN_BOOLEAN</a>,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa1485e2d19fb6a1f6a64796ae09f670d">   44</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa1485e2d19fb6a1f6a64796ae09f670d">TOKEN_INTEGER</a>,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae747a334f718cf83374cc20e0bd54c6b">   46</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae747a334f718cf83374cc20e0bd54c6b">TOKEN_REAL</a>,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a20bd045ad2e31cda0e56d92fb94d911d">   48</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a20bd045ad2e31cda0e56d92fb94d911d">TOKEN_LEFT_PARENTHESIS</a>,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197">   50</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197">TOKEN_RIGHT_PARENTHESIS</a>,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86">   52</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86">TOKEN_COND</a>,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d">   54</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d">TOKEN_DEFINE</a>,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2">   56</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2">TOKEN_IF</a>,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89">   58</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89">TOKEN_LAMBDA</a>,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a92b794297c24c547a4d479550c21622e">   60</a></span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a92b794297c24c547a4d479550c21622e">TOKEN_LET</a>,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <a class="code hl_enumvalue" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a69f223553afe3f6829b72cb8f3d5c7d4">TOKEN_END_OF_FILE</a></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a69f223553afe3f6829b72cb8f3d5c7d4">   63</a></span>} <a class="code hl_enumeration" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69">token_type_t</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="uniontoken__value__t.html">   65</a></span><span class="keyword">typedef</span> <span class="keyword">union </span>{</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">char</span> character_sequence[CHARSEQ_SIZE];</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">bool</span> boolean;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">long</span> integer;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">double</span> real;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>} <a class="code hl_union" href="uniontoken__value__t.html">token_value_t</a>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structtoken__t.html">   72</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="structtoken__t.html#a306a26577dc68b8810cf018a6442cef3">   74</a></span>  <a class="code hl_enumeration" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69">token_type_t</a> <a class="code hl_variable" href="structtoken__t.html#a306a26577dc68b8810cf018a6442cef3">type</a>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="structtoken__t.html#a0b5ccb5fc98e9a8f62de7d614e22f69e">   76</a></span>  <a class="code hl_union" href="uniontoken__value__t.html">token_value_t</a> <a class="code hl_variable" href="structtoken__t.html#a0b5ccb5fc98e9a8f62de7d614e22f69e">value</a>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="structtoken__t.html#a178448bb4d6d83c01610fec5d40f7c5c">   78</a></span>  <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structtoken__t.html#a178448bb4d6d83c01610fec5d40f7c5c">line</a>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structtoken__t.html#a85bed66e93e00dacf6642c86b0b5c013">   80</a></span>  <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structtoken__t.html#a85bed66e93e00dacf6642c86b0b5c013">column</a>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>} <a class="code hl_struct" href="structtoken__t.html">token_t</a>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><a class="code hl_struct" href="structlist.html">list</a> *<a class="code hl_function" href="scanner_8h.html#aeec4143454f6bbf986749c3afb04b747">scanner</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *input);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keywordtype">char</span> *<a class="code hl_function" href="scanner_8h.html#a6576d9d26375e39db457a4f747d68692">token_tostring</a>(<a class="code hl_struct" href="structtoken__t.html">token_t</a> *token);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keywordtype">void</span> <a class="code hl_function" href="scanner_8h.html#ae50c405a9f7c1713e16e2462c164d424">delete_token_list</a>(<a class="code hl_struct" href="structlist.html">list</a>* token_list);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="ascanner_8h_html_a6576d9d26375e39db457a4f747d68692"><div class="ttname"><a href="scanner_8h.html#a6576d9d26375e39db457a4f747d68692">token_tostring</a></div><div class="ttdeci">char * token_tostring(token_t *token)</div><div class="ttdoc">Returns the string representation of a token.</div><div class="ttdef"><b>Definition:</b> scanner.c:259</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69">token_type_t</a></div><div class="ttdeci">token_type_t</div><div class="ttdef"><b>Definition:</b> scanner.h:32</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a20bd045ad2e31cda0e56d92fb94d911d"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a20bd045ad2e31cda0e56d92fb94d911d">TOKEN_LEFT_PARENTHESIS</a></div><div class="ttdeci">@ TOKEN_LEFT_PARENTHESIS</div><div class="ttdoc">(</div><div class="ttdef"><b>Definition:</b> scanner.h:48</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d">TOKEN_DEFINE</a></div><div class="ttdeci">@ TOKEN_DEFINE</div><div class="ttdoc">define</div><div class="ttdef"><b>Definition:</b> scanner.h:54</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89">TOKEN_LAMBDA</a></div><div class="ttdeci">@ TOKEN_LAMBDA</div><div class="ttdoc">lambda</div><div class="ttdef"><b>Definition:</b> scanner.h:58</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a69f223553afe3f6829b72cb8f3d5c7d4"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a69f223553afe3f6829b72cb8f3d5c7d4">TOKEN_END_OF_FILE</a></div><div class="ttdeci">@ TOKEN_END_OF_FILE</div><div class="ttdoc">Placed at the end of token list by scanner.</div><div class="ttdef"><b>Definition:</b> scanner.h:62</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2">TOKEN_IF</a></div><div class="ttdeci">@ TOKEN_IF</div><div class="ttdoc">if</div><div class="ttdef"><b>Definition:</b> scanner.h:56</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a77b8cd6178f08686df07925a2cbac353"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a77b8cd6178f08686df07925a2cbac353">TOKEN_IDENTIFIER</a></div><div class="ttdeci">@ TOKEN_IDENTIFIER</div><div class="ttdoc">Unquoted sequence of characters that does not begin with a special character or digit.</div><div class="ttdef"><b>Definition:</b> scanner.h:38</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a8caffddda84e7a25800278a2dcf86c26"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a8caffddda84e7a25800278a2dcf86c26">TOKEN_BOOLEAN</a></div><div class="ttdeci">@ TOKEN_BOOLEAN</div><div class="ttdoc">#t and #f</div><div class="ttdef"><b>Definition:</b> scanner.h:42</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69a92b794297c24c547a4d479550c21622e"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a92b794297c24c547a4d479550c21622e">TOKEN_LET</a></div><div class="ttdeci">@ TOKEN_LET</div><div class="ttdoc">let</div><div class="ttdef"><b>Definition:</b> scanner.h:60</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69aa1485e2d19fb6a1f6a64796ae09f670d"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa1485e2d19fb6a1f6a64796ae09f670d">TOKEN_INTEGER</a></div><div class="ttdeci">@ TOKEN_INTEGER</div><div class="ttdoc">C integers.</div><div class="ttdef"><b>Definition:</b> scanner.h:44</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69aa3fc977f98b7ca9106ecff5687eeade1"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa3fc977f98b7ca9106ecff5687eeade1">TOKEN_AMPERSAND</a></div><div class="ttdeci">@ TOKEN_AMPERSAND</div><div class="ttdoc">&amp;</div><div class="ttdef"><b>Definition:</b> scanner.h:36</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86">TOKEN_COND</a></div><div class="ttdeci">@ TOKEN_COND</div><div class="ttdoc">cond</div><div class="ttdef"><b>Definition:</b> scanner.h:52</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197">TOKEN_RIGHT_PARENTHESIS</a></div><div class="ttdeci">@ TOKEN_RIGHT_PARENTHESIS</div><div class="ttdoc">)</div><div class="ttdef"><b>Definition:</b> scanner.h:50</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69ae4def7ca080dbd4f6bcaac5a6889a37a"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae4def7ca080dbd4f6bcaac5a6889a37a">TOKEN_NULL</a></div><div class="ttdeci">@ TOKEN_NULL</div><div class="ttdoc">null</div><div class="ttdef"><b>Definition:</b> scanner.h:34</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69ae747a334f718cf83374cc20e0bd54c6b"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ae747a334f718cf83374cc20e0bd54c6b">TOKEN_REAL</a></div><div class="ttdeci">@ TOKEN_REAL</div><div class="ttdoc">C doubles.</div><div class="ttdef"><b>Definition:</b> scanner.h:46</div></div>
+<div class="ttc" id="ascanner_8h_html_ad04fc3241884cc3eb19ccad1ce5afa69afcaa8f23ed1d21aa5779451ed3c243ef"><div class="ttname"><a href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69afcaa8f23ed1d21aa5779451ed3c243ef">TOKEN_STRING</a></div><div class="ttdeci">@ TOKEN_STRING</div><div class="ttdoc">A quoted string.</div><div class="ttdef"><b>Definition:</b> scanner.h:40</div></div>
+<div class="ttc" id="ascanner_8h_html_ae50c405a9f7c1713e16e2462c164d424"><div class="ttname"><a href="scanner_8h.html#ae50c405a9f7c1713e16e2462c164d424">delete_token_list</a></div><div class="ttdeci">void delete_token_list(list *token_list)</div><div class="ttdoc">Deallocates all tokens from the given token list and then deletes the list itself.</div><div class="ttdef"><b>Definition:</b> scanner.c:283</div></div>
+<div class="ttc" id="ascanner_8h_html_aeec4143454f6bbf986749c3afb04b747"><div class="ttname"><a href="scanner_8h.html#aeec4143454f6bbf986749c3afb04b747">scanner</a></div><div class="ttdeci">list * scanner(const char *input)</div><div class="ttdoc">Takes a char array and returns a list of tokens.</div><div class="ttdef"><b>Definition:</b> scanner.c:157</div></div>
 <div class="ttc" id="astructlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdoc">A generic list type that stores void* pointers.</div><div class="ttdef"><b>Definition:</b> utils/list.h:37</div></div>
-<div class="ttc" id="astructtoken__t_html"><div class="ttname"><a href="structtoken__t.html">token_t</a></div><div class="ttdef"><b>Definition:</b> scanner.h:55</div></div>
-<div class="ttc" id="auniontoken__value__t_html"><div class="ttname"><a href="uniontoken__value__t.html">token_value_t</a></div><div class="ttdef"><b>Definition:</b> scanner.h:48</div></div>
+<div class="ttc" id="astructtoken__t_html"><div class="ttname"><a href="structtoken__t.html">token_t</a></div><div class="ttdef"><b>Definition:</b> scanner.h:72</div></div>
+<div class="ttc" id="astructtoken__t_html_a0b5ccb5fc98e9a8f62de7d614e22f69e"><div class="ttname"><a href="structtoken__t.html#a0b5ccb5fc98e9a8f62de7d614e22f69e">token_t::value</a></div><div class="ttdeci">token_value_t value</div><div class="ttdoc">Value of the token (not all tokens store value in this field)</div><div class="ttdef"><b>Definition:</b> scanner.h:76</div></div>
+<div class="ttc" id="astructtoken__t_html_a178448bb4d6d83c01610fec5d40f7c5c"><div class="ttname"><a href="structtoken__t.html#a178448bb4d6d83c01610fec5d40f7c5c">token_t::line</a></div><div class="ttdeci">size_t line</div><div class="ttdoc">Line where the token is found.</div><div class="ttdef"><b>Definition:</b> scanner.h:78</div></div>
+<div class="ttc" id="astructtoken__t_html_a306a26577dc68b8810cf018a6442cef3"><div class="ttname"><a href="structtoken__t.html#a306a26577dc68b8810cf018a6442cef3">token_t::type</a></div><div class="ttdeci">token_type_t type</div><div class="ttdoc">Kind of token.</div><div class="ttdef"><b>Definition:</b> scanner.h:74</div></div>
+<div class="ttc" id="astructtoken__t_html_a85bed66e93e00dacf6642c86b0b5c013"><div class="ttname"><a href="structtoken__t.html#a85bed66e93e00dacf6642c86b0b5c013">token_t::column</a></div><div class="ttdeci">size_t column</div><div class="ttdoc">Column number of the first character of the token.</div><div class="ttdef"><b>Definition:</b> scanner.h:80</div></div>
+<div class="ttc" id="auniontoken__value__t_html"><div class="ttname"><a href="uniontoken__value__t.html">token_value_t</a></div><div class="ttdef"><b>Definition:</b> scanner.h:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_59853be006b90e1bf6b4d1eb57332949.html">scanner</a></li><li class="navelem"><b>scanner.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_59853be006b90e1bf6b4d1eb57332949.html">scanner</a></li><li class="navelem"><a class="el" href="scanner_8h.html">scanner.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>

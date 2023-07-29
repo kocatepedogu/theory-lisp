@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file arithmetic.h
+
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
 object_t builtin_add(size_t n, object_t *args, stack_frame_ptr sf);

@@ -20,23 +20,29 @@
 
 #include <string.h>
 
-#define VARIADIC 0, true
-
-// TODO: Perfect hashing is possible
+#include "../expressions/lambda_expr.h"
+#include "../expressions/evaluation_expr.h"
+#include "../expressions/identifier_expr.h"
+#include "../expressions/expanded_expr.h"
+#include "../expressions/expression.h"
+#include "../utils/heap-format.h"
+#include "eval.h"
 
 const builtin_function builtin_functions[] = {
+    {"include", builtin_include, 1},
     {"display", builtin_display, 1, true},
     {"=", builtin_equals, 1, true},
     {"<", builtin_less, 2},
     {"<=", builtin_less_or_eq, 2},
     {">", builtin_greater, 2},
     {">=", builtin_greater_or_eq, 2},
+    {"null?", builtin_is_null, 1},
     {"void?", builtin_is_void, 1},
     {"boolean?", builtin_is_boolean, 1},
     {"integer?", builtin_is_integer, 1},
     {"real?", builtin_is_real, 1},
     {"number?", builtin_is_number, 1},
-    {"symbol?", builtin_is_symbol, 1},
+    {"string?", builtin_is_string, 1},
     {"pair?", builtin_is_pair, 1},
     {"procedure?", builtin_is_procedure, 1},
     {"+", builtin_add, 0, true},
@@ -50,7 +56,17 @@ const builtin_function builtin_functions[] = {
     {"cons", builtin_cons, 2},
     {"car", builtin_car, 1},
     {"cdr", builtin_cdr, 1},
-    {"list", builtin_list, 0, true}};
+    {"list", builtin_list, 0, true},
+    {"strlen", builtin_strlen, 1},
+    {"strcat", builtin_strcat, 0, true},
+    {"charat", builtin_charat, 2},
+    {"substr", builtin_substr, 3},
+    {"strcar", builtin_strcar, 1},
+    {"strcdr", builtin_strcdr, 1},
+    {"eval", builtin_eval, 1},
+    {"defined?", builtin_defined, 1},
+    {"error", builtin_error, 1},
+    {"exit", builtin_exit, 0}};
 
 const size_t number_of_builtin_functions =
     sizeof builtin_functions / sizeof *builtin_functions;
@@ -66,4 +82,36 @@ const builtin_function *find_builtin_function(const char *name) {
 
 bool is_builtin_name(const char *name) {
   return find_builtin_function(name) != NULL;
+}
+
+void define_builtin_function_wrappers(stack_frame_ptr sf) {
+  for (size_t i = 0; i < number_of_builtin_functions; i++) {
+    const builtin_function *f = &builtin_functions[i];
+
+    exprptr lambda_body = new_evaluation_expr(new_identifier_expr(f->name));
+    if (f->variadic) {
+      evaluation_expr_add_arg(lambda_body, 
+          new_expanded_expr(new_identifier_expr("va_args")));
+    } else {
+      for (size_t i = 0; i < f->arity; i++) {
+        char *id = heap_format("arg%ld", i);
+        evaluation_expr_add_arg(lambda_body, new_identifier_expr(id));
+        free(id);
+      }
+    }
+
+    exprptr lambda = new_lambda_expr(lambda_body, f->variadic);
+    if (!f->variadic) {
+      for (size_t i = 0; i < f->arity; i++) {
+        char *id = heap_format("arg%ld", i);
+        lambda_expr_add_param(lambda, id);
+        free(id);
+      }
+    }
+
+    object_t procedure = make_procedure(lambda, sf);
+    stack_frame_set_global_variable(sf, f->name, procedure);
+    destroy_object(procedure);
+    delete_expr(lambda);
+  }
 }

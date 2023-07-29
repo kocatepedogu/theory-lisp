@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../../src/types/types.h"
+#include "../../src/types/object.h"
 #include "../../src/types/boolean.h"
 #include "../../src/types/error.h"
 #include "../../src/types/integer.h"
 #include "../../src/types/pair.h"
 #include "../../src/types/procedure.h"
 #include "../../src/types/real.h"
-#include "../../src/types/symbol.h"
+#include "../../src/types/string.h"
 #include "../../src/types/void.h"
 
 /* Ensure that all operators on all possible
@@ -28,7 +28,7 @@ operator_t const operators[] = {
 typedef bool (*is_operator_t)(object_t);
 is_operator_t const is_operators[] = {
   is_void, is_error, is_integer, is_real,
-  is_symbol, is_boolean, is_procedure, is_pair
+  is_string, is_boolean, is_procedure, is_pair
 };
 
 const int len_operators = sizeof operators / sizeof(operator_t);
@@ -38,9 +38,9 @@ START_TEST(test_operations) {
   object_t bool_obj = make_boolean(true);
   object_t int_obj = make_integer(1);
   object_t pair_obj = make_pair(bool_obj, int_obj);
-  object_t proc_obj = make_procedure(NULL);
+  object_t proc_obj = make_procedure(NULL, NULL);
   object_t real_obj = make_real(1.0);
-  object_t sym_obj = make_symbol("symbol");
+  object_t sym_obj = make_string("string word");
   object_t void_obj = make_void(); 
   object_t objects[] = {
     bool_obj, int_obj, pair_obj,

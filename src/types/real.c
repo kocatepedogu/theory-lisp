@@ -20,13 +20,14 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "../types/boolean.h"
 #include "../types/error.h"
 #include "../utils/heap-format.h"
 #include "integer.h"
 
-static const object_vtable_t real_vtable = {.copy = copy_real,
+static const object_vtable_t real_vtable = {.clone = clone_real,
                                             .destroy = destroy_real,
                                             .equals = real_equals,
                                             .tostring = real_tostring,
@@ -38,10 +39,19 @@ static const object_vtable_t real_vtable = {.copy = copy_real,
 
 static const char real_type_name[] = "real";
 
-/* Real constructor */
+inline bool is_real(object_t obj) {
+  return strcmp(real_type_name, obj.type) == 0;
+}
+
+inline real_t real_value(object_t obj) {
+  assert(is_real(obj));
+  return *(real_t *)obj.value;
+}
+
 object_t make_real(real_t value) {
   real_t *real_value = (real_t *)malloc(sizeof(real_t));
   *real_value = value;
+
   object_t obj;
   obj.value = real_value;
   obj.type = real_type_name;
@@ -50,9 +60,11 @@ object_t make_real(real_t value) {
   return obj;
 }
 
-object_t copy_real(object_t other) {
+object_t clone_real(object_t self) {
+  assert(is_real(self));
   real_t *real_value = (real_t *)malloc(sizeof(real_t));
-  *real_value = *(real_t *)other.value;
+  *real_value = *(real_t *)self.value;
+
   object_t obj;
   obj.value = real_value;
   obj.type = real_type_name;
@@ -61,24 +73,26 @@ object_t copy_real(object_t other) {
   return obj;
 }
 
-/* Real destructor */
-void destroy_real(object_t obj) { free(obj.value); }
+void destroy_real(object_t self) {
+  assert(is_real(self));
+  free(self.value);
+}
 
-/* Real equals implementation */
-bool real_equals(object_t val, object_t other) {
+bool real_equals(object_t self, object_t other) {
+  assert(is_real(self));
   if (is_real(other)) {
-    return real_value(val) == real_value(other);
+    return real_value(self) == real_value(other);
   }
 
   if (is_integer(other)) {
-    return real_value(val) == (real_t)int_value(other);
+    return real_value(self) == (real_t)int_value(other);
   }
 
   return false;
 }
 
-/* Real less implementation */
 object_t real_less(object_t self, object_t other) {
+  assert(is_real(self));
   real_t self_value = real_value(self);
 
   if (is_integer(other)) {
@@ -91,11 +105,10 @@ object_t real_less(object_t self, object_t other) {
   return make_error("A real number cannot be compared with a non-number.");
 }
 
-/* Real tostring implementation */
 char *real_tostring(object_t obj) { return heap_format("%f", real_value(obj)); }
 
-/* Real "+" implementation */
 object_t real_op_add(object_t self, object_t other) {
+  assert(is_real(self));
   real_t self_value = real_value(self);
 
   if (is_integer(other)) {
@@ -108,8 +121,8 @@ object_t real_op_add(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-/* Real "*" implementation */
 object_t real_op_mul(object_t self, object_t other) {
+  assert(is_real(self));
   real_t self_value = real_value(self);
 
   if (is_integer(other)) {
@@ -122,8 +135,8 @@ object_t real_op_mul(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-/* Real "-" implementation */
 object_t real_op_sub(object_t self, object_t other) {
+  assert(is_real(self));
   real_t self_value = real_value(self);
 
   if (is_integer(other)) {
@@ -136,8 +149,8 @@ object_t real_op_sub(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-/* Real "/" implementation */
 object_t real_op_div(object_t self, object_t other) {
+  assert(is_real(self));
   real_t self_value = real_value(self);
 
   if (is_integer(other)) {
@@ -150,8 +163,4 @@ object_t real_op_div(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-inline bool is_real(object_t obj) {
-  return strcmp(real_type_name, obj.type) == 0;
-}
 
-inline real_t real_value(object_t obj) { return *(real_t *)obj.value; }

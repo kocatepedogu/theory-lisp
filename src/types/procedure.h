@@ -16,20 +16,77 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file procedure.h
+
 #ifndef PROCEDURE_H
 #define PROCEDURE_H
 
-#include "types.h"
+#include "object.h"
+#include "../interpreter/stack_frame.h"
 
 /* Procedure type */
 typedef void *procedure_t;
 
-object_t make_procedure(procedure_t proc);
-object_t copy_procedure(object_t other);
+typedef struct {
+  /// Expression obtained from parse tree
+  void *lambda;
+  /// List of variables that existed in the original environment
+  list closure;
+} proc_t;
+
+/**
+ * Procedure constructor.
+ * No memory allocation occurs. Created object refers to the given lambda
+ * expression in the parse tree.
+ */
+object_t make_procedure(procedure_t proc, stack_frame_ptr sf);
+
+/**
+ * Procedure clone.
+ * No memory allocation occurs. The new object still points to the same
+ * lambda expression in the parse tree. This is not a violation of the 
+ * rule that all objects must do a deep copy, because the lambda is
+ * never mutated or free()'d during program execution.
+ */
+object_t clone_procedure(object_t self);
+
+/**
+ * Procedure destructor.
+ * No memory deallocation occurs. Lambda expressions, like other expessions,
+ * are removed from the memory when the program finishes. Managing their
+ * memory is not the responsibility of procedure objects.
+ */
 void destroy_procedure(object_t procedure);
+
+/**
+ * Returns the string representation of the procedure.
+ * If the returned string is substituted as input to scanner, and then
+ * to the parser, the resulting lambda expression must be
+ * exactly the same as the lambda expression pointed to by the procedure
+ * object. This is how Theory Lisp can implement the special form eval
+ * without requiring the entire code to be in the list form. 
+ * If this constraint is violated, it should be reported as a bug.
+ */
 char *procedure_tostring(object_t obj);
+
+/**
+ * Calling procedure_equals will throw an assertion error if
+ * assertions are enabled in compile options, otherwise it will return false.
+ *
+ * The reasons for this implementation are:
+ * 1. Testing whether two procedures do the same thing is an undecidable problem.
+ * 2. Testing whether two objects point to the same lambda expression is useless.
+ */
 bool procedure_equals(object_t obj, object_t other);
+
+/**
+ * Returns true if and only if the given object is a procedure object.
+ */
 bool is_procedure(object_t obj);
-void *procedure_value(object_t obj);
+
+/**
+ * Returns a pointer to the lambda expression pointed to by the procedure object.
+ */
+proc_t *procedure_value(object_t obj);
 
 #endif

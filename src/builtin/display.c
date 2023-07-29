@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "../types/void.h"
 
 object_t builtin_display(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n >= 1);
@@ -31,5 +30,5 @@ object_t builtin_display(size_t n, object_t *args, stack_frame_ptr sf) {
     free(str);
   }
 
-  return copy_object(args[0]);
+  return clone_object(args[0]);
 }

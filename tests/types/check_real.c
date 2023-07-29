@@ -17,7 +17,7 @@ START_TEST(test_real_common) {
   sscanf(real_str, "%lf", &value1);
   ck_assert_double_eq(value1, REAL_TEST_VALUE);
 
-  object_t copy_obj = copy_real(real_obj);
+  object_t copy_obj = clone_real(real_obj);
   ck_assert(is_real(copy_obj));
   ck_assert(real_equals(copy_obj, copy_obj));
   char *copy_str = real_tostring(copy_obj);
@@ -27,8 +27,8 @@ START_TEST(test_real_common) {
 
   ck_assert(real_equals(real_obj, copy_obj));
 
-  destroy_integer(real_obj);
-  destroy_integer(copy_obj);
+  destroy_real(real_obj);
+  destroy_real(copy_obj);
 } END_TEST
 
 START_TEST(test_real_op_add) {

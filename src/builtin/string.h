@@ -16,20 +16,22 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef SYMBOL_H
-#define SYMBOL_H
+#ifndef BUILTIN_STRING_H
+#define BUILTIN_STRING_H
 
-#include "types.h"
+#include "../types/string.h"
+#include "../interpreter/stack_frame.h"
 
-/* Symbol type */
-typedef char *symbol_t;
+object_t builtin_strlen(size_t n, object_t *args, stack_frame_ptr sf);
 
-object_t make_symbol(symbol_t value);
-object_t copy_symbol(object_t other);
-void destroy_symbol(object_t val);
-char *symbol_tostring(object_t val);
-bool symbol_equals(object_t val, object_t other);
-bool is_symbol(object_t obj);
-symbol_t symbol_value(object_t obj);
+object_t builtin_strcat(size_t n, object_t *args, stack_frame_ptr sf);
+
+object_t builtin_charat(size_t n, object_t *args, stack_frame_ptr sf);
+
+object_t builtin_substr(size_t n, object_t *args, stack_frame_ptr sf);
+
+object_t builtin_strcar(size_t n, object_t *args, stack_frame_ptr sf);
+
+object_t builtin_strcdr(size_t n, object_t *args, stack_frame_ptr sf);
 
 #endif

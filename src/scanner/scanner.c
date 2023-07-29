@@ -36,10 +36,17 @@ static const struct {
                 {"cond", TOKEN_COND},
                 {")", TOKEN_RIGHT_PARENTHESIS},
                 {"(", TOKEN_LEFT_PARENTHESIS},
+		{"]", TOKEN_RIGHT_SQUARE_BRACKET},
+		{"[", TOKEN_LEFT_SQUARE_BRACKET},
                 {"null", TOKEN_NULL},
-		{"&", TOKEN_AMPERSAND}};
+                {"&", TOKEN_AMPERSAND}};
 
-typedef enum { ST_WHITESPACE, ST_TOKEN, ST_SINGLE_LINE_COMMENT } scanner_state;
+typedef enum { 
+  ST_WHITESPACE, 
+  ST_TOKEN, 
+  ST_SINGLE_LINE_COMMENT,
+  ST_STRING
+} scanner_state;
 
 static bool token_keyword(token_type_t *type, token_value_t *value,
                           char *word) {
@@ -48,15 +55,6 @@ static bool token_keyword(token_type_t *type, token_value_t *value,
       *type = keywords[i].type;
       return true;
     }
-  }
-  return false;
-}
-
-static bool token_symbol(token_type_t *type, token_value_t *value, char *word) {
-  if (word[0] == '\'' && !strchr(word, '(') && !strchr(word, ')')) {
-    *type = TOKEN_SYMBOL;
-    strcpy(value->character_sequence, &word[1]);
-    return true;
   }
   return false;
 }
@@ -103,7 +101,9 @@ static bool token_number(token_type_t *type, token_value_t *value, char *word) {
 static bool token_identifier(token_type_t *type, token_value_t *value,
                              char *word) {
   if (!strchr(word, '(') && 
-      !strchr(word, ')') && 
+      !strchr(word, ')') &&
+      !strchr(word, '[') &&
+      !strchr(word, ']') && 
       !strchr(word, '&') &&
       !isdigit(word[0]) &&
       word[0] != '\'') {
@@ -136,7 +136,6 @@ static bool get_tokens(list *token_list, const char *str, size_t line_number,
       chrcat(current_token, str[i]);
 
       if (token_keyword(&tkn_type, &tkn_value, current_token) ||
-          token_symbol(&tkn_type, &tkn_value, current_token) ||
           token_number(&tkn_type, &tkn_value, current_token) ||
           token_boolean(&tkn_type, &tkn_value, current_token) ||
           token_identifier(&tkn_type, &tkn_value, current_token)) {
@@ -166,15 +165,19 @@ list *scanner(const char *input) {
   memset(word, 0, sizeof word);
 
   scanner_state state = ST_WHITESPACE;
+
   size_t line_number = 1;
   size_t column_number = 1;
   size_t column_of_the_first_char_of_the_word = 1;
   size_t length = strlen(input);
+
   for (size_t i = 0, j = 0; i < length; i++) {
     /* get one character from input */
     char c = input[i];
+
     bool is_semicolon = (c == ';');
     bool is_newline = (c == '\n');
+    bool is_quote = (c == '\"');
     bool is_space = isspace(c);
 
     switch (state) {
@@ -182,18 +185,42 @@ list *scanner(const char *input) {
       case ST_WHITESPACE:
         if (is_semicolon) {
           state = ST_SINGLE_LINE_COMMENT;
+         } else if (is_quote) {
+           column_of_the_first_char_of_the_word = column_number;
+           state = ST_STRING;
         } else if (!is_space) {
           word[j++] = c;
-	  column_of_the_first_char_of_the_word = column_number;
+          column_of_the_first_char_of_the_word = column_number;
           state = ST_TOKEN;
+        }
+        break;
+      /* if scanner is currently in a quoted string */
+      case ST_STRING:
+        if (is_quote) {
+          word[j] = '\0';
+
+          token_t *tkn = (token_t *)malloc(sizeof(token_t));
+          tkn->line = line_number;
+          tkn->column = column_of_the_first_char_of_the_word;
+          tkn->type = TOKEN_STRING;
+          strcpy(tkn->value.character_sequence, word);
+          list_add(token_list, tkn);
+
+          memset(word, 0, sizeof word);
+          state = ST_WHITESPACE;
+          j = 0;
+        } else {
+          word[j++] = c;
         }
         break;
       /* if scanner is currently in a token */
       case ST_TOKEN:
         if (is_semicolon || is_space) {
           word[j] = '\0';
+
           get_tokens(token_list, word, line_number, 
-	      column_of_the_first_char_of_the_word);
+          column_of_the_first_char_of_the_word);
+
           memset(word, 0, sizeof word);
           j = 0;
         } else {
@@ -243,8 +270,8 @@ char *token_tostring(token_t *token) {
       return heap_format("%ld", token->value.integer);
     case TOKEN_REAL:
       return heap_format("%f", token->value.real);
-    case TOKEN_SYMBOL:
-      return heap_format("'%s", token->value.character_sequence);
+    case TOKEN_STRING:
+      return heap_format("\"%s\"", token->value.character_sequence);
     default:
       for (int i = 0; i < sizeof keywords / sizeof(keywords[0]); i++) {
         if (keywords[i].type == token->type) {

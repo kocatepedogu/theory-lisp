@@ -1,7 +1,7 @@
 var real_8h =
 [
     [ "real_t", "real_8h.html#a0d00e2b3dfadee81331bbb39068570c4", null ],
-    [ "copy_real", "real_8h.html#abf16cbea4ba79a9b094bd42eec5c7aae", null ],
+    [ "clone_real", "real_8h.html#aa797f627e815dd5ad00b898c96d2cc52", null ],
     [ "destroy_real", "real_8h.html#adabfc944d48a412f9430711fac46d41d", null ],
     [ "is_real", "real_8h.html#ad32bcf47a36faaed72fc8a29f222a47e", null ],
     [ "make_real", "real_8h.html#a72c8eeebcc56cc92d7b6d6ec56777d65", null ],

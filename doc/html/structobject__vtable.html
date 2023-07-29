@@ -96,50 +96,58 @@ $(document).ready(function(){initNavTree('structobject__vtable.html',''); initRe
   <div class="headertitle"><div class="title">object_vtable Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>object_vtable_t contains operations that are supported by an object.  
+ <a href="structobject__vtable.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="types_2object_8h_source.html">object.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:adbb945c5f1147f9ffe6d0ae85688e4c2"><td class="memItemLeft" align="right" valign="top"><a id="adbb945c5f1147f9ffe6d0ae85688e4c2" name="adbb945c5f1147f9ffe6d0ae85688e4c2"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><b>destroy</b> )(<a class="el" href="structobject.html">object_t</a>)</td></tr>
+void(*&#160;</td><td class="memItemRight" valign="bottom"><b>destroy</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:adbb945c5f1147f9ffe6d0ae85688e4c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a556caf3d816a2f7e43a255047ffdf4f9"><td class="memItemLeft" align="right" valign="top"><a id="a556caf3d816a2f7e43a255047ffdf4f9" name="a556caf3d816a2f7e43a255047ffdf4f9"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>copy</b> )(<a class="el" href="structobject.html">object_t</a>)</td></tr>
-<tr class="separator:a556caf3d816a2f7e43a255047ffdf4f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9122180bc5d8334b611b8db2afe6d36"><td class="memItemLeft" align="right" valign="top"><a id="ad9122180bc5d8334b611b8db2afe6d36" name="ad9122180bc5d8334b611b8db2afe6d36"></a>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>clone</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
+<tr class="separator:ad9122180bc5d8334b611b8db2afe6d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f0614015fd3ab5be84f184df398593c"><td class="memItemLeft" align="right" valign="top"><a id="a9f0614015fd3ab5be84f184df398593c" name="a9f0614015fd3ab5be84f184df398593c"></a>
-char *(*&#160;</td><td class="memItemRight" valign="bottom"><b>tostring</b> )(<a class="el" href="structobject.html">object_t</a>)</td></tr>
+char *(*&#160;</td><td class="memItemRight" valign="bottom"><b>tostring</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a9f0614015fd3ab5be84f184df398593c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c341ee7965ff18d1f808a067e420a47"><td class="memItemLeft" align="right" valign="top"><a id="a1c341ee7965ff18d1f808a067e420a47" name="a1c341ee7965ff18d1f808a067e420a47"></a>
-bool(*&#160;</td><td class="memItemRight" valign="bottom"><b>equals</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+bool(*&#160;</td><td class="memItemRight" valign="bottom"><b>equals</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a1c341ee7965ff18d1f808a067e420a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69306303dd5abbd7fa0f256013f3dfad"><td class="memItemLeft" align="right" valign="top"><a id="a69306303dd5abbd7fa0f256013f3dfad" name="a69306303dd5abbd7fa0f256013f3dfad"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>less</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>less</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a69306303dd5abbd7fa0f256013f3dfad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ee1b2db8f7022b9b9b8c53e19be78e1"><td class="memItemLeft" align="right" valign="top"><a id="a8ee1b2db8f7022b9b9b8c53e19be78e1" name="a8ee1b2db8f7022b9b9b8c53e19be78e1"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_add</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_add</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a8ee1b2db8f7022b9b9b8c53e19be78e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae61fc94f75e829d2ce91fe935bf70a76"><td class="memItemLeft" align="right" valign="top"><a id="ae61fc94f75e829d2ce91fe935bf70a76" name="ae61fc94f75e829d2ce91fe935bf70a76"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_mul</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_mul</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:ae61fc94f75e829d2ce91fe935bf70a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11fab36dc9f081a1839de432cc0e8f32"><td class="memItemLeft" align="right" valign="top"><a id="a11fab36dc9f081a1839de432cc0e8f32" name="a11fab36dc9f081a1839de432cc0e8f32"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_sub</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_sub</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a11fab36dc9f081a1839de432cc0e8f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18b173191dec8b0138167ff494ec909"><td class="memItemLeft" align="right" valign="top"><a id="ad18b173191dec8b0138167ff494ec909" name="ad18b173191dec8b0138167ff494ec909"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_div</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_div</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:ad18b173191dec8b0138167ff494ec909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6cf5dbf970553f04caa265ae96655ff"><td class="memItemLeft" align="right" valign="top"><a id="ac6cf5dbf970553f04caa265ae96655ff" name="ac6cf5dbf970553f04caa265ae96655ff"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_and</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_and</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:ac6cf5dbf970553f04caa265ae96655ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4d3f1187d564ec3e18edeb4511da507"><td class="memItemLeft" align="right" valign="top"><a id="ad4d3f1187d564ec3e18edeb4511da507" name="ad4d3f1187d564ec3e18edeb4511da507"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_or</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_or</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:ad4d3f1187d564ec3e18edeb4511da507"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a680eb824c015661d167a8c65ee5866ad"><td class="memItemLeft" align="right" valign="top"><a id="a680eb824c015661d167a8c65ee5866ad" name="a680eb824c015661d167a8c65ee5866ad"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_xor</b> )(<a class="el" href="structobject.html">object_t</a>, <a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_xor</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:a680eb824c015661d167a8c65ee5866ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab303bcc3c1a9cc349a2cdcf929360f66"><td class="memItemLeft" align="right" valign="top"><a id="ab303bcc3c1a9cc349a2cdcf929360f66" name="ab303bcc3c1a9cc349a2cdcf929360f66"></a>
-<a class="el" href="structobject.html">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_not</b> )(<a class="el" href="structobject.html">object_t</a>)</td></tr>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><b>op_not</b> )(<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>)</td></tr>
 <tr class="separator:ab303bcc3c1a9cc349a2cdcf929360f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >object_vtable_t contains operations that are supported by an object. </p>
+<p >All objects must implement destroy, clone, tostring and equals functions. The remaining are optional. If an operation is not implemented, the member corresponding to it must be set to NULL. If an unsupported operation is called, it will return an error object containing "unsupported operation" message. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

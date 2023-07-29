@@ -21,10 +21,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-variable_t *new_variable(char *name, object_t value) {
+variable_t *new_variable(const char *name, object_t value) {
   variable_t *var = (variable_t *)malloc(sizeof(variable_t));
   var->name = strdup(name);
-  var->value = copy_object(value);
+  var->value = clone_object(value);
   return var;
 }
 
@@ -34,7 +34,7 @@ void delete_variable(variable_t *var) {
   free(var);
 }
 
-object_t variable_get_value(variable_t *var) { return copy_object(var->value); }
+object_t variable_get_value(variable_t *var) { return clone_object(var->value); }
 
 void variable_set_value(variable_t *var, object_t value) { var->value = value; }
 

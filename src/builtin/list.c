@@ -19,7 +19,7 @@
 #include "list.h"
 #include "../types/pair.h"
 #include "../types/error.h"
-#include "../types/void.h"
+#include "../types/null.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -34,7 +34,7 @@ object_t builtin_car(size_t n, object_t *args, stack_frame_ptr sf) {
 
   if (is_pair(args[0])) {
     pair_t p = pair_value(args[0]);
-    return copy_object(p.first);
+    return clone_object(p.first);
   }
 
   return make_error("car argument is not a pair.");
@@ -45,7 +45,7 @@ object_t builtin_cdr(size_t n, object_t *args, stack_frame_ptr sf) {
 
   if (is_pair(args[0])) {
     pair_t p = pair_value(args[0]);
-    return copy_object(p.second);
+    return clone_object(p.second);
   }
 
   return make_error("cdr argument is not a pair");
@@ -53,10 +53,10 @@ object_t builtin_cdr(size_t n, object_t *args, stack_frame_ptr sf) {
 
 object_t builtin_list(size_t n, object_t *args, stack_frame_ptr sf) {
   if (n == 0) {
-    return make_void();
+    return make_null();
   }
 
-  object_t nil = make_void();
+  object_t nil = make_null();
   object_t pair = make_pair(args[n-1], nil);
   if (n >= 2) {
     for (size_t i = n - 1; i != 0; i--) {

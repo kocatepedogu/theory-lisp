@@ -16,20 +16,38 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file variable.h
+
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 
+/** Stores the name and values of a variable */
 typedef struct variable {
   char *name;
   object_t value;
 } variable_t;
 
-variable_t *new_variable(char *name, object_t value);
+/**
+ * Returns a malloc'ed variable with the given name and value.
+ * A clone of the given parameter value is stored internally.
+ */
+variable_t *new_variable(const char *name, object_t value);
+
+/** Deallocates the given variable */
 void delete_variable(variable_t *);
+
+/** Returns the value stored in the given variable */
 object_t variable_get_value(variable_t *var);
+
+/**
+ * Sets the value of an existing variable.
+ * A clone of the given parameter value is stored internally.
+ */
 void variable_set_value(variable_t *var, object_t value);
+
+/** Returns the name of the given variable */
 char *variable_get_name(variable_t *var);
 
 #endif

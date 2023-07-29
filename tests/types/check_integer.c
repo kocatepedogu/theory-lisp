@@ -18,7 +18,7 @@ START_TEST(test_integer_common) {
   sscanf(int_str, "%ld", &value1);
   ck_assert_int_eq(value1, INT_TEST_VALUE);
 
-  object_t copy_obj = copy_integer(int_obj);
+  object_t copy_obj = clone_integer(int_obj);
   ck_assert(is_integer(copy_obj));
   ck_assert(integer_equals(copy_obj, copy_obj));
   char *copy_str = integer_tostring(copy_obj);

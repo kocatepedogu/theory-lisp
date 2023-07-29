@@ -33,6 +33,7 @@ static const char if_expr_name[] = "if_expr";
 
 static const expr_vtable if_expr_vtable = {.deallocate = delete_if_expr,
                                            .destructor = destroy_if_expr,
+					   .clone = clone_if_expr,
                                            .to_string = if_expr_tostring,
                                            .interpret = interpret_if};
 
@@ -64,6 +65,22 @@ void destroy_if_expr(exprptr e) {
 void delete_if_expr(exprptr e) {
   destroy_if_expr(e);
   free(e);
+}
+
+exprptr clone_if_expr(exprptr e) {
+  if_expr *self_ie = e->data;
+  if_expr *new_ie = (if_expr *)malloc(sizeof(if_expr));
+  new_ie->condition = clone_expr(self_ie->condition);
+  new_ie->false_case = clone_expr(self_ie->false_case);
+  new_ie->true_case = clone_expr(self_ie->true_case);
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_ie;
+  new_expr->expr_name = if_expr_name;
+  new_expr->vtable = &if_expr_vtable;
+  new_expr->line_number = e->line_number;
+  new_expr->column_number = e->column_number;
+  return new_expr;
 }
 
 char *if_expr_tostring(exprptr e) {

@@ -96,23 +96,34 @@ $(document).ready(function(){initNavTree('structobject.html',''); initResizable(
   <div class="headertitle"><div class="title">object Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>object_t contains the type and value information of objects in Theory Lisp programs.  
+ <a href="structobject.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="types_2object_8h_source.html">object.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a0f61d63b009d0880a89c843bd50d8d76"><td class="memItemLeft" align="right" valign="top"><a id="a0f61d63b009d0880a89c843bd50d8d76" name="a0f61d63b009d0880a89c843bd50d8d76"></a>
 void *&#160;</td><td class="memItemRight" valign="bottom"><b>value</b></td></tr>
+<tr class="memdesc:a0f61d63b009d0880a89c843bd50d8d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data contained in the object. <br /></td></tr>
 <tr class="separator:a0f61d63b009d0880a89c843bd50d8d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd1b69c6c81fdecff3454a06608f9b49"><td class="memItemLeft" align="right" valign="top"><a id="abd1b69c6c81fdecff3454a06608f9b49" name="abd1b69c6c81fdecff3454a06608f9b49"></a>
 const struct <a class="el" href="structobject__vtable.html">object_vtable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>vtable</b></td></tr>
+<tr class="memdesc:abd1b69c6c81fdecff3454a06608f9b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operations that can operate on the data. <br /></td></tr>
 <tr class="separator:abd1b69c6c81fdecff3454a06608f9b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a763fd8db6bba8fbbbc113ca0d61c47c2"><td class="memItemLeft" align="right" valign="top"><a id="a763fd8db6bba8fbbbc113ca0d61c47c2" name="a763fd8db6bba8fbbbc113ca0d61c47c2"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
+<tr class="memdesc:a763fd8db6bba8fbbbc113ca0d61c47c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runtime type name of the object. <br /></td></tr>
 <tr class="separator:a763fd8db6bba8fbbbc113ca0d61c47c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a213942fe4cf3ce5da598bb2971452f95"><td class="memItemLeft" align="right" valign="top"><a id="a213942fe4cf3ce5da598bb2971452f95" name="a213942fe4cf3ce5da598bb2971452f95"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>temporary</b></td></tr>
+<tr class="memdesc:a213942fe4cf3ce5da598bb2971452f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the object is a temporary value or not. <br /></td></tr>
 <tr class="separator:a213942fe4cf3ce5da598bb2971452f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >object_t contains the type and value information of objects in Theory Lisp programs. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

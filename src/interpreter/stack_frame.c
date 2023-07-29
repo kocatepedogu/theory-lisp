@@ -50,7 +50,7 @@ void delete_stack_frame(stack_frame_ptr sf) {
   free(sf);
 }
 
-static variable_t *find_variable_locally(stack_frame_ptr sf, char *name) {
+static variable_t *find_variable_locally(stack_frame_ptr sf, const char *name) {
   list *local_vars = &sf->local_variables;
   for (size_t i = 0; i < list_size(local_vars); i++) {
     variable_t *var = list_get(local_vars, i);
@@ -61,7 +61,7 @@ static variable_t *find_variable_locally(stack_frame_ptr sf, char *name) {
   return NULL;
 }
 
-static variable_t *find_variable(stack_frame_ptr sf, char *name) {
+static variable_t *find_variable(stack_frame_ptr sf, const char *name) {
   while (sf) {
     variable_t *var = find_variable_locally(sf, name);
     if (var) {
@@ -74,7 +74,7 @@ static variable_t *find_variable(stack_frame_ptr sf, char *name) {
   return NULL;
 }
 
-void stack_frame_set_variable(stack_frame_ptr sf, char *name, object_t value) {
+void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value) {
   variable_t *var = find_variable_locally(sf, name);
   if (var) {
     variable_set_value(var, value);
@@ -84,7 +84,7 @@ void stack_frame_set_variable(stack_frame_ptr sf, char *name, object_t value) {
   }
 }
 
-void stack_frame_set_global_variable(stack_frame_ptr sf, char *name,
+void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
                                      object_t value) {
   while (sf->saved_frame_pointer != NULL) {
     sf = sf->saved_frame_pointer;
@@ -92,10 +92,17 @@ void stack_frame_set_global_variable(stack_frame_ptr sf, char *name,
   stack_frame_set_variable(sf, name, value);
 }
 
-object_t stack_frame_get_variable(stack_frame_ptr sf, char *name) {
+object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name) {
   variable_t *var = find_variable(sf, name);
   if (var) {
     return variable_get_value(var);
   }
   return make_error("Variable %s does not exist", name);
+}
+
+bool stack_frame_defined(stack_frame_ptr sf, const char *name) {
+  object_t value = stack_frame_get_variable(sf, name);
+  bool defined = !is_error(value);
+  destroy_object(value);
+  return defined;
 }

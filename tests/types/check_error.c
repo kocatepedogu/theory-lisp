@@ -23,7 +23,7 @@ START_TEST(test_error) {
   char *err_str = error_tostring(err_obj);
   ck_assert_str_eq(err_str, expected_result);
 
-  object_t copy_obj = copy_error(err_obj);
+  object_t copy_obj = clone_error(err_obj);
   ck_assert(is_error(copy_obj));
   ck_assert(error_equals(copy_obj, copy_obj));
   char *copy_str = error_tostring(copy_obj);

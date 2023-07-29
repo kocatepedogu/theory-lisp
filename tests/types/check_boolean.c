@@ -17,12 +17,12 @@ START_TEST(test_boolean_common) {
   char *str2 = boolean_tostring(false_obj1);
   ck_assert_str_eq(str2, FALSE_STRING);
 
-  object_t true_obj2 = copy_boolean(true_obj1);
+  object_t true_obj2 = clone_boolean(true_obj1);
   ck_assert(is_boolean(true_obj2));
   char *str3 = boolean_tostring(true_obj2);
   ck_assert_str_eq(str3, TRUE_STRING);
 
-  object_t false_obj2 = copy_boolean(false_obj1);
+  object_t false_obj2 = clone_boolean(false_obj1);
   ck_assert(is_boolean(false_obj2));
   char *str4 = boolean_tostring(false_obj2);
   ck_assert_str_eq(boolean_tostring(false_obj2), FALSE_STRING);

@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('stack__frame_8h_source.html',''); init
   <div class="headertitle"><div class="title">stack_frame.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
+<a href="stack__frame_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright 2023 Doğu Kocatepe</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This file is part of Theory Lisp.</span></div>
@@ -112,38 +112,53 @@ $(document).ready(function(){initNavTree('stack__frame_8h_source.html',''); init
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef STACK_FRAME_H</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define STACK_FRAME_H</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;../types/types.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;../utils/list.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structstack__frame.html">   25</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structstack__frame.html">stack_frame</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_struct" href="structlist.html">list</a> local_variables;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">struct </span><a class="code hl_struct" href="structstack__frame.html">stack_frame</a> *saved_frame_pointer;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>} <a class="code hl_struct" href="structstack__frame.html">stack_frame_t</a>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structstack__frame.html">stack_frame_t</a> *<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> construct_stack_frame(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> previous);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> new_stack_frame(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> previous);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">void</span> destroy_stack_frame(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> delete_stack_frame(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keywordtype">void</span> stack_frame_set_variable(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name, <a class="code hl_struct" href="structobject.html">object_t</a> value);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keywordtype">void</span> stack_frame_set_global_variable(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                                     <a class="code hl_struct" href="structobject.html">object_t</a> value);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><a class="code hl_struct" href="structobject.html">object_t</a> stack_frame_get_variable(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef STACK_FRAME_H</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define STACK_FRAME_H</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;../types/object.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;../utils/list.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structstack__frame.html">   30</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structstack__frame.html">stack_frame</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <a class="code hl_struct" href="structlist.html">list</a> local_variables;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">struct </span><a class="code hl_struct" href="structstack__frame.html">stack_frame</a> *saved_frame_pointer;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="stack__frame_8h.html#aec9a61c7e37b0e1d70eb9d5f50303217">   33</a></span>} <a class="code hl_typedef" href="stack__frame_8h.html#aec9a61c7e37b0e1d70eb9d5f50303217">stack_frame_t</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">typedef</span> <a class="code hl_struct" href="structstack__frame.html">stack_frame_t</a> *<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> <a class="code hl_function" href="stack__frame_8h.html#af1e01669e7df8f62051c84ce88ffe0e8">construct_stack_frame</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> previous);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> <a class="code hl_function" href="stack__frame_8h.html#a1ab4b4b342f839e8b9dd14329e07d136">new_stack_frame</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> previous);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keywordtype">void</span> <a class="code hl_function" href="stack__frame_8h.html#acc3cdc2cf8a4fb1499053d15fdca313a">destroy_stack_frame</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keywordtype">void</span> <a class="code hl_function" href="stack__frame_8h.html#a0d9cf5541481222983a3be39af7a376d">delete_stack_frame</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keywordtype">void</span> <a class="code hl_function" href="stack__frame_8h.html#aec629164c195049f292410cfb2e208c1">stack_frame_set_variable</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name, <a class="code hl_struct" href="structobject.html">object_t</a> value);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> <a class="code hl_function" href="stack__frame_8h.html#a2b76511c87351a2dff18f3419d059ace">stack_frame_set_global_variable</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name,</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                                     <a class="code hl_struct" href="structobject.html">object_t</a> value);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><a class="code hl_struct" href="structobject.html">object_t</a> <a class="code hl_function" href="stack__frame_8h.html#a3e40c111f912af3e78ac74c3c90d79b7">stack_frame_get_variable</a>(<a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf, <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="astack__frame_8h_html_a0d9cf5541481222983a3be39af7a376d"><div class="ttname"><a href="stack__frame_8h.html#a0d9cf5541481222983a3be39af7a376d">delete_stack_frame</a></div><div class="ttdeci">void delete_stack_frame(stack_frame_ptr sf)</div><div class="ttdoc">Calls stack frame destructor and free()'s the given pointer.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:48</div></div>
+<div class="ttc" id="astack__frame_8h_html_a1ab4b4b342f839e8b9dd14329e07d136"><div class="ttname"><a href="stack__frame_8h.html#a1ab4b4b342f839e8b9dd14329e07d136">new_stack_frame</a></div><div class="ttdeci">stack_frame_ptr new_stack_frame(stack_frame_ptr previous)</div><div class="ttdoc">Allocates a stack frame and calls stack frame constructor.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:33</div></div>
+<div class="ttc" id="astack__frame_8h_html_a2b76511c87351a2dff18f3419d059ace"><div class="ttname"><a href="stack__frame_8h.html#a2b76511c87351a2dff18f3419d059ace">stack_frame_set_global_variable</a></div><div class="ttdeci">void stack_frame_set_global_variable(stack_frame_ptr sf, char *name, object_t value)</div><div class="ttdoc">Sets the value of a global variable.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:87</div></div>
+<div class="ttc" id="astack__frame_8h_html_a3e40c111f912af3e78ac74c3c90d79b7"><div class="ttname"><a href="stack__frame_8h.html#a3e40c111f912af3e78ac74c3c90d79b7">stack_frame_get_variable</a></div><div class="ttdeci">object_t stack_frame_get_variable(stack_frame_ptr sf, char *name)</div><div class="ttdoc">Returns the value of the variable with the given name.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:95</div></div>
+<div class="ttc" id="astack__frame_8h_html_acc3cdc2cf8a4fb1499053d15fdca313a"><div class="ttname"><a href="stack__frame_8h.html#acc3cdc2cf8a4fb1499053d15fdca313a">destroy_stack_frame</a></div><div class="ttdeci">void destroy_stack_frame(stack_frame_ptr sf)</div><div class="ttdoc">Stack frame destructor.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:39</div></div>
+<div class="ttc" id="astack__frame_8h_html_aec629164c195049f292410cfb2e208c1"><div class="ttname"><a href="stack__frame_8h.html#aec629164c195049f292410cfb2e208c1">stack_frame_set_variable</a></div><div class="ttdeci">void stack_frame_set_variable(stack_frame_ptr sf, char *name, object_t value)</div><div class="ttdoc">Sets the value of a local variable in the given stack frame.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:77</div></div>
+<div class="ttc" id="astack__frame_8h_html_aec9a61c7e37b0e1d70eb9d5f50303217"><div class="ttname"><a href="stack__frame_8h.html#aec9a61c7e37b0e1d70eb9d5f50303217">stack_frame_t</a></div><div class="ttdeci">struct stack_frame stack_frame_t</div><div class="ttdoc">A container for local variables.</div></div>
+<div class="ttc" id="astack__frame_8h_html_af1e01669e7df8f62051c84ce88ffe0e8"><div class="ttname"><a href="stack__frame_8h.html#af1e01669e7df8f62051c84ce88ffe0e8">construct_stack_frame</a></div><div class="ttdeci">void construct_stack_frame(stack_frame_ptr sf, stack_frame_ptr previous)</div><div class="ttdoc">Constructs an empty stack frame with no variables.</div><div class="ttdef"><b>Definition:</b> stack_frame.c:28</div></div>
 <div class="ttc" id="astructlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdoc">A generic list type that stores void* pointers.</div><div class="ttdef"><b>Definition:</b> utils/list.h:37</div></div>
-<div class="ttc" id="astructobject_html"><div class="ttname"><a href="structobject.html">object</a></div><div class="ttdef"><b>Definition:</b> types.h:26</div></div>
-<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdef"><b>Definition:</b> stack_frame.h:25</div></div>
+<div class="ttc" id="astructobject_html"><div class="ttname"><a href="structobject.html">object</a></div><div class="ttdoc">object_t contains the type and value information of objects in Theory Lisp programs.</div><div class="ttdef"><b>Definition:</b> types/object.h:28</div></div>
+<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdoc">A container for local variables.</div><div class="ttdef"><b>Definition:</b> stack_frame.h:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_4904b5727094acb85f1fb3ce4b540d24.html">interpreter</a></li><li class="navelem"><b>stack_frame.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_4904b5727094acb85f1fb3ce4b540d24.html">interpreter</a></li><li class="navelem"><a class="el" href="stack__frame_8h.html">stack_frame.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>

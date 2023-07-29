@@ -21,7 +21,7 @@
 #ifndef REAL_H
 #define REAL_H
 
-#include "types.h"
+#include "object.h"
 
 /** 
  * Real number type.
@@ -40,7 +40,7 @@ object_t make_real(real_t value);
  * Copies an instance of real number type.
  * The resulting object contains a reference to the value.
  */
-object_t copy_real(object_t other);
+object_t clone_real(object_t self);
 
 /**
  * Destroys an instance of real number type.
@@ -64,11 +64,18 @@ char *real_tostring(object_t val);
  * precision arithmetic. This function exists because all subtypes of
  * object must have the equals function, but relying on this function
  * is prone to errors.
+ *
+ * If the other object has a different number type, it will be
+ * converted to real before making the comparison.
  */
 bool real_equals(object_t val, object_t other);
 
 /**
  * Less than operator for real numbers (self < other).
+ * The second operand can have a type different from real
+ * as long as it is a number type (currently the only such type is integer)
+ * In case it has a different type, it is converted to real and the comparison
+ * is done with two real numbers.
  */
 object_t real_less(object_t self, object_t other);
 

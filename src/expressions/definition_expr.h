@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file definition_expr.h
+
 #ifndef DEFINITION_EXPR_H
 #define DEFINITION_EXPR_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
 
@@ -43,6 +45,9 @@ void destroy_definition_expr(exprptr e);
 
 /* definiton_expr "delete" operation */
 void delete_definition_expr(exprptr e);
+
+/* definition_expr clone */
+exprptr clone_definition_expr(exprptr e);
 
 /* definition_expr tostring implementation */
 char *definition_expr_tostring(exprptr e);

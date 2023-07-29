@@ -28,7 +28,7 @@
 #include "../scanner/scanner.h"
 #include "../types/error.h"
 #include "../types/procedure.h"
-#include "../types/void.h"
+#include "../types/null.h"
 #include "../types/pair.h"
 #include "../utils/heap-format.h"
 #include "../utils/list.h"
@@ -52,6 +52,7 @@ static const char evaluation_expr_name[] = "evaluation_expr";
 static const expr_vtable evaluation_expr_vtable = {
     .deallocate = delete_evaluation_expr,
     .destructor = destroy_evaluation_expr,
+    .clone = clone_evaluation_expr,
     .to_string = evaluation_expr_tostring,
     .interpret = interpret_evaluation};
 
@@ -83,6 +84,25 @@ void destroy_evaluation_expr(exprptr e) {
 void delete_evaluation_expr(exprptr e) {
   destroy_evaluation_expr(e);
   free(e);
+}
+
+exprptr clone_evaluation_expr(exprptr self) {
+  evaluation_expr *self_ee = self->data;
+  evaluation_expr *new_ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
+  new_ee->procexpr = clone_expr(self_ee->procexpr);
+  construct_list(&new_ee->arguments);
+  for (size_t i = 0; i < list_size(&self_ee->arguments); i++) {
+    exprptr arg = list_get(&self_ee->arguments, i);
+    list_add(&new_ee->arguments, clone_expr(arg));
+  }
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_ee;
+  new_expr->expr_name = evaluation_expr_name;
+  new_expr->vtable = &evaluation_expr_vtable;
+  new_expr->line_number = self->line_number;
+  new_expr->column_number = self->column_number;
+  return new_expr;
 }
 
 void evaluation_expr_add_arg(exprptr e, exprptr argument) {
@@ -124,7 +144,7 @@ exprptr evaluation_expr_parse(list *tokens, int *index) {
     return parser_error(tkn->line, tkn->column, ERR_REAL_AS_PROCEDURE,
                         tkn->value.real);
   }
-  if (tkn->type == TOKEN_SYMBOL) {
+  if (tkn->type == TOKEN_STRING) {
     return parser_error(tkn->line, tkn->column, ERR_SYM_AS_PROCEDURE,
                         tkn->value.character_sequence);
   }
@@ -160,7 +180,7 @@ bool is_evaluation_expr(exprptr e) {
 
 static object_t interpret_args(list *arglist, size_t *argsize,
                                stack_frame_ptr sf, object_t **args) {
-  object_t error = make_void();
+  object_t error = make_null();
 
   list *evaluated_arglist = new_list();
   for (size_t i = 0; i < list_size(arglist); i++) {
@@ -169,22 +189,21 @@ static object_t interpret_args(list *arglist, size_t *argsize,
     if (is_expanded_expression(expr)) {
       object_t list_object = interpret_expr(expr->data, sf);
       if (!is_error(error) && is_error(list_object)) {
-	assign_object(&error, copy_object(list_object));
+        assign_object(&error, clone_object(list_object));
       }
 
       if (!cons_list_to_internal_list(list_object, evaluated_arglist)) {
-	if (!is_error(error)) {
-	  assign_object(&error, make_error(ERR_EXPANDED_NOT_LIST));
-	}
+        if (!is_error(error)) {
+          assign_object(&error, make_error(ERR_EXPANDED_NOT_LIST));
+        }
       }
 
       destroy_object(list_object);
-
     } else {
       object_t *value = (object_t *)malloc(sizeof(object_t));
       *value = interpret_expr(expr, sf);
       if (!is_error(error) && is_error(*value)) {
-	assign_object(&error, copy_object(*value));
+        assign_object(&error, clone_object(*value));
       }
 
       list_add(evaluated_arglist, value);
@@ -220,8 +239,8 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
         object_t error = make_error(ERR_ARITY_AT_LEAST, ie->name, func->arity, argsize);
         assign_object(result, error);
       } else if (!func->variadic && func->arity != argsize) {
-	object_t error = make_error(ERR_ARITY, ie->name, func->arity, argsize);
-	assign_object(result, error);
+        object_t error = make_error(ERR_ARITY, ie->name, func->arity, argsize);
+        assign_object(result, error);
       } else {
         assign_object(result, func->func(argsize, evaluated_args, sf));
       }
@@ -238,18 +257,21 @@ static object_t interpret_lambda_call(exprptr procexpr, stack_frame_ptr sf,
     return proc;
   }
 
-  if (is_procedure(proc) == false) {
+  if (!is_procedure(proc)) {
     char *str = object_tostring(proc);
     object_t result = make_error(ERR_NOT_PROCEDURE, str);
     free(str);
+    destroy_object(proc);
     return result;
   }
 
-  return call_lambda(procedure_value(proc), args_size, args, sf);
+  object_t result = call_lambda(procedure_value(proc), args_size, args, sf);
+  destroy_object(proc);
+  return result;
 }
 
 object_t interpret_evaluation(exprptr e, stack_frame_ptr sf) {
-  object_t result = make_void();
+  object_t result = make_null();
 
   evaluation_expr *evaluation_expr = e->data;
   exprptr proc = evaluation_expr->procexpr;

@@ -39,6 +39,7 @@
 
 static const expr_vtable cond_expr_vtable = {.destructor = destroy_cond_expr,
                                              .deallocate = delete_cond_expr,
+					     .clone = clone_cond_expr,
                                              .to_string = cond_expr_tostring,
                                              .interpret = interpret_cond};
 
@@ -73,6 +74,28 @@ void destroy_cond_expr(exprptr e) {
 void delete_cond_expr(exprptr e) {
   destroy_cond_expr(e);
   free(e);
+}
+
+exprptr clone_cond_expr(exprptr self) {
+  cond_expr *new_ce = (cond_expr *)malloc(sizeof(cond_expr));
+  construct_list(&new_ce->cases);
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_ce;
+  new_expr->vtable = &cond_expr_vtable;
+  new_expr->expr_name = cond_expr_name;
+  new_expr->line_number = self->line_number;
+  new_expr->column_number = self->column_number;
+
+  cond_expr *self_ce = self->data;
+  for (int i = 0; i < list_size(&self_ce->cases); i++) {
+    cond_case *self_case = list_get(&self_ce->cases, i);
+    cond_case *new_case = (cond_case *)malloc(sizeof(cond_case));
+    new_case->condition = clone_expr(self_case->condition);
+    new_case->true_case = clone_expr(self_case->true_case);
+    list_add(&new_ce->cases, new_case);
+  }
+
+  return new_expr;
 }
 
 void cond_expr_add_case(exprptr e, exprptr cond, exprptr true_case) {

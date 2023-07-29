@@ -16,24 +16,51 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file boolean.h
+
 #ifndef BOOLEAN_H
 #define BOOLEAN_H
 
-#include "types.h"
+#include "object.h"
 
 /* Boolean type */
 typedef bool boolean_t;
 
+/**
+ * Creates a boolean object.
+ * Any value other than true and false is undefined behavior.
+ * (true and false from stdbool.h)
+ */
 object_t make_boolean(boolean_t value);
-object_t copy_boolean(object_t other);
+
+/** Clones a boolean object. */
+object_t clone_boolean(object_t self);
+
+/** Boolean destructor */
 void destroy_boolean(object_t val);
+
+/** Returns "#t" for true, and "#f" for false. */
 char *boolean_tostring(object_t val);
+
+/** Tests equality of two boolean values. */
 bool boolean_equals(object_t val, object_t other);
+
+/** True if and only if given object is a boolean. */
 bool is_boolean(object_t obj);
+
+/** Boolean && operator */
 object_t boolean_op_and(object_t obj, object_t other);
+
+/** Boolean || operator */
 object_t boolean_op_or(object_t obj, object_t other);
+
+/** Boolean ^ operator */
 object_t boolean_op_xor(object_t obj, object_t other);
+
+/** Boolean ! operator */
 object_t boolean_op_not(object_t obj);
+
+/** Returns the internally stored boolean value */
 boolean_t boolean_value(object_t obj);
 
 #endif

@@ -18,10 +18,11 @@
 
 #include "object.h"
 #include "../types/error.h"
+#include "../types/null.h"
 #include "../types/void.h"
 #include "../types/integer.h"
 #include "../types/real.h"
-#include "../types/symbol.h"
+#include "../types/string.h"
 #include "../types/pair.h"
 #include "../types/boolean.h"
 #include "../types/procedure.h"
@@ -68,6 +69,11 @@ object_t builtin_greater_or_eq(size_t n, object_t *args, stack_frame_ptr sf) {
   return greater_or_eq;
 }
 
+object_t builtin_is_null(size_t n, object_t *args, stack_frame_ptr sf) {
+  assert(n == 1);
+  return make_boolean(is_null(*args));
+}
+
 object_t builtin_is_void(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n == 1);
   return make_boolean(is_void(*args));
@@ -93,9 +99,9 @@ object_t builtin_is_number(size_t n, object_t *args, stack_frame_ptr sf) {
   return make_boolean(is_integer(*args) || is_real(*args));
 }
 
-object_t builtin_is_symbol(size_t n, object_t *args, stack_frame_ptr sf) {
+object_t builtin_is_string(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n == 1);
-  return make_boolean(is_symbol(*args));
+  return make_boolean(is_string(*args));
 }
 
 object_t builtin_is_pair(size_t n, object_t *args, stack_frame_ptr sf) {

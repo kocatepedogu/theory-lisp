@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file display.h
+
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 
 #include "../interpreter/stack_frame.h"
 

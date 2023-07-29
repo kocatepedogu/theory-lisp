@@ -1,6 +1,6 @@
 var void_8h =
 [
-    [ "copy_void", "void_8h.html#ae4992ccad8f30f2fd5f938172b89b29d", null ],
+    [ "clone_void", "void_8h.html#a0654cccea0e6b2cd0fb14e68694dfa19", null ],
     [ "destroy_void", "void_8h.html#aa8e76d9186b9848bcc618bad99039390", null ],
     [ "is_void", "void_8h.html#a6c3c4fd42a6d52218a6d380f406ea8fa", null ],
     [ "make_void", "void_8h.html#a50929b81aba49d3b7ec4308fd192b575", null ],

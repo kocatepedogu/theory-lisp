@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file parser.h
+
 #ifndef PARSER_H
 #define PARSER_H
 
@@ -30,8 +32,25 @@
 #include "../expressions/data_expr.h"
 #include "../expressions/expression.h"
 
+/**
+ * A common error printing function for parser functions.
+ * Displays the line and column numbers where the error has occured,
+ * and prints the given formatted error message.
+ */
 void *parser_error(size_t line, size_t column, char *format, ...);
+
+/**
+ * Takes a list of tokens and returns a list of expressions (parse tree).
+ *
+ * If an error occurs during parsing, the constructed portion of the
+ * parse tree is deallocated and NULL is returned. It will print an error
+ * message before returning to the caller.
+ */
 list *parser(list *token_list);
+
+/**
+ * Recursively deallocates the given parse tree.
+ */
 void delete_parse_tree(list *parse_tree);
 
 #endif

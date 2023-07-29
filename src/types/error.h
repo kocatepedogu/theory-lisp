@@ -16,19 +16,45 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file error.h
+
 #ifndef ERROR_H
 #define ERROR_H
 
-#include "types.h"
+#include "object.h"
 
-/* Error type */
+/** Error type */
 typedef char *error_t;
 
-object_t make_error(error_t err, ...);
-object_t copy_error(object_t other);
-void destroy_error(object_t err);
-bool error_equals(object_t err, object_t other);
-char *error_tostring(object_t err);
-bool is_error(object_t err);
+/**
+ * Creates an error object with the given error mesage.
+ * The format string and parameters for creating the error message
+ * are exactly the same as printf
+ */
+object_t make_error(error_t fmt, ...);
+
+/**
+ * Creates an error object that causes the program to exit
+ * normally without printing an error message.
+ */
+object_t make_exit(void);
+
+/** Clones an error object. Copies the internal message */
+object_t clone_error(object_t self);
+
+/** Error destructor */
+void destroy_error(object_t self);
+
+/** Returns true if and only if both errors have the same error message */
+bool error_equals(object_t self, object_t other);
+
+/** Returns the stored error message */
+char *error_tostring(object_t self);
+
+/** Returns true if and only if obj is an error. */
+bool is_error(object_t obj);
+
+/** Returns true if and only if obj is a normal exit */
+bool is_exit(object_t obj);
 
 #endif

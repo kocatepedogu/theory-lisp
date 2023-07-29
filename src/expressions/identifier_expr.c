@@ -27,6 +27,7 @@ static const char identifier_expr_name[] = "identifier_expr";
 static const expr_vtable identifier_expr_vtable = {
   .deallocate = delete_identifier_expr,
   .destructor = destroy_identifier_expr,
+  .clone = clone_identifier_expr,
   .to_string = identifier_expr_tostring,
   .interpret = interpret_identifier
 };
@@ -54,6 +55,20 @@ void destroy_identifier_expr(exprptr e) {
 void delete_identifier_expr(exprptr e) {
   destroy_identifier_expr(e);
   free(e);
+}
+
+exprptr clone_identifier_expr(exprptr e) {
+  identifier_expr *new_ie = (identifier_expr *)malloc(sizeof(identifier_expr));
+  identifier_expr *self_ie = e->data;
+  new_ie->name = strdup(self_ie->name);
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_ie;
+  new_expr->vtable = &identifier_expr_vtable;
+  new_expr->expr_name = identifier_expr_name;
+  new_expr->line_number = e->line_number;
+  new_expr->column_number = e->column_number;
+  return new_expr;
 }
 
 char *identifier_expr_tostring(exprptr e) {

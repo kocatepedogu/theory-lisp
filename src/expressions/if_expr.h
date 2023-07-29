@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file if_expr.h
+
 #ifndef IF_EXPR_H
 #define IF_EXPR_H
 
@@ -45,6 +47,9 @@ void destroy_if_expr(exprptr e);
 
 /* if_expr "delete" operation */
 void delete_if_expr(exprptr e);
+
+/* if_expr clone */
+exprptr clone_if_expr(exprptr e);
 
 /* if_expr tostring */
 char *if_expr_tostring(exprptr e); 

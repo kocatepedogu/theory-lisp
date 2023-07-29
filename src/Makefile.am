@@ -1,27 +1,33 @@
 lib_LTLIBRARIES = libtlisp.la
 libtlisp_la_SOURCES =\
-    types/types.c\
-    types/types.h\
+    types/object.c\
+    types/object.h\
     types/boolean.c\
     types/boolean.h\
     types/integer.c\
     types/integer.h\
     types/real.c\
     types/real.h\
-    types/symbol.c\
-    types/symbol.h\
+    types/string.c\
+    types/string.h\
     types/pair.c\
     types/pair.h\
     types/procedure.c\
     types/procedure.h\
     types/void.c\
     types/void.h\
+    types/null.c\
+    types/null.h\
     types/error.c\
     types/error.h\
+    utils/init.c\
+    utils/init.h\
     utils/heap-format.c\
     utils/heap-format.h\
     utils/list.c\
     utils/list.h\
+    utils/file.c\
+    utils/file.h\
     scanner/scanner.c\
     scanner/scanner.h\
     expressions/expression.c\
@@ -54,6 +60,8 @@ libtlisp_la_SOURCES =\
     interpreter/interpreter.h\
     builtin/builtin.c\
     builtin/builtin.h\
+    builtin/include.c\
+    builtin/include.h\
     builtin/object.c\
     builtin/object.h\
     builtin/display.c\
@@ -63,11 +71,21 @@ libtlisp_la_SOURCES =\
     builtin/arithmetic.c\
     builtin/arithmetic.h\
     builtin/list.c \
-    builtin/list.h
+    builtin/list.h \
+    builtin/string.c \
+    builtin/string.h \
+    builtin/eval.c \
+    builtin/eval.h \
+    builtin/error.c \
+    builtin/error.h
 
-libtlisp_la_CFLAGS = -O3 -g -Wall -Werror -pedantic -fsanitize=undefined
+tlispdir = $(libdir)/tlisp
+tlisp_DATA =\
+    lib/list.tl\
+    lib/util.tl
+
+libtlisp_la_CFLAGS = -DLIBRARY_DIR='"$(tlispdir)"'
 
 bin_PROGRAMS = tlisp
 tlisp_SOURCES = main.c
 tlisp_LDADD = libtlisp.la
-tlisp_CFLAGS = -O3 -g -Wall -Werror -pedantic -fsanitize=undefined

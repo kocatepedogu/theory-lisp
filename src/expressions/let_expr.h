@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file let_expr.h
+
 #ifndef LET_EXPR_H
 #define LET_EXPR_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
 
@@ -49,6 +51,9 @@ void destroy_let_expr(exprptr e);
 
 /* let_expr "delete" operation */
 void delete_let_expr(exprptr e);
+
+/* let_expr clone */
+exprptr clone_let_expr(exprptr e);
 
 /* adds a variable declaration to the let block */
 void let_expr_add_declaration(exprptr let_expr, const char *name, 

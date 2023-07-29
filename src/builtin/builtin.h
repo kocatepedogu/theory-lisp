@@ -16,16 +16,22 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file builtin.h
+
 #ifndef BUILTIN_H
 #define BUILTIN_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 
+#include "include.h"
 #include "arithmetic.h"
 #include "display.h"
 #include "object.h"
 #include "boolean.h"
 #include "list.h"
+#include "string.h"
+#include "eval.h"
+#include "error.h"
 
 typedef object_t (*builtin_function_ptr)(size_t, object_t*, stack_frame_ptr);
 
@@ -37,6 +43,9 @@ typedef struct {
 } builtin_function;
 
 const builtin_function *find_builtin_function(const char *name);
+
 bool is_builtin_name(const char *name);
+
+void define_builtin_function_wrappers(stack_frame_ptr sf);
 
 #endif

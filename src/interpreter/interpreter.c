@@ -19,10 +19,19 @@
 #include "interpreter.h"
 
 #include <stdio.h>
+#include <limits.h>
+#include <string.h>
 
 #include "stack_frame.h"
 #include "variable.h"
+#include "../scanner/scanner.h"
+#include "../parser/parser.h"
 #include "../types/error.h"
+#include "../types/void.h"
+
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
 
 static exprptr get_expression(list *parse_tree, size_t i, bool verbose) {
   exprptr expr = list_get(parse_tree, i);
@@ -35,17 +44,21 @@ static exprptr get_expression(list *parse_tree, size_t i, bool verbose) {
   return expr;
 }
 
-static bool evaluate(exprptr e, stack_frame_ptr sf, bool verbose) {
+static object_t evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet) {
   object_t result = interpret_expr(e, sf);
-  bool error = is_error(result);
   char *result_str = object_tostring(result);
-  destroy_object(result);
-  if (verbose && !error) {
+
+  if (verbose) {
     printf("Result: ");
   }
-  puts(result_str);
+
+  bool show_result = !quiet && !is_void(result);
+  if (!is_exit(result) && (is_error(result) || show_result || verbose)) {
+    puts(result_str);
+  }
+
   free(result_str);
-  return error;
+  return result;
 }
 
 static void print_variables(stack_frame_ptr sf, bool verbose) {
@@ -70,16 +83,45 @@ static void print_variables(stack_frame_ptr sf, bool verbose) {
   }
 }
 
-void interpreter(list *parse_tree, bool verbose) {
-  stack_frame_t global_frame;
-  construct_stack_frame(&global_frame, NULL);
+object_t interpreter(list *parse_tree, bool verbose, bool quiet, stack_frame_ptr sf) {
+  object_t result = make_void();
 
-  bool error = false;
-  for (size_t i = 0; !error && i < list_size(parse_tree); i++) {
+  for (size_t i = 0; !is_error(result) && i < list_size(parse_tree); i++) {
     exprptr e = get_expression(parse_tree, i, verbose);
-    error = evaluate(e, &global_frame, verbose);
-    print_variables(&global_frame, verbose);
+    assign_object(&result, evaluate(e, sf, verbose, quiet));
+    print_variables(sf, verbose);
   }
 
-  destroy_stack_frame(&global_frame);
+  return result;
+}
+
+void repl(stack_frame_ptr sf) {
+  char line[LINE_MAX];
+
+  while (!feof(stdin)) {
+    if (!fgets(line, LINE_MAX, stdin)) {
+      if (!feof(stdin)) {
+        fprintf(stderr, 
+            "Cannot read the next line from stdin."
+            "The length of a line must not exceed %d characters",
+            LINE_MAX);
+      }
+
+      return;
+    }
+
+    list *tokens = scanner(line);
+    list *parse_tree = parser(tokens);
+    delete_token_list(tokens);
+    
+    if (parse_tree) {
+      object_t result = interpreter(parse_tree, false, false, sf);
+      delete_parse_tree(parse_tree);
+
+      if (is_exit(result)) {
+        destroy_object(result);
+        return;
+      }
+    }
+  }
 }

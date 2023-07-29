@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['real_5ft_0',['real_t',['../real_8h.html#a0d00e2b3dfadee81331bbb39068570c4',1,'real.h']]]
+  ['error_5ft_0',['error_t',['../error_8h.html#a41088072d1797f61c6e3ed2ce704e0b7',1,'error.h']]]
 ];

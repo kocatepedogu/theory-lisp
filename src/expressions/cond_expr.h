@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file cond_expr.h
+
 #ifndef COND_EXPR_H
 #define COND_EXPR_H
 
@@ -48,6 +50,9 @@ void destroy_cond_expr(exprptr e);
 
 /* "delete" operation for cond_expr */
 void delete_cond_expr(exprptr e);
+
+/* clone for cond_expr */
+exprptr clone_cond_expr(exprptr e);
 
 /* adds a new case to cond_expr */
 void cond_expr_add_case(exprptr e, exprptr condition,

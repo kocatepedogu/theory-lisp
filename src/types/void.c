@@ -19,17 +19,20 @@
 #include "void.h"
 
 #include <string.h>
+#include <assert.h>
 
 #include "error.h"
 
 static const object_vtable_t void_vtable = {
-    .copy = copy_void,
+    .clone = clone_void,
     .destroy = destroy_void,
     .tostring = void_tostring,
     .equals = void_equals,
 };
 
 static const char void_type_name[] = "void";
+
+inline bool is_void(object_t obj) { return strcmp(void_type_name, obj.type) == 0; }
 
 object_t make_void(void) {
   object_t obj;
@@ -40,12 +43,24 @@ object_t make_void(void) {
   return obj;
 }
 
-void destroy_void(object_t obj) {}
+void destroy_void(object_t self) {
+  assert(is_void(self));
+}
 
-object_t copy_void(object_t other) { return other; }
+object_t clone_void(object_t self) {
+  assert(is_void(self));
+  return self;
+}
 
-char *void_tostring(object_t obj) { return strdup("null"); }
+char *void_tostring(object_t self) {
+  assert(is_void(self));
+  return strdup("#<void>");
+}
 
-bool void_equals(object_t obj, object_t other) { return true; }
-
-bool is_void(object_t obj) { return strcmp(void_type_name, obj.type) == 0; }
+bool void_equals(object_t self, object_t other) {
+  assert(is_void(self));
+  if (!is_void(other)) {
+    return false;
+  }
+  return true;
+}

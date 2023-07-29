@@ -16,10 +16,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file list.h
+
 #ifndef BUILTIN_LIST_H
 #define BUILTIN_LIST_H
 
-#include "../types/types.h"
+#include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
 object_t builtin_cons(size_t n, object_t *args, stack_frame_ptr sf);

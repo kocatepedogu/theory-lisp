@@ -21,7 +21,7 @@
 #ifndef VOID_H
 #define VOID_H
 
-#include "types.h"
+#include "object.h"
 
 /**
  * Creates an instance of void type.
@@ -39,7 +39,7 @@ void destroy_void(object_t obj);
  * Copies an instance of void object.
  * No memory allocation occurs.
  */
-object_t copy_void(object_t other);
+object_t clone_void(object_t self);
 
 /**
  * Returns malloc'ed string representation of void object.
@@ -52,7 +52,6 @@ char *void_tostring(object_t obj);
  * All instances of void type are equal.
  * The value space of the void type is the singleton set {null}.
  */
-
 bool void_equals(object_t obj, object_t other);
 
 /**

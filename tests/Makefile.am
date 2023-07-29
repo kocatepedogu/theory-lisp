@@ -7,7 +7,7 @@ TESTS = check_list \
 	check_pair \
 	check_procedure \
 	check_real \
-	check_symbol \
+	check_string \
 	check_types \
 	check_scanner \
 	check_stack_frame \
@@ -21,9 +21,6 @@ TESTS = check_list \
 check_PROGRAMS = $(TESTS)
 
 LDADD = $(top_builddir)/src/libtlisp.la @CHECK_LIBS@
-
-AM_LDFLAGS = -fsanitize=undefined
-AM_CFLAGS = -O3 -g -Wall -Werror -pedantic -fsanitize=undefined
 
 SRC_DIR = $(top_builddir)/src
 
@@ -68,18 +65,19 @@ check_real_SOURCES = types/check_real.c \
                      $(TYPES_DIR)/integer.h \
                      $(TYPES_DIR)/boolean.h
 
-check_symbol_SOURCES = types/check_symbol.c \
-                       $(TYPES_DIR)/symbol.h
+check_string_SOURCES = types/check_string.c \
+                       $(TYPES_DIR)/string.h
 
 check_types_SOURCES = types/check_types.c \
-                      $(TYPES_DIR)/types.h \
+                      $(TYPES_DIR)/object.h \
                       $(TYPES_DIR)/void.h \
                       $(TYPES_DIR)/boolean.h \
                       $(TYPES_DIR)/error.h \
                       $(TYPES_DIR)/integer.h \
                       $(TYPES_DIR)/real.h \
                       $(TYPES_DIR)/procedure.h \
-                      $(TYPES_DIR)/pair.h
+                      $(TYPES_DIR)/pair.h \
+                      $(TYPES_DIR)/string.h
 
 # Scanner Tests
 
@@ -93,7 +91,7 @@ INTERPRETER_DIR = $(SRC_DIR)/interpreter
 check_stack_frame_SOURCES = interpreter/check_stack_frame.c \
                             $(INTERPRETER_DIR)/stack_frame.h \
                             $(INTERPRETER_DIR)/variable.h \
-                            $(TYPES_DIR)/types.h \
+                            $(TYPES_DIR)/object.h \
                             $(UTILS_DIR)/list.h
 
 # Expression Tests

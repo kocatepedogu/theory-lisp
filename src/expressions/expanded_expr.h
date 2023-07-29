@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file expanded_expr.h
+
 #ifndef EXPANDED_EXPR_H
 #define EXPANDED_EXPR_H
 
@@ -38,6 +40,9 @@ void destroy_expanded_expr(exprptr e);
 
 /* expanded expression "delete" operation */
 void delete_expanded_expr(exprptr e);
+
+/* expanded expression clone */
+exprptr clone_expanded_expr(exprptr e);
 
 /* expanded expression tostring implementation */
 char *expanded_expr_tostring(exprptr e);

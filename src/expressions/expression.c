@@ -33,11 +33,11 @@
 #include "let_expr.h"
 #include "../parser/parser.h"
 
-#include "../types/void.h"
+#include "../types/null.h"
 #include "../types/boolean.h"
 #include "../types/integer.h"
 #include "../types/real.h"
-#include "../types/symbol.h"
+#include "../types/string.h"
 #include "../types/error.h"
 
 /* Parser error messages */
@@ -59,6 +59,14 @@ void delete_expr(exprptr e) {
   }
 }
 
+/* clones an expression */
+exprptr clone_expr(exprptr e) {
+  if (e != NULL) {
+    return e->vtable->clone(e);
+  }
+  return NULL;
+}
+
 /* Returns string representation of an expression */
 char *expr_tostring(exprptr e) { return e->vtable->to_string(e); }
 
@@ -75,7 +83,7 @@ static exprptr parenthesized_expr_parse(list *tokens, int *index) {
   if (next_tkn->type == TOKEN_RIGHT_PARENTHESIS) {
     (*index)++;
 
-    exprptr result = new_data_expr(make_void());
+    exprptr result = new_data_expr(make_null());
     result->line_number = line;
     result->column_number = column;
     return result;
@@ -100,7 +108,7 @@ static exprptr parenthesized_expr_parse(list *tokens, int *index) {
       break;
     case TOKEN_LEFT_PARENTHESIS:
     case TOKEN_IDENTIFIER:
-    case TOKEN_SYMBOL:
+    case TOKEN_STRING:
     case TOKEN_INTEGER:
     case TOKEN_REAL:
       subexpr = evaluation_expr_parse(tokens, index);
@@ -148,7 +156,7 @@ exprptr expr_parse(list *tokens, int *index) {
   exprptr result = NULL;
   switch (tkn->type) {
     case TOKEN_NULL:
-      assign_object(&obj, make_void());
+      assign_object(&obj, make_null());
       result = new_data_expr(obj);
       destroy_object(obj);
       break;
@@ -171,8 +179,8 @@ exprptr expr_parse(list *tokens, int *index) {
       destroy_object(obj);
       result = new_identifier_expr(tkn->value.character_sequence);
       break;
-    case TOKEN_SYMBOL:
-      assign_object(&obj, make_symbol(tkn->value.character_sequence));
+    case TOKEN_STRING:
+      assign_object(&obj, make_string(tkn->value.character_sequence));
       result = new_data_expr(obj);
       destroy_object(obj);
       break;

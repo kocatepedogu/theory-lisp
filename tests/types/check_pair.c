@@ -14,7 +14,7 @@ START_TEST(test_pair_common) {
   ck_assert(is_pair(pair_obj));
   ck_assert(pair_equals(pair_obj, pair_obj));
 
-  object_t copy_obj = copy_pair(pair_obj);
+  object_t copy_obj = clone_pair(pair_obj);
   ck_assert(is_pair(copy_obj));
   ck_assert(pair_equals(copy_obj, copy_obj));
 

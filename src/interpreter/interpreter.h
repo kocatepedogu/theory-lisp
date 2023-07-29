@@ -16,14 +16,30 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file interpreter.h
+
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
 #include "../utils/list.h"
 #include "../expressions/expression.h"
-#include "../types/types.h"
+#include "../types/object.h"
 #include "stack_frame.h"
 
-void interpreter(list *parse_tree, bool verbose);
+/**
+ * Takes a list of expressions and interprets them one by one.
+ * If any one of the expressions returns an error, the execution is
+ * terminated.
+ *
+ * @param verbose if verbose is set to true, each expression will
+ * be printed before getting evaluated, and global variables will
+ * be displayed after evaluating each expression.
+ */
+object_t interpreter(list *parse_tree, bool verbose, bool show, stack_frame_ptr sf);
+
+/**
+ * Read-Evaluate-Print-Loop
+ */
+void repl(stack_frame_ptr sf);
 
 #endif

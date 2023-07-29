@@ -20,15 +20,29 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <assert.h>
 
 #include "../utils/heap-format.h"
 
-static const object_vtable_t error_vtable = {.copy = copy_error,
+static const object_vtable_t error_vtable = {.clone = clone_error,
                                              .destroy = destroy_error,
                                              .equals = error_equals,
                                              .tostring = error_tostring};
 
 static const char error_type_name[] = "error";
+static const char normal_exit_message [] = "NORMAL_EXIT";
+
+inline bool is_error(object_t obj) { 
+  return strcmp(error_type_name, obj.type) == 0; 
+}
+
+bool is_exit(object_t obj) {
+  if (is_error(obj)) {
+    return strcmp(obj.value, normal_exit_message) == 0;
+  }
+
+  return false;
+}
 
 object_t make_error(error_t err, ...) {
   va_list args;
@@ -44,21 +58,36 @@ object_t make_error(error_t err, ...) {
   return obj;
 }
 
-object_t copy_error(object_t other) {
+object_t make_exit(void) {
+  return make_error("%s", normal_exit_message);
+}
+
+object_t clone_error(object_t self) {
+  assert(is_error(self));
   object_t obj;
   obj.type = error_type_name;
-  obj.value = strdup(other.value);
+  obj.value = strdup(self.value);
   obj.vtable = &error_vtable;
   obj.temporary = false;
   return obj;
 }
 
-void destroy_error(object_t err) { free(err.value); }
-
-bool error_equals(object_t err, object_t other) {
-  return strcmp(err.value, other.value) == 0;
+void destroy_error(object_t self) {
+  assert(is_error(self));
+  free(self.value);
 }
 
-char *error_tostring(object_t err) { return strdup(err.value); }
+bool error_equals(object_t self, object_t other) {
+  assert(is_error(self));
+  if (!is_error(other)) {
+    return false;
+  }
 
-bool is_error(object_t err) { return strcmp(error_type_name, err.type) == 0; }
+  return strcmp(self.value, other.value) == 0;
+}
+
+char *error_tostring(object_t self) {
+  assert(is_error(self));
+  return strdup(self.value);
+}
+

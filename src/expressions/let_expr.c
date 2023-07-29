@@ -49,6 +49,7 @@ static const char let_expr_name[] = "let_expr";
 
 static const expr_vtable let_expr_vtable = {.deallocate = delete_let_expr,
                                             .destructor = destroy_let_expr,
+					    .clone = clone_let_expr,
                                             .to_string = let_expr_tostring,
 					    .interpret = interpret_let};
 
@@ -83,6 +84,29 @@ void destroy_let_expr(exprptr e) {
 void delete_let_expr(exprptr e) {
   destroy_let_expr(e);
   free(e);
+}
+
+exprptr clone_let_expr(exprptr e) {
+  let_expr *self_le = e->data;
+  let_expr *new_le = (let_expr *)malloc(sizeof(let_expr));
+  new_le->body = clone_expr(self_le->body);
+  construct_list(&new_le->declarations);
+
+  for (size_t i = 0; i < list_size(&self_le->declarations); i++) {
+    var_declaration *self_decl = list_get(&self_le->declarations, i);
+    var_declaration *new_decl = (var_declaration *)malloc(sizeof(var_declaration));
+    new_decl->name = strdup(self_decl->name);
+    new_decl->value = clone_expr(self_decl->value);
+    list_add(&new_le->declarations, new_decl);
+  }
+
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = new_le;
+  new_expr->vtable = &let_expr_vtable;
+  new_expr->expr_name = let_expr_name;
+  new_expr->line_number = e->line_number;
+  new_expr->column_number = e->column_number;
+  return new_expr;
 }
 
 void let_expr_add_declaration(exprptr e, const char *name, exprptr expr) {

@@ -30,6 +30,7 @@ static const char expanded_expr_name[] = "expanded_expr";
 static const expr_vtable expanded_expr_vtable = {
   .destructor = destroy_expanded_expr,
   .deallocate = delete_expanded_expr,
+  .clone = clone_expanded_expr,
   .to_string = expanded_expr_tostring,
   .interpret = interpret_expanded_expr
 };
@@ -53,6 +54,16 @@ void destroy_expanded_expr(exprptr e) {
 void delete_expanded_expr(exprptr e) {
   destroy_expanded_expr(e);
   free(e);
+}
+
+exprptr clone_expanded_expr(exprptr e) {
+  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
+  new_expr->data = clone_expr(e->data);
+  new_expr->vtable = &expanded_expr_vtable;
+  new_expr->expr_name = expanded_expr_name;
+  new_expr->line_number = e->line_number;
+  new_expr->column_number = e->column_number;
+  return new_expr;
 }
 
 char *expanded_expr_tostring(exprptr e) {

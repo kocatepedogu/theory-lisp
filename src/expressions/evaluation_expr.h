@@ -16,6 +16,8 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file evaluation_expr.h
+
 #ifndef EVALUATION_EXPR_H
 #define EVALUATION_EXPR_H
 
@@ -43,6 +45,9 @@ void destroy_evaluation_expr(exprptr e);
 
 /* evaluation_expr "delete" operation */
 void delete_evaluation_expr(exprptr e);
+
+/* evaluation_expr clone */
+exprptr clone_evaluation_expr(exprptr e);
 
 /* Adds an argument to an evulation expression */
 void evaluation_expr_add_arg(exprptr e, exprptr argument);

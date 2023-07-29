@@ -26,7 +26,7 @@
 #define ERR_OPERAND_NOT_BOOL \
   "Boolean AND operands must be booleans"
 
-static const object_vtable_t boolean_vtable = {.copy = copy_boolean,
+static const object_vtable_t boolean_vtable = {.clone = clone_boolean,
                                                .destroy = destroy_boolean,
                                                .tostring = boolean_tostring,
                                                .equals = boolean_equals,
@@ -37,9 +37,19 @@ static const object_vtable_t boolean_vtable = {.copy = copy_boolean,
 
 static const char boolean_type_name[] = "boolean";
 
+inline boolean_t boolean_value(object_t obj) { 
+  assert(is_boolean(obj));
+  return *(boolean_t *)obj.value; 
+}
+
+inline bool is_boolean(object_t obj) {
+  return strcmp(obj.type, boolean_type_name) == 0;
+}
+
 object_t make_boolean(boolean_t value) {
   boolean_t *bool_value = (boolean_t *)malloc(sizeof(boolean_t));
   *bool_value = value;
+
   object_t obj;
   obj.value = bool_value;
   obj.type = boolean_type_name;
@@ -48,14 +58,13 @@ object_t make_boolean(boolean_t value) {
   return obj;
 }
 
-object_t copy_boolean(object_t other) {
-  if (!is_boolean(other)) {
-    return make_error("Copy constructor argument is not a boolean");
-  }
+object_t clone_boolean(object_t self) {
+  assert(is_boolean(self));
 
   boolean_t *bool_value = (boolean_t *)malloc(sizeof(boolean_t));
-  *bool_value = *(boolean_t *)other.value;
+  *bool_value = *(boolean_t *)self.value;
   object_t obj;
+
   obj.value = bool_value;
   obj.type = boolean_type_name;
   obj.vtable = &boolean_vtable;
@@ -80,10 +89,6 @@ bool boolean_equals(object_t obj, object_t other) {
   }
 
   return boolean_value(obj) == boolean_value(other);
-}
-
-bool is_boolean(object_t obj) {
-  return strcmp(obj.type, boolean_type_name) == 0;
 }
 
 object_t boolean_op_and(object_t obj, object_t other) {
@@ -118,7 +123,4 @@ object_t boolean_op_not(object_t obj) {
   return make_boolean(!boolean_value(obj));
 }
 
-inline boolean_t boolean_value(object_t obj) { 
-  assert(is_boolean(obj));
-  return *(boolean_t *)obj.value; 
-}
+

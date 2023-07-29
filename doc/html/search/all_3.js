@@ -1,6 +1,24 @@
 var searchData=
 [
-  ['evaluation_5fexpr_0',['evaluation_expr',['../structevaluation__expr.html',1,'']]],
-  ['expr_1',['expr',['../structexpr.html',1,'']]],
-  ['expr_5fvtable_2',['expr_vtable',['../structexpr__vtable.html',1,'']]]
+  ['data_5fexpr_0',['data_expr',['../structdata__expr.html',1,'']]],
+  ['data_5fexpr_2eh_1',['data_expr.h',['../data__expr_8h.html',1,'']]],
+  ['definition_5fexpr_2',['definition_expr',['../structdefinition__expr.html',1,'']]],
+  ['definition_5fexpr_2eh_3',['definition_expr.h',['../definition__expr_8h.html',1,'']]],
+  ['delete_5flist_4',['delete_list',['../utils_2list_8h.html#a9ef6ebfdb116cbc7143fe49bea79bf94',1,'list.c']]],
+  ['delete_5fparse_5ftree_5',['delete_parse_tree',['../parser_8h.html#aa00b4a8dced19c2c522d94cbdf99fbe0',1,'parser.c']]],
+  ['delete_5fstack_5fframe_6',['delete_stack_frame',['../stack__frame_8h.html#a0d9cf5541481222983a3be39af7a376d',1,'stack_frame.c']]],
+  ['delete_5ftoken_5flist_7',['delete_token_list',['../scanner_8h.html#ae50c405a9f7c1713e16e2462c164d424',1,'scanner.c']]],
+  ['delete_5fvariable_8',['delete_variable',['../variable_8h.html#a6c2d271c54e1dfa34cad127c758e2f10',1,'variable.c']]],
+  ['destroy_5fboolean_9',['destroy_boolean',['../types_2boolean_8h.html#a0b0faab0a4f7686da2f9514471952857',1,'boolean.c']]],
+  ['destroy_5ferror_10',['destroy_error',['../error_8h.html#a0727842454f03cf5528ba91f681bfd8c',1,'error.c']]],
+  ['destroy_5finteger_11',['destroy_integer',['../integer_8h.html#a1119d950bce9a4a424b2be4ef6032c42',1,'integer.c']]],
+  ['destroy_5flist_12',['destroy_list',['../utils_2list_8h.html#a1b254c2a5c7521bf6bc2ac0772793392',1,'list.c']]],
+  ['destroy_5fobject_13',['destroy_object',['../types_2object_8h.html#add21e680425eac3bde1c4ed7fb33758e',1,'object.c']]],
+  ['destroy_5fpair_14',['destroy_pair',['../pair_8h.html#a7729d994eab4296b13a0171c82400c52',1,'pair.c']]],
+  ['destroy_5fprocedure_15',['destroy_procedure',['../procedure_8h.html#a4ada27faf1d57dd0a9d586e570bc9110',1,'procedure.c']]],
+  ['destroy_5freal_16',['destroy_real',['../real_8h.html#adabfc944d48a412f9430711fac46d41d',1,'real.c']]],
+  ['destroy_5fstack_5fframe_17',['destroy_stack_frame',['../stack__frame_8h.html#acc3cdc2cf8a4fb1499053d15fdca313a',1,'stack_frame.c']]],
+  ['destroy_5fstring_18',['destroy_string',['../string_8h.html#ad3557addfeb53b4cb603d348cc27f699',1,'string.c']]],
+  ['destroy_5fvoid_19',['destroy_void',['../void_8h.html#aa8e76d9186b9848bcc618bad99039390',1,'void.c']]],
+  ['display_2eh_20',['display.h',['../display_8h.html',1,'']]]
 ];
