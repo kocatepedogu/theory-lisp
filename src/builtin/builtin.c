@@ -27,11 +27,15 @@
 #include "../expressions/expression.h"
 #include "../utils/heap-format.h"
 #include "eval.h"
+#include "object.h"
+
+#define MAX_PN_ARITY 2048
 
 const builtin_function builtin_functions[] = {
     {"include", builtin_include, 1},
-    {"display", builtin_display, 1, true},
-    {"=", builtin_equals, 1, true},
+    {"display", builtin_display, 1, 1, true},
+    {"=", builtin_equals, 1, 2, true},
+    {"!=", builtin_not_equals, 1, 2, true},
     {"<", builtin_less, 2},
     {"<=", builtin_less_or_eq, 2},
     {">", builtin_greater, 2},
@@ -45,20 +49,20 @@ const builtin_function builtin_functions[] = {
     {"string?", builtin_is_string, 1},
     {"pair?", builtin_is_pair, 1},
     {"procedure?", builtin_is_procedure, 1},
-    {"+", builtin_add, 0, true},
-    {"*", builtin_mul, 0, true},
-    {"-", builtin_sub, 1, true},
-    {"/", builtin_div, 1, true},
-    {"and", builtin_and, 0, true},
-    {"or", builtin_or, 0, true},
-    {"xor", builtin_xor, 0, true},
+    {"+", builtin_add, 0, 2, true},
+    {"*", builtin_mul, 0, 2, true},
+    {"-", builtin_sub, 1, 2, true},
+    {"/", builtin_div, 1, 2, true},
+    {"and", builtin_and, 0, 2, true},
+    {"or", builtin_or, 0, 2, true},
+    {"xor", builtin_xor, 0, 2, true},
     {"not", builtin_not, 1},
     {"cons", builtin_cons, 2},
     {"car", builtin_car, 1},
     {"cdr", builtin_cdr, 1},
-    {"list", builtin_list, 0, true},
+    {"list", builtin_list, 0, MAX_PN_ARITY, true},
     {"strlen", builtin_strlen, 1},
-    {"strcat", builtin_strcat, 0, true},
+    {"strcat", builtin_strcat, 0, 2, true},
     {"charat", builtin_charat, 2},
     {"substr", builtin_substr, 3},
     {"strcar", builtin_strcar, 1},
@@ -101,7 +105,11 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
     }
 
     exprptr lambda = new_lambda_expr(lambda_body, f->variadic);
-    if (!f->variadic) {
+    if (f->variadic) {
+      lambda_expr_set_pn_arity(lambda, f->pn_arity);
+    }
+    else {
+      lambda_expr_set_pn_arity(lambda, f->arity);
       for (size_t i = 0; i < f->arity; i++) {
         char *id = heap_format("arg%ld", i);
         lambda_expr_add_param(lambda, id);
@@ -109,7 +117,7 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
       }
     }
 
-    object_t procedure = make_procedure(lambda, sf);
+    object_t procedure = make_procedure(lambda);
     stack_frame_set_global_variable(sf, f->name, procedure);
     destroy_object(procedure);
     delete_expr(lambda);

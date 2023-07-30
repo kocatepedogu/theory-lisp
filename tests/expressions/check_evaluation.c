@@ -5,6 +5,11 @@
 #include "../../src/expressions/lambda_expr.h"
 #include "parse.h"
 
+typedef struct {
+  exprptr procexpr;
+  listptr arguments;
+} evaluation_expr;
+
 START_TEST(test_empty_call_using_name) {
   exprptr e = NULL;
   parse(e, "(func)");
@@ -12,7 +17,7 @@ START_TEST(test_empty_call_using_name) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   assert_identifier(ee->procexpr, "func");
-  ck_assert_uint_eq(list_size(&ee->arguments), 0);
+  ck_assert_uint_eq(list_size(ee->arguments), 0);
 
   delete_expr(e);
 } END_TEST
@@ -24,7 +29,7 @@ START_TEST(test_call_using_name) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   assert_identifier(ee->procexpr, "+");
-  ck_assert_uint_eq(list_size(&ee->arguments), 3);
+  ck_assert_uint_eq(list_size(ee->arguments), 3);
 
   delete_expr(e);
 } END_TEST
@@ -36,7 +41,7 @@ START_TEST(test_call_using_name_complex_params) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   assert_identifier(ee->procexpr, "op");
-  ck_assert_uint_eq(list_size(&ee->arguments), 2);
+  ck_assert_uint_eq(list_size(ee->arguments), 2);
 
   delete_expr(e);
 } END_TEST
@@ -48,7 +53,7 @@ START_TEST(test_empty_call_using_expr) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   ck_assert(is_let_expr(ee->procexpr));
-  ck_assert_uint_eq(list_size(&ee->arguments), 0);
+  ck_assert_uint_eq(list_size(ee->arguments), 0);
 
   delete_expr(e);
 } END_TEST
@@ -60,7 +65,7 @@ START_TEST(test_call_using_expr) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   ck_assert(is_lambda_expr(ee->procexpr));
-  ck_assert_uint_eq(list_size(&ee->arguments), 5);
+  ck_assert_uint_eq(list_size(ee->arguments), 5);
 
   delete_expr(e);
 } END_TEST
@@ -76,7 +81,7 @@ START_TEST(test_call_using_expr_complex_params) {
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;
   ck_assert(is_lambda_expr(ee->procexpr));
-  ck_assert_uint_eq(list_size(&ee->arguments), 3);
+  ck_assert_uint_eq(list_size(ee->arguments), 3);
 
   delete_expr(e);
 } END_TEST

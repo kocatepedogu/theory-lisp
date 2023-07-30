@@ -101,28 +101,44 @@ $(document).ready(function(){initNavTree('interpreter_8h.html',''); initResizabl
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a40d14b52170d5ba37cc94f102f9c0f23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interpreter_8h.html#a40d14b52170d5ba37cc94f102f9c0f23">interpreter</a> (<a class="el" href="structlist.html">list</a> *parse_tree, bool verbose)</td></tr>
-<tr class="memdesc:a40d14b52170d5ba37cc94f102f9c0f23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a list of expressions and interprets them one by one.  <a href="interpreter_8h.html#a40d14b52170d5ba37cc94f102f9c0f23">More...</a><br /></td></tr>
-<tr class="separator:a40d14b52170d5ba37cc94f102f9c0f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa25fe6599b42d2e514e02e9eef8fd6c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interpreter_8h.html#aa25fe6599b42d2e514e02e9eef8fd6c5">interpreter</a> (<a class="el" href="structlist.html">listptr</a> parse_tree, bool verbose, bool show, <a class="el" href="structstack__frame.html">stack_frame_ptr</a> sf)</td></tr>
+<tr class="memdesc:aa25fe6599b42d2e514e02e9eef8fd6c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a list of expressions and interprets them one by one.  <a href="interpreter_8h.html#aa25fe6599b42d2e514e02e9eef8fd6c5">More...</a><br /></td></tr>
+<tr class="separator:aa25fe6599b42d2e514e02e9eef8fd6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aa2be530777272433e9ff100eba2e35"><td class="memItemLeft" align="right" valign="top"><a id="a4aa2be530777272433e9ff100eba2e35" name="a4aa2be530777272433e9ff100eba2e35"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>repl</b> (<a class="el" href="structstack__frame.html">stack_frame_ptr</a> sf)</td></tr>
+<tr class="memdesc:a4aa2be530777272433e9ff100eba2e35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read-Evaluate-Print-Loop. <br /></td></tr>
+<tr class="separator:a4aa2be530777272433e9ff100eba2e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a40d14b52170d5ba37cc94f102f9c0f23" name="a40d14b52170d5ba37cc94f102f9c0f23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40d14b52170d5ba37cc94f102f9c0f23">&#9670;&nbsp;</a></span>interpreter()</h2>
+<a id="aa25fe6599b42d2e514e02e9eef8fd6c5" name="aa25fe6599b42d2e514e02e9eef8fd6c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa25fe6599b42d2e514e02e9eef8fd6c5">&#9670;&nbsp;</a></span>interpreter()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void interpreter </td>
+          <td class="memname"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> interpreter </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structlist.html">list</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structlist.html">listptr</a>&#160;</td>
           <td class="paramname"><em>parse_tree</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>verbose</em>&#160;</td>
+          <td class="paramname"><em>verbose</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structstack__frame.html">stack_frame_ptr</a>&#160;</td>
+          <td class="paramname"><em>sf</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

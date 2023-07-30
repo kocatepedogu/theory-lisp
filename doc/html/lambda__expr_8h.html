@@ -92,7 +92,6 @@ $(document).ready(function(){initNavTree('lambda__expr_8h.html',''); initResizab
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">lambda_expr.h File Reference</div></div>
@@ -101,11 +100,6 @@ $(document).ready(function(){initNavTree('lambda__expr_8h.html',''); initResizab
 
 <p><a href="lambda__expr_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlambda__expr.html">lambda_expr</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a81742f0e511b9fd646c0e315486294c9"><td class="memItemLeft" align="right" valign="top"><a id="a81742f0e511b9fd646c0e315486294c9" name="a81742f0e511b9fd646c0e315486294c9"></a>
@@ -126,24 +120,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroy_lambda_expr</
 <tr class="memitem:abc601b82a988a891b7b2b5c5001c91b7"><td class="memItemLeft" align="right" valign="top"><a id="abc601b82a988a891b7b2b5c5001c91b7" name="abc601b82a988a891b7b2b5c5001c91b7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_lambda_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:abc601b82a988a891b7b2b5c5001c91b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9145686d642bbfaab68994cb8d397ccb"><td class="memItemLeft" align="right" valign="top"><a id="a9145686d642bbfaab68994cb8d397ccb" name="a9145686d642bbfaab68994cb8d397ccb"></a>
+<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clone_lambda_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
+<tr class="separator:a9145686d642bbfaab68994cb8d397ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a807ceeee232d3c9e2be8c67ed2c524e6"><td class="memItemLeft" align="right" valign="top"><a id="a807ceeee232d3c9e2be8c67ed2c524e6" name="a807ceeee232d3c9e2be8c67ed2c524e6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_expr_add_param</b> (<a class="el" href="structexpr.html">exprptr</a> e, const char *name)</td></tr>
 <tr class="separator:a807ceeee232d3c9e2be8c67ed2c524e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f3c7935f5f6de931632cdf2d6374cd"><td class="memItemLeft" align="right" valign="top"><a id="a86f3c7935f5f6de931632cdf2d6374cd" name="a86f3c7935f5f6de931632cdf2d6374cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_expr_set_pn_arity</b> (<a class="el" href="structexpr.html">exprptr</a> e, size_t arity)</td></tr>
+<tr class="separator:a86f3c7935f5f6de931632cdf2d6374cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0355491b355f1b4c281a3137f1cb515"><td class="memItemLeft" align="right" valign="top"><a id="ad0355491b355f1b4c281a3137f1cb515" name="ad0355491b355f1b4c281a3137f1cb515"></a>
 char *&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_expr_tostring</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:ad0355491b355f1b4c281a3137f1cb515"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05ada18692b10c56c5699323c7fa6c86"><td class="memItemLeft" align="right" valign="top"><a id="a05ada18692b10c56c5699323c7fa6c86" name="a05ada18692b10c56c5699323c7fa6c86"></a>
-<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_expr_parse</b> (<a class="el" href="structlist.html">list</a> *tokens, int *index)</td></tr>
-<tr class="separator:a05ada18692b10c56c5699323c7fa6c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af00c5b01a8e026b9c1cc259b9760e7bc"><td class="memItemLeft" align="right" valign="top"><a id="af00c5b01a8e026b9c1cc259b9760e7bc" name="af00c5b01a8e026b9c1cc259b9760e7bc"></a>
+<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_expr_parse</b> (<a class="el" href="structlist.html">listptr</a> tokens, int *index)</td></tr>
+<tr class="separator:af00c5b01a8e026b9c1cc259b9760e7bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02dd55998ee12dcb6f6d922d906896c3"><td class="memItemLeft" align="right" valign="top"><a id="a02dd55998ee12dcb6f6d922d906896c3" name="a02dd55998ee12dcb6f6d922d906896c3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_lambda_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:a02dd55998ee12dcb6f6d922d906896c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12d021a71e0942df102c7a97701e381f"><td class="memItemLeft" align="right" valign="top"><a id="a12d021a71e0942df102c7a97701e381f" name="a12d021a71e0942df102c7a97701e381f"></a>
 <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>interpret_lambda</b> (<a class="el" href="structexpr.html">exprptr</a> e, <a class="el" href="structstack__frame.html">stack_frame_ptr</a> sf)</td></tr>
 <tr class="separator:a12d021a71e0942df102c7a97701e381f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18d64dbac8e74c3915415ae830891cd9"><td class="memItemLeft" align="right" valign="top"><a id="a18d64dbac8e74c3915415ae830891cd9" name="a18d64dbac8e74c3915415ae830891cd9"></a>
-<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>call_lambda</b> (<a class="el" href="structexpr.html">exprptr</a> e, size_t number_of_args, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> *args, <a class="el" href="structstack__frame.html">stack_frame_ptr</a> sf)</td></tr>
-<tr class="separator:a18d64dbac8e74c3915415ae830891cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f5ec1a53f7e4efa08b59279c40de46"><td class="memItemLeft" align="right" valign="top"><a id="a58f5ec1a53f7e4efa08b59279c40de46" name="a58f5ec1a53f7e4efa08b59279c40de46"></a>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>call_lambda</b> (<a class="el" href="structexpr.html">exprptr</a> lambda, <a class="el" href="structlist.html">listptr</a> closure, size_t number_of_args, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> *args, <a class="el" href="structstack__frame.html">stack_frame_ptr</a> sf)</td></tr>
+<tr class="separator:a58f5ec1a53f7e4efa08b59279c40de46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

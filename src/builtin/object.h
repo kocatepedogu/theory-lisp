@@ -26,6 +26,8 @@
 
 object_t builtin_equals(size_t n, object_t *args, stack_frame_ptr sf);
 
+object_t builtin_not_equals(size_t n, object_t *args, stack_frame_ptr sf);
+
 object_t builtin_less(size_t n, object_t *args, stack_frame_ptr sf);
 
 object_t builtin_less_or_eq(size_t n, object_t *args, stack_frame_ptr sf);

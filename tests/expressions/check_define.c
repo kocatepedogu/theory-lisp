@@ -5,6 +5,11 @@
 #include "../../src/types/integer.h"
 #include "parse.h"
 
+typedef struct {
+  char *name;
+  exprptr value;
+} definition_expr;
+
 START_TEST(test_define_parse_constant) {
   exprptr e = NULL;
   parse(e, "(define x 3)");

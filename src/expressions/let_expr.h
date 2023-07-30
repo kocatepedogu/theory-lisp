@@ -28,47 +28,29 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* (var val) */
-typedef struct {
-  char *name;
-  exprptr value;
-} var_declaration;
-
-/* (let ((var1 val1) (var2 val2) ...) (body)) */
-typedef struct {
-  list declarations; /* list of var_declaration*'s */
-  exprptr body;
-} let_expr;
-
-/* let_expr constructor */
-void construct_let_expr(exprptr e, exprptr body);
-
 /* let_expr "new" operation */
 exprptr new_let_expr(exprptr body);
 
-/* let_expr destructor */
-void destroy_let_expr(exprptr e);
-
 /* let_expr "delete" operation */
-void delete_let_expr(exprptr e);
+void delete_let_expr(exprptr self);
 
 /* let_expr clone */
-exprptr clone_let_expr(exprptr e);
+exprptr clone_let_expr(exprptr self);
 
 /* adds a variable declaration to the let block */
 void let_expr_add_declaration(exprptr let_expr, const char *name, 
     exprptr expr);
 
 /* let_expr tostring implementation */
-char *let_expr_tostring(exprptr e);
+char *let_expr_tostring(exprptr self);
 
 /* let_expr parser */
-exprptr let_expr_parse(list *tokens, int *index);
+exprptr let_expr_parse(listptr tokens, int *index);
 
 /* true if e is let_expr */
 bool is_let_expr(exprptr e);
 
 /* evaluates let expression */
-object_t interpret_let(exprptr e, stack_frame_ptr sf);
+object_t interpret_let(exprptr self, stack_frame_ptr sf);
 
 #endif

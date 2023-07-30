@@ -4,13 +4,22 @@
 #include "../../src/expressions/cond_expr.h"
 #include "../../src/expressions/evaluation_expr.h"
 
+typedef struct {
+  exprptr condition;
+  exprptr true_case;
+} cond_case;
+
+typedef struct {
+  listptr cases;
+} cond_expr;
+
 START_TEST(test_empty) {
   exprptr e = NULL;
   parse(e, "(cond)");
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;
-  ck_assert_uint_eq(list_size(&ce->cases), 0);
+  ck_assert_uint_eq(list_size(ce->cases), 0);
 
   delete_expr(e);
 } END_TEST
@@ -21,13 +30,13 @@ START_TEST(test_constant_cond_constant_expr) {
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;
-  ck_assert_uint_eq(list_size(&ce->cases), 2);
+  ck_assert_uint_eq(list_size(ce->cases), 2);
 
-  cond_case *cc1 = list_get(&ce->cases, 0);
+  cond_case *cc1 = list_get(ce->cases, 0);
   assert_boolean(cc1->condition, true);
   assert_integer(cc1->true_case, 10);
 
-  cond_case *cc2 = list_get(&ce->cases, 1);
+  cond_case *cc2 = list_get(ce->cases, 1);
   assert_boolean(cc2->condition, false);
   assert_integer(cc2->true_case, 20);
 
@@ -40,13 +49,13 @@ START_TEST(test_constant_cond_arbitrary_expr) {
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;
-  ck_assert_uint_eq(list_size(&ce->cases), 2);
+  ck_assert_uint_eq(list_size(ce->cases), 2);
 
-  cond_case *cc1 = list_get(&ce->cases, 0);
+  cond_case *cc1 = list_get(ce->cases, 0);
   assert_boolean(cc1->condition, false);
   ck_assert(is_evaluation_expr(cc1->true_case));
   
-  cond_case *cc2 = list_get(&ce->cases, 1);
+  cond_case *cc2 = list_get(ce->cases, 1);
   assert_boolean(cc2->condition, true);
   ck_assert(is_let_expr(cc2->true_case));
 
@@ -59,17 +68,17 @@ START_TEST(test_arbitrary_cond_constant_expr) {
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;
-  ck_assert_uint_eq(list_size(&ce->cases), 3);
+  ck_assert_uint_eq(list_size(ce->cases), 3);
 
-  cond_case *cc1 = list_get(&ce->cases, 0);
+  cond_case *cc1 = list_get(ce->cases, 0);
   assert_integer(cc1->true_case, 10);
   ck_assert(is_evaluation_expr(cc1->condition));
 
-  cond_case *cc2 = list_get(&ce->cases, 1);
+  cond_case *cc2 = list_get(ce->cases, 1);
   assert_integer(cc2->true_case, 15);
   ck_assert(is_evaluation_expr(cc2->condition));
 
-  cond_case *cc3 = list_get(&ce->cases, 2);
+  cond_case *cc3 = list_get(ce->cases, 2);
   assert_integer(cc3->true_case, 20);
   ck_assert(is_evaluation_expr(cc3->condition));
 
@@ -84,17 +93,17 @@ START_TEST(test_arbitrary_cond_arbitrary_expr) {
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;
-  ck_assert_uint_eq(list_size(&ce->cases), 3);
+  ck_assert_uint_eq(list_size(ce->cases), 3);
 
-  cond_case *cc1 = list_get(&ce->cases, 0);
+  cond_case *cc1 = list_get(ce->cases, 0);
   ck_assert(is_evaluation_expr(cc1->condition));
   ck_assert(is_evaluation_expr(cc1->true_case));
 
-  cond_case *cc2 = list_get(&ce->cases, 1);
+  cond_case *cc2 = list_get(ce->cases, 1);
   ck_assert(is_let_expr(cc2->condition));
   ck_assert(is_evaluation_expr(cc2->true_case));
 
-  cond_case *cc3 = list_get(&ce->cases, 2);
+  cond_case *cc3 = list_get(ce->cases, 2);
   assert_identifier(cc3->condition, "bool_variable");
   ck_assert(is_evaluation_expr(cc3->true_case));
 

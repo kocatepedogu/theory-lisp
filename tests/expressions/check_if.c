@@ -6,6 +6,12 @@
 #include "../../src/types/boolean.h"
 #include "parse.h"
 
+typedef struct {
+  exprptr condition;
+  exprptr true_case;
+  exprptr false_case;
+} if_expr;
+
 START_TEST(test_if) {
   exprptr e = NULL;
   parse(e, "(if #t 10 20.0)");

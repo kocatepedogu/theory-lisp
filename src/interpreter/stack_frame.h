@@ -27,33 +27,21 @@
 /**
  * A container for local variables
  */
-typedef struct stack_frame {
-  list local_variables;
-  struct stack_frame *saved_frame_pointer;
-} stack_frame_t;
 
-typedef stack_frame_t *stack_frame_ptr;
+struct stack_frame;
+typedef struct stack_frame *stack_frame_ptr;
 
 /**
- * Constructs an empty stack frame with no variables.
+ * Allocates a stack frame.
  * The member saved_frame_pointer is set to the given previous frame.
  * Previous should be NULL if a global stack frame is constructed.
- */
-void construct_stack_frame(stack_frame_ptr sf, stack_frame_ptr previous);
-
-/**
- * Allocates a stack frame and calls stack frame constructor
  */
 stack_frame_ptr new_stack_frame(stack_frame_ptr previous);
 
 /**
- * Stack frame destructor. Local variables in the stack frame are deallocated.
+ * Deallocates a stack frame.
+ * Local variables in the stack frame are deallocated.
  * It has no effect on the variables of previous stack frames.
- */
-void destroy_stack_frame(stack_frame_ptr sf);
-
-/**
- * Calls stack frame destructor and free()'s the given pointer.
  */
 void delete_stack_frame(stack_frame_ptr sf);
 

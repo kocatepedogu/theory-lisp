@@ -16,24 +16,20 @@ START_TEST(test_list_simple)
   char *third_string = malloc(sizeof(THIRD_STRING));
   memcpy(third_string, THIRD_STRING, sizeof(THIRD_STRING));
 
-  list *lst = new_list();
+  listptr lst = new_list();
   ck_assert_uint_eq(list_size(lst), 0);
-  ck_assert_uint_ge(lst->capacity, list_size(lst));
   list_add(lst, strdup("first string"));
   ck_assert_str_eq(list_get(lst, 0), first_string);
   ck_assert_uint_eq(list_size(lst), 1);
-  ck_assert_uint_ge(lst->capacity, list_size(lst));
   list_add(lst, strdup("second string"));
   ck_assert_str_eq(list_get(lst, 0), first_string);
   ck_assert_str_eq(list_get(lst, 1), second_string);
   ck_assert_uint_eq(list_size(lst), 2);
-  ck_assert_uint_ge(lst->capacity, list_size(lst));
   list_add(lst, strdup("third string"));
   ck_assert_str_eq(list_get(lst, 0), first_string);
   ck_assert_str_eq(list_get(lst, 1), second_string);
   ck_assert_str_eq(list_get(lst, 2), third_string);
   ck_assert_uint_eq(list_size(lst), 3);
-  ck_assert_uint_ge(lst->capacity, list_size(lst));
 
   free(first_string);
   free(second_string);
@@ -46,8 +42,8 @@ END_TEST
 #define SECOND_LIST_SIZE 10
 
 START_TEST(test_list_add_all) {
-  list *first_list = new_list();
-  list *second_list = new_list();
+  listptr first_list = new_list();
+  listptr second_list = new_list();
 
   for (int i = 0; i < FIRST_LIST_SIZE; i++) {
     int *new_int = (int *)malloc(sizeof(int));

@@ -28,46 +28,29 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* ((cond) expr-if-cond) */
-typedef struct {
-  exprptr condition;
-  exprptr true_case;
-} cond_case;
-
-/* (cond ((cond1) expr-if-cond1) ((cond2) expr-if-cond2) ... ) */
-typedef struct {
-  list cases; /* list of cond_case*'s */
-} cond_expr; 
-
-/* cond_expr constructor */
-void construct_cond_expr(exprptr e);
-
 /* "new" operation for cond_expr */
 exprptr new_cond_expr(void);
 
-/* cond_expr destructor */
-void destroy_cond_expr(exprptr e);
-
 /* "delete" operation for cond_expr */
-void delete_cond_expr(exprptr e);
+void delete_cond_expr(exprptr self);
 
 /* clone for cond_expr */
-exprptr clone_cond_expr(exprptr e);
+exprptr clone_cond_expr(exprptr self);
 
 /* adds a new case to cond_expr */
-void cond_expr_add_case(exprptr e, exprptr condition,
+void cond_expr_add_case(exprptr self, exprptr condition,
     exprptr true_case);
 
 /* cond_expr tostring implementation */
-char *cond_expr_tostring(exprptr e);
+char *cond_expr_tostring(exprptr self);
 
 /* cond_expr parser */
-exprptr cond_expr_parse(list *tokens, int *index);
+exprptr cond_expr_parse(listptr tokens, int *index);
 
 /* true if e is cond_expr */
 bool is_cond_expr(exprptr e);
 
 /* evaluates cond expression */
-object_t interpret_cond(exprptr e, stack_frame_ptr sf);
+object_t interpret_cond(exprptr self, stack_frame_ptr sf);
 
 #endif

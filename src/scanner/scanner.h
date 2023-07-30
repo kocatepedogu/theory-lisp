@@ -52,6 +52,12 @@ typedef enum {
   TOKEN_LEFT_SQUARE_BRACKET,
   /// ]
   TOKEN_RIGHT_SQUARE_BRACKET,
+  /// {
+  TOKEN_LEFT_CURLY_BRACKET,
+  /// }
+  TOKEN_RIGHT_CURLY_BRACKET,
+  /// "\"
+  TOKEN_BACKSLASH,
   /// cond
   TOKEN_COND,
   /// define
@@ -90,7 +96,7 @@ typedef struct {
  * If an error occurs during scanning, the constructed portion of the list is
  * deallocated and NULL is returned.
  */
-list *scanner(const char *input);
+listptr scanner(const char *input);
 
 /**
  * Returns the string representation of a token.
@@ -100,6 +106,6 @@ list *scanner(const char *input);
 char *token_tostring(token_t *token);
 
 /** Deallocates all tokens from the given token list and then deletes the list itself. */
-void delete_token_list(list* token_list);
+void delete_token_list(listptr token_list);
 
 #endif

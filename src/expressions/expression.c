@@ -31,6 +31,7 @@
 #include "if_expr.h"
 #include "lambda_expr.h"
 #include "let_expr.h"
+#include "pn_expr.h"
 #include "../parser/parser.h"
 
 #include "../types/null.h"
@@ -45,33 +46,46 @@
 #define ERR_INVALID_TOKEN "Invalid token"
 #define ERR_UNMATCHED_PARENTHESIS "Unmatched parenthesis"
 
-/* destroys and expression */
-void destroy_expr(exprptr e) { 
-  if (e != NULL) {
-    e->vtable->destructor(e); 
-  }
+/* base constructor */
+exprptr new_expr(void *data, const expr_vtable *vtable, const char *expr_name,
+                 size_t line_number, size_t column_number) {
+  exprptr e = (exprptr)malloc(sizeof(expr_t));
+  e->data = data;
+  e->vtable = vtable;
+  e->expr_name = expr_name;
+  e->line_number = line_number;
+  e->column_number = column_number;
+  return e;
+}
+
+/* base clone */
+exprptr base_clone(exprptr other, void *new_data) {
+  exprptr e = (exprptr)malloc(sizeof(expr_t));
+  *e = *other;
+  e->data = new_data;
+  return e;
 }
 
 /* destroys and deallocates an expression */
-void delete_expr(exprptr e) {
-  if (e != NULL) {
-    e->vtable->deallocate(e); 
+void delete_expr(exprptr self) {
+  if (self != NULL) {
+    self->vtable->deallocate(self); 
   }
 }
 
 /* clones an expression */
-exprptr clone_expr(exprptr e) {
-  if (e != NULL) {
-    return e->vtable->clone(e);
+exprptr clone_expr(exprptr self) {
+  if (self != NULL) {
+    return self->vtable->clone(self);
   }
   return NULL;
 }
 
 /* Returns string representation of an expression */
-char *expr_tostring(exprptr e) { return e->vtable->to_string(e); }
+char *expr_tostring(exprptr self) { return self->vtable->to_string(self); }
 
 /* Parses an expression that starts with a left parenthesis */
-static exprptr parenthesized_expr_parse(list *tokens, int *index) {
+static exprptr parenthesized_expr_parse(listptr tokens, int *index) {
   token_t *next_tkn = list_get(tokens, *index);
   size_t line = next_tkn->line;
   size_t column = next_tkn->column;
@@ -107,6 +121,7 @@ static exprptr parenthesized_expr_parse(list *tokens, int *index) {
       subexpr = cond_expr_parse(tokens, index);
       break;
     case TOKEN_LEFT_PARENTHESIS:
+    case TOKEN_LEFT_CURLY_BRACKET:
     case TOKEN_IDENTIFIER:
     case TOKEN_STRING:
     case TOKEN_INTEGER:
@@ -129,7 +144,7 @@ static exprptr parenthesized_expr_parse(list *tokens, int *index) {
 }
 
 /* Parses an arbitrary expression */
-exprptr expr_parse(list *tokens, int *index) {
+exprptr expr_parse(listptr tokens, int *index) {
   token_t *tkn = list_get(tokens, (*index)++);
   size_t line = tkn->line;
   size_t column = tkn->column;
@@ -142,6 +157,9 @@ exprptr expr_parse(list *tokens, int *index) {
   }
   if (tkn->type == TOKEN_LEFT_PARENTHESIS) {
     return parenthesized_expr_parse(tokens, index);
+  }
+  if (tkn->type == TOKEN_LEFT_CURLY_BRACKET) {
+    return pn_expr_parse(tokens, index);
   }
   if (tkn->type == TOKEN_AMPERSAND) {
     exprptr inner = expr_parse(tokens, index);
@@ -199,6 +217,6 @@ exprptr expr_parse(list *tokens, int *index) {
 }
 
 /* interpretes an arbitrary expression */
-object_t interpret_expr(exprptr e, stack_frame_ptr sf) {
-  return e->vtable->interpret(e, sf);
+object_t interpret_expr(exprptr self, stack_frame_ptr sf) {
+  return self->vtable->interpret(self, sf);
 }

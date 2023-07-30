@@ -37,81 +37,80 @@
 #define ERR_NO_RIGHT_PARENTHESIS \
   "In cond expression, there is no right parenthesis at the end of case"
 
-static const expr_vtable cond_expr_vtable = {.destructor = destroy_cond_expr,
-                                             .deallocate = delete_cond_expr,
-					     .clone = clone_cond_expr,
+
+
+static const expr_vtable cond_expr_vtable = {.deallocate = delete_cond_expr,
+					                                   .clone = clone_cond_expr,
                                              .to_string = cond_expr_tostring,
                                              .interpret = interpret_cond};
 
+/* ((cond) expr-if-cond) */
+typedef struct {
+  exprptr condition;
+  exprptr true_case;
+} cond_case;
+
+/* (cond ((cond1) expr-if-cond1) ((cond2) expr-if-cond2) ... ) */
+typedef struct {
+  listptr cases; /* list of cond_case*'s */
+} cond_expr; 
+
 static const char cond_expr_name[] = "cond_expr";
 
-void construct_cond_expr(exprptr e) {
+exprptr new_cond_expr(void) {
   cond_expr *ce = (cond_expr *)malloc(sizeof(cond_expr));
-  construct_list(&ce->cases);
+  ce->cases = new_list();
+
+  exprptr e = (exprptr)malloc(sizeof(expr_t));
   e->data = ce;
   e->vtable = &cond_expr_vtable;
   e->expr_name = cond_expr_name;
-}
-
-exprptr new_cond_expr(void) {
-  exprptr e = (exprptr)malloc(sizeof(expr_t));
-  construct_cond_expr(e);
   return e;
 }
 
-void destroy_cond_expr(exprptr e) {
-  cond_expr *ce = e->data;
-  for (int i = 0; i < list_size(&ce->cases); i++) {
-    cond_case *c = (cond_case *)list_get(&ce->cases, i);
+void delete_cond_expr(exprptr self) {
+  cond_expr *ce = self->data;
+  for (size_t i = 0; i < list_size(ce->cases); i++) {
+    cond_case *c = (cond_case *)list_get(ce->cases, i);
     delete_expr(c->condition);
     delete_expr(c->true_case);
     free(c);
   }
-  destroy_list(&ce->cases);
+  delete_list(ce->cases);
   free(ce);
-}
-
-void delete_cond_expr(exprptr e) {
-  destroy_cond_expr(e);
-  free(e);
+  free(self);
 }
 
 exprptr clone_cond_expr(exprptr self) {
   cond_expr *new_ce = (cond_expr *)malloc(sizeof(cond_expr));
-  construct_list(&new_ce->cases);
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = new_ce;
-  new_expr->vtable = &cond_expr_vtable;
-  new_expr->expr_name = cond_expr_name;
-  new_expr->line_number = self->line_number;
-  new_expr->column_number = self->column_number;
-
+  new_ce->cases = new_list();
+  
   cond_expr *self_ce = self->data;
-  for (int i = 0; i < list_size(&self_ce->cases); i++) {
-    cond_case *self_case = list_get(&self_ce->cases, i);
+  for (size_t i = 0; i < list_size(self_ce->cases); i++) {
+    cond_case *self_case = list_get(self_ce->cases, i);
     cond_case *new_case = (cond_case *)malloc(sizeof(cond_case));
     new_case->condition = clone_expr(self_case->condition);
     new_case->true_case = clone_expr(self_case->true_case);
-    list_add(&new_ce->cases, new_case);
+    list_add(new_ce->cases, new_case);
   }
 
-  return new_expr;
+  return base_clone(self, new_ce);
 }
 
-void cond_expr_add_case(exprptr e, exprptr cond, exprptr true_case) {
-  cond_expr *ce = e->data;
+void cond_expr_add_case(exprptr self, exprptr cond, exprptr true_case) {
+  cond_expr *ce = self->data;
   cond_case *new_case = malloc(sizeof(cond_case));
   new_case->condition = cond;
   new_case->true_case = true_case;
-  list_add(&ce->cases, new_case);
+  list_add(ce->cases, new_case);
 }
 
-char *cond_expr_tostring(exprptr e) {
-  cond_expr *ce = e->data;
+char *cond_expr_tostring(exprptr self) {
+  cond_expr *ce = self->data;
   char *concatenated_cases = NULL;
-  for (int i = 0; i < list_size(&ce->cases); i++) {
+  for (size_t i = 0; i < list_size(ce->cases); i++) {
     /* Compute the string representation of the current case */
-    cond_case *c = (cond_case *)list_get(&ce->cases, i);
+    cond_case *c = (cond_case *)list_get(ce->cases, i);
     char *cond_str = expr_tostring(c->condition);
     char *true_case_str = expr_tostring(c->true_case);
     char *case_str = heap_format("(%s %s) ", cond_str, true_case_str);
@@ -133,7 +132,7 @@ char *cond_expr_tostring(exprptr e) {
   return result;
 }
 
-exprptr cond_expr_parse(list *tokens, int *index) {
+exprptr cond_expr_parse(listptr tokens, int *index) {
   token_t *cond_token = list_get(tokens, (*index)++);
   assert(cond_token->type == TOKEN_COND);
 
@@ -180,10 +179,10 @@ bool is_cond_expr(exprptr e) {
   return strcmp(e->expr_name, cond_expr_name) == 0;
 }
 
-object_t interpret_cond(exprptr e, stack_frame_ptr sf) {
-  cond_expr *ce = e->data;
-  for (size_t i = 0; i < list_size(&ce->cases); i++) {
-    cond_case *cc = list_get(&ce->cases, i);
+object_t interpret_cond(exprptr self, stack_frame_ptr sf) {
+  cond_expr *ce = self->data;
+  for (size_t i = 0; i < list_size(ce->cases); i++) {
+    cond_case *cc = list_get(ce->cases, i);
 
     object_t condition_result = interpret_expr(cc->condition, sf);
     if (is_error(condition_result)) {

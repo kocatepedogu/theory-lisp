@@ -28,46 +28,31 @@
 static const char expanded_expr_name[] = "expanded_expr";
 
 static const expr_vtable expanded_expr_vtable = {
-  .destructor = destroy_expanded_expr,
   .deallocate = delete_expanded_expr,
   .clone = clone_expanded_expr,
   .to_string = expanded_expr_tostring,
   .interpret = interpret_expanded_expr
 };
 
-void construct_expanded_expr(exprptr e, exprptr inner) {
-  e->data = inner;
-  e->vtable = &expanded_expr_vtable;
-  e->expr_name = expanded_expr_name;
-}
-
 exprptr new_expanded_expr(exprptr inner) {
   expr_t *ee = (expr_t *)malloc(sizeof(expr_t));
-  construct_expanded_expr(ee, inner);
+  ee->data = inner;
+  ee->vtable = &expanded_expr_vtable;
+  ee->expr_name = expanded_expr_name;
   return ee;
 }
 
-void destroy_expanded_expr(exprptr e) {
-  delete_expr(e->data);  
+void delete_expanded_expr(exprptr self) {
+  delete_expr(self->data);  
+  free(self);
 }
 
-void delete_expanded_expr(exprptr e) {
-  destroy_expanded_expr(e);
-  free(e);
+exprptr clone_expanded_expr(exprptr self) {
+  return base_clone(self, clone_expr(self->data));
 }
 
-exprptr clone_expanded_expr(exprptr e) {
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = clone_expr(e->data);
-  new_expr->vtable = &expanded_expr_vtable;
-  new_expr->expr_name = expanded_expr_name;
-  new_expr->line_number = e->line_number;
-  new_expr->column_number = e->column_number;
-  return new_expr;
-}
-
-char *expanded_expr_tostring(exprptr e) {
-  char *inner = expr_tostring(e->data);
+char *expanded_expr_tostring(exprptr self) {
+  char *inner = expr_tostring(self->data);
   char *result = heap_format("&%s", inner);
   free(inner);
   return result;
@@ -81,7 +66,7 @@ bool is_expanded_expression(exprptr e) {
   return strcmp(e->expr_name, expanded_expr_name) == 0;
 }
 
-object_t interpret_expanded_expr(exprptr e, stack_frame_ptr sf) {
+object_t interpret_expanded_expr(exprptr self, stack_frame_ptr sf) {
   return make_error("An expanded expression can be evaluated only "
                     "as an argument in a function evaluation expression");
 }

@@ -1,4 +1,5 @@
 TESTS = check_list \
+        check_stack \
         check_format \
 	check_void \
 	check_boolean \
@@ -30,6 +31,9 @@ UTIL_DIR = $(SRC_DIR)/utils
 
 check_list_SOURCES = utils/check_list.c \
                      $(UTIL_DIR)/list.h
+
+check_stack_SOURCES = utils/check_stack.c \
+                      $(UTIL_DIR)/stack.h
 
 check_format_SOURCES = utils/check_format.c \
                        $(UTIL_DIR)/heap-format.h

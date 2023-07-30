@@ -31,67 +31,59 @@
 #define ERR_NOT_DEF_EXPR \
   "Not a define expression"
 
+/* (define name expr) */
+typedef struct {
+  char *name;
+  exprptr value;
+} definition_expr;
+
 static const char definition_expr_name[] = "definition_expr";
 
 static const expr_vtable definition_expr_vtable = {
   .deallocate = delete_definition_expr,
-  .destructor = destroy_definition_expr,
   .clone = clone_definition_expr,
   .to_string = definition_expr_tostring,
   .interpret = interpret_definition
 };
 
-void construct_definition_expr(exprptr e, const char *name, exprptr body) {
+exprptr new_definition_expr(const char *name, exprptr body) {
   definition_expr *de = (definition_expr *)malloc(sizeof(definition_expr));
   de->name = strdup(name);
   de->value = body;
+
+  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
   e->data = de;
   e->vtable = &definition_expr_vtable;
   e->expr_name = definition_expr_name;
-}
-
-exprptr new_definition_expr(const char *name, exprptr body) {
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  construct_definition_expr(e, name, body);
   return e;
 }
 
-void destroy_definition_expr(exprptr e) {
-  definition_expr *de = e->data;
+void delete_definition_expr(exprptr self) {
+  definition_expr *de = self->data;
   free(de->name);
   delete_expr(de->value);
   free(de);
+  free(self);
 }
 
-void delete_definition_expr(exprptr e) {
-  destroy_definition_expr(e);
-  free(e);
-}
-
-exprptr clone_definition_expr(exprptr e) {
-  definition_expr *self_de = e->data;
+exprptr clone_definition_expr(exprptr self) {
+  definition_expr *self_de = self->data;
   definition_expr *new_de = (definition_expr *)malloc(sizeof(definition_expr));
   new_de->name = strdup(self_de->name);
   new_de->value = clone_expr(self_de->value);
 
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = new_de;
-  new_expr->vtable = &definition_expr_vtable;
-  new_expr->expr_name = definition_expr_name;
-  new_expr->column_number = e->column_number;
-  new_expr->line_number = e->line_number;
-  return new_expr;
+  return base_clone(self, new_de);
 }
 
-char *definition_expr_tostring(exprptr e) {
-  definition_expr *de = e->data;
+char *definition_expr_tostring(exprptr self) {
+  definition_expr *de = self->data;
   char *body_str = expr_tostring(de->value);
   char *result = heap_format("(define %s %s)", de->name, body_str);
   free(body_str);
   return result;
 }
 
-exprptr definition_expr_parse(list *tokens, int *index) {
+exprptr definition_expr_parse(listptr tokens, int *index) {
   token_t *define_token = list_get(tokens, (*index)++);
   assert(define_token->type == TOKEN_DEFINE);
 
@@ -120,8 +112,8 @@ bool is_definition_expr(exprptr e) {
   return strcmp(definition_expr_name, e->expr_name) == 0; 
 }
 
-object_t interpret_definition(exprptr e, stack_frame_ptr sf) {
-  definition_expr *de = e->data;
+object_t interpret_definition(exprptr self, stack_frame_ptr sf) {
+  definition_expr *de = self->data;
   object_t value = interpret_expr(de->value, sf);
   if (is_error(value)) {
     return value;

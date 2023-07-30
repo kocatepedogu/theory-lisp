@@ -25,21 +25,14 @@
 #include "../interpreter/stack_frame.h"
 
 /* Procedure type */
-typedef void *procedure_t;
-
-typedef struct {
-  /// Expression obtained from parse tree
-  void *lambda;
-  /// List of variables that existed in the original environment
-  list closure;
-} proc_t;
+typedef void *lambda_t;
 
 /**
  * Procedure constructor.
  * No memory allocation occurs. Created object refers to the given lambda
  * expression in the parse tree.
  */
-object_t make_procedure(procedure_t proc, stack_frame_ptr sf);
+object_t make_procedure(lambda_t proc);
 
 /**
  * Procedure clone.
@@ -87,6 +80,37 @@ bool is_procedure(object_t obj);
 /**
  * Returns a pointer to the lambda expression pointed to by the procedure object.
  */
-proc_t *procedure_value(object_t obj);
+lambda_t procedure_get_lambda(object_t obj);
+
+/**
+ * Returns a pointer to the closure list of the procedure object.
+ */
+listptr procedure_get_closure(object_t obj);
+
+/**
+ * Returns PN arity of the lambda
+ */
+size_t procedure_get_pn_arity(object_t self);
+
+/**
+ * Returns arity of the lambda 
+ */
+size_t procedure_get_arity(object_t self);
+
+/**
+ * Returns whether explicit PN arity is given 
+ */
+bool procedure_is_pn_arity_given(object_t self);
+
+/**
+ * Returns whether the lambda is variadic
+ */
+bool procedure_is_variadic(object_t self);
+
+/**
+ * Adds a variable to the closure
+ */
+void procedure_add_closure_variable(object_t self, const char *name,
+                                    object_t value);
 
 #endif

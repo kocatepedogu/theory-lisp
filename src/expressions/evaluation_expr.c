@@ -47,74 +47,66 @@
 #define ERR_NOT_PROCEDURE "%s is not a procedure"
 #define ERR_EXPANDED_NOT_LIST "Expanded expression does not yield a list"
 
+/* (proc arg1 arg2 arg3 ...) */
+typedef struct {
+  exprptr procexpr;
+  listptr arguments; /* list of exprptr's */
+} evaluation_expr;
+
 static const char evaluation_expr_name[] = "evaluation_expr";
 
 static const expr_vtable evaluation_expr_vtable = {
     .deallocate = delete_evaluation_expr,
-    .destructor = destroy_evaluation_expr,
     .clone = clone_evaluation_expr,
     .to_string = evaluation_expr_tostring,
     .interpret = interpret_evaluation};
 
-void construct_evaluation_expr(exprptr e, exprptr proc) {
+exprptr new_evaluation_expr(exprptr proc) {
   evaluation_expr *ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
   ee->procexpr = proc;
-  construct_list(&ee->arguments);
+  ee->arguments = new_list();
+  
+  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
   e->data = ee;
   e->vtable = &evaluation_expr_vtable;
   e->expr_name = evaluation_expr_name;
-}
-
-exprptr new_evaluation_expr(exprptr proc) {
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  construct_evaluation_expr(e, proc);
   return e;
 }
 
-void destroy_evaluation_expr(exprptr e) {
-  evaluation_expr *expr = e->data;
+void delete_evaluation_expr(exprptr self) {
+  evaluation_expr *expr = self->data;
   delete_expr(expr->procexpr);
-  for (size_t i = 0; i < list_size(&expr->arguments); i++) {
-    delete_expr(list_get(&expr->arguments, i));
+  for (size_t i = 0; i < list_size(expr->arguments); i++) {
+    delete_expr(list_get(expr->arguments, i));
   }
-  destroy_list(&expr->arguments);
+  delete_list(expr->arguments);
   free(expr);
-}
-
-void delete_evaluation_expr(exprptr e) {
-  destroy_evaluation_expr(e);
-  free(e);
+  free(self);
 }
 
 exprptr clone_evaluation_expr(exprptr self) {
   evaluation_expr *self_ee = self->data;
   evaluation_expr *new_ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
   new_ee->procexpr = clone_expr(self_ee->procexpr);
-  construct_list(&new_ee->arguments);
-  for (size_t i = 0; i < list_size(&self_ee->arguments); i++) {
-    exprptr arg = list_get(&self_ee->arguments, i);
-    list_add(&new_ee->arguments, clone_expr(arg));
+  new_ee->arguments = new_list();
+  for (size_t i = 0; i < list_size(self_ee->arguments); i++) {
+    exprptr arg = list_get(self_ee->arguments, i);
+    list_add(new_ee->arguments, clone_expr(arg));
   }
 
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = new_ee;
-  new_expr->expr_name = evaluation_expr_name;
-  new_expr->vtable = &evaluation_expr_vtable;
-  new_expr->line_number = self->line_number;
-  new_expr->column_number = self->column_number;
-  return new_expr;
+  return base_clone(self, new_ee);
 }
 
-void evaluation_expr_add_arg(exprptr e, exprptr argument) {
-  evaluation_expr *ee = e->data;
-  list_add(&ee->arguments, argument);
+void evaluation_expr_add_arg(exprptr self, exprptr argument) {
+  evaluation_expr *ee = self->data;
+  list_add(ee->arguments, argument);
 }
 
-char *evaluation_expr_tostring(exprptr e) {
-  evaluation_expr *expr = e->data;
+char *evaluation_expr_tostring(exprptr self) {
+  evaluation_expr *expr = self->data;
   char *args = NULL;
-  for (int i = 0; i < list_size(&expr->arguments); i++) {
-    char *str = expr_tostring((exprptr)list_get(&expr->arguments, i));
+  for (size_t i = 0; i < list_size(expr->arguments); i++) {
+    char *str = expr_tostring((exprptr)list_get(expr->arguments, i));
     if (!args) {
       args = str;
     } else {
@@ -134,7 +126,7 @@ char *evaluation_expr_tostring(exprptr e) {
   return result;
 }
 
-exprptr evaluation_expr_parse(list *tokens, int *index) {
+exprptr evaluation_expr_parse(listptr tokens, int *index) {
   token_t *tkn = list_get(tokens, *index);
   if (tkn->type == TOKEN_INTEGER) {
     return parser_error(tkn->line, tkn->column, ERR_INT_AS_PROCEDURE,
@@ -178,11 +170,11 @@ bool is_evaluation_expr(exprptr e) {
   return strcmp(e->expr_name, evaluation_expr_name) == 0;
 }
 
-static object_t interpret_args(list *arglist, size_t *argsize,
+static object_t interpret_args(listptr arglist, size_t *argsize,
                                stack_frame_ptr sf, object_t **args) {
   object_t error = make_null();
 
-  list *evaluated_arglist = new_list();
+  listptr evaluated_arglist = new_list();
   for (size_t i = 0; i < list_size(arglist); i++) {
     exprptr expr = list_get(arglist, i);
 
@@ -229,17 +221,16 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
   bool is_builtin_call = false;
 
   if (is_identifier_expr(procexpr)) {
-    identifier_expr *ie = procexpr->data;
-
-    const builtin_function *func = find_builtin_function(ie->name);
+    const char *name = identifier_expr_get_name(procexpr);
+    const builtin_function *func = find_builtin_function(name);
     if (func) {
       is_builtin_call = true;
 
       if (func->variadic && func->arity > argsize) {
-        object_t error = make_error(ERR_ARITY_AT_LEAST, ie->name, func->arity, argsize);
+        object_t error = make_error(ERR_ARITY_AT_LEAST, name, func->arity, argsize);
         assign_object(result, error);
       } else if (!func->variadic && func->arity != argsize) {
-        object_t error = make_error(ERR_ARITY, ie->name, func->arity, argsize);
+        object_t error = make_error(ERR_ARITY, name, func->arity, argsize);
         assign_object(result, error);
       } else {
         assign_object(result, func->func(argsize, evaluated_args, sf));
@@ -265,17 +256,19 @@ static object_t interpret_lambda_call(exprptr procexpr, stack_frame_ptr sf,
     return result;
   }
 
-  object_t result = call_lambda(procedure_value(proc), args_size, args, sf);
+  exprptr lambda = procedure_get_lambda(proc);
+  listptr closure = procedure_get_closure(proc);
+  object_t result = call_lambda(lambda, closure, args_size, args, sf);
   destroy_object(proc);
   return result;
 }
 
-object_t interpret_evaluation(exprptr e, stack_frame_ptr sf) {
+object_t interpret_evaluation(exprptr self, stack_frame_ptr sf) {
   object_t result = make_null();
 
-  evaluation_expr *evaluation_expr = e->data;
+  evaluation_expr *evaluation_expr = self->data;
   exprptr proc = evaluation_expr->procexpr;
-  list *arglist = &evaluation_expr->arguments;
+  listptr arglist = evaluation_expr->arguments;
   size_t argsize = 0;
 
   object_t *args = NULL;

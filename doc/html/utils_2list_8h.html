@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('utils_2list_8h.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">utils/list.h File Reference</div></div>
 </div><!--header-->
@@ -100,87 +100,38 @@ $(document).ready(function(){initNavTree('utils_2list_8h.html',''); initResizabl
 
 <p><a href="utils_2list_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlist.html">list</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic list type that stores void* pointers.  <a href="structlist.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ae0630a6eec88353af46ad8877a86bc27"><td class="memItemLeft" align="right" valign="top"><a id="ae0630a6eec88353af46ad8877a86bc27" name="ae0630a6eec88353af46ad8877a86bc27"></a>
+typedef struct <a class="el" href="structlist.html">list</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>listptr</b></td></tr>
+<tr class="separator:ae0630a6eec88353af46ad8877a86bc27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afd635f542dabf96e3618f39f9975319b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_2list_8h.html#afd635f542dabf96e3618f39f9975319b">construct_list</a> (<a class="el" href="structlist.html">list</a> *lst)</td></tr>
-<tr class="memdesc:afd635f542dabf96e3618f39f9975319b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List constructor.  <a href="utils_2list_8h.html#afd635f542dabf96e3618f39f9975319b">More...</a><br /></td></tr>
-<tr class="separator:afd635f542dabf96e3618f39f9975319b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae91778720d306de61a477978d822753a"><td class="memItemLeft" align="right" valign="top"><a id="ae91778720d306de61a477978d822753a" name="ae91778720d306de61a477978d822753a"></a>
-<a class="el" href="structlist.html">list</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>new_list</b> (void)</td></tr>
-<tr class="memdesc:ae91778720d306de61a477978d822753a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a malloc'ed and initialized list. <br /></td></tr>
-<tr class="separator:ae91778720d306de61a477978d822753a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b254c2a5c7521bf6bc2ac0772793392"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_2list_8h.html#a1b254c2a5c7521bf6bc2ac0772793392">destroy_list</a> (<a class="el" href="structlist.html">list</a> *lst)</td></tr>
-<tr class="memdesc:a1b254c2a5c7521bf6bc2ac0772793392"><td class="mdescLeft">&#160;</td><td class="mdescRight">List destructor.  <a href="utils_2list_8h.html#a1b254c2a5c7521bf6bc2ac0772793392">More...</a><br /></td></tr>
-<tr class="separator:a1b254c2a5c7521bf6bc2ac0772793392"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ef6ebfdb116cbc7143fe49bea79bf94"><td class="memItemLeft" align="right" valign="top"><a id="a9ef6ebfdb116cbc7143fe49bea79bf94" name="a9ef6ebfdb116cbc7143fe49bea79bf94"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_list</b> (<a class="el" href="structlist.html">list</a> *lst)</td></tr>
-<tr class="memdesc:a9ef6ebfdb116cbc7143fe49bea79bf94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls list destructor and then free()'s the given list pointer. <br /></td></tr>
-<tr class="separator:a9ef6ebfdb116cbc7143fe49bea79bf94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad05c0e8c869e08ebb707739576e3b857"><td class="memItemLeft" align="right" valign="top"><a id="ad05c0e8c869e08ebb707739576e3b857" name="ad05c0e8c869e08ebb707739576e3b857"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>list_add</b> (<a class="el" href="structlist.html">list</a> *lst, void *element)</td></tr>
-<tr class="memdesc:ad05c0e8c869e08ebb707739576e3b857"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds element to given list. <br /></td></tr>
-<tr class="separator:ad05c0e8c869e08ebb707739576e3b857"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abecea0e2e31e54f34ed4eeef1b572e67"><td class="memItemLeft" align="right" valign="top"><a id="abecea0e2e31e54f34ed4eeef1b572e67" name="abecea0e2e31e54f34ed4eeef1b572e67"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>list_add_all</b> (<a class="el" href="structlist.html">list</a> *lst, <a class="el" href="structlist.html">list</a> *other)</td></tr>
-<tr class="memdesc:abecea0e2e31e54f34ed4eeef1b572e67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds all elements of another list to given list. <br /></td></tr>
-<tr class="separator:abecea0e2e31e54f34ed4eeef1b572e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f56f1706161bd25356b9887ffacf514"><td class="memItemLeft" align="right" valign="top"><a id="a4f56f1706161bd25356b9887ffacf514" name="a4f56f1706161bd25356b9887ffacf514"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>list_size</b> (<a class="el" href="structlist.html">list</a> *lst)</td></tr>
-<tr class="memdesc:a4f56f1706161bd25356b9887ffacf514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of elements in the given list. <br /></td></tr>
-<tr class="separator:a4f56f1706161bd25356b9887ffacf514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c7061bc4601cf99964b7cedd75713bb"><td class="memItemLeft" align="right" valign="top"><a id="a2c7061bc4601cf99964b7cedd75713bb" name="a2c7061bc4601cf99964b7cedd75713bb"></a>
-void *&#160;</td><td class="memItemRight" valign="bottom"><b>list_get</b> (<a class="el" href="structlist.html">list</a> *lst, size_t index)</td></tr>
-<tr class="separator:a2c7061bc4601cf99964b7cedd75713bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fee67726fb73239baa2a919182ccc02"><td class="memItemLeft" align="right" valign="top"><a id="a7fee67726fb73239baa2a919182ccc02" name="a7fee67726fb73239baa2a919182ccc02"></a>
+<a class="el" href="structlist.html">listptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>new_list</b> (void)</td></tr>
+<tr class="memdesc:a7fee67726fb73239baa2a919182ccc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a malloc'ed and initialized list. <br /></td></tr>
+<tr class="separator:a7fee67726fb73239baa2a919182ccc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a725b45c3f9c54c3a0ae9bfd29d5d61a8"><td class="memItemLeft" align="right" valign="top"><a id="a725b45c3f9c54c3a0ae9bfd29d5d61a8" name="a725b45c3f9c54c3a0ae9bfd29d5d61a8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_list</b> (<a class="el" href="structlist.html">listptr</a> lst)</td></tr>
+<tr class="memdesc:a725b45c3f9c54c3a0ae9bfd29d5d61a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls list destructor and then free()'s the given list pointer. <br /></td></tr>
+<tr class="separator:a725b45c3f9c54c3a0ae9bfd29d5d61a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6309f0e854fa3ed8a0ef6917509473a7"><td class="memItemLeft" align="right" valign="top"><a id="a6309f0e854fa3ed8a0ef6917509473a7" name="a6309f0e854fa3ed8a0ef6917509473a7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>list_add</b> (<a class="el" href="structlist.html">listptr</a> lst, void *element)</td></tr>
+<tr class="memdesc:a6309f0e854fa3ed8a0ef6917509473a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds element to given list. <br /></td></tr>
+<tr class="separator:a6309f0e854fa3ed8a0ef6917509473a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a68fca61cfac6dc9327fc671b0106a7"><td class="memItemLeft" align="right" valign="top"><a id="a0a68fca61cfac6dc9327fc671b0106a7" name="a0a68fca61cfac6dc9327fc671b0106a7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>list_add_all</b> (<a class="el" href="structlist.html">listptr</a> lst, <a class="el" href="structlist.html">listptr</a> other)</td></tr>
+<tr class="memdesc:a0a68fca61cfac6dc9327fc671b0106a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds all elements of another list to given list. <br /></td></tr>
+<tr class="separator:a0a68fca61cfac6dc9327fc671b0106a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1a1a2b4366afab82ef894a22c6ddecc"><td class="memItemLeft" align="right" valign="top"><a id="af1a1a2b4366afab82ef894a22c6ddecc" name="af1a1a2b4366afab82ef894a22c6ddecc"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>list_size</b> (<a class="el" href="structlist.html">listptr</a> lst)</td></tr>
+<tr class="memdesc:af1a1a2b4366afab82ef894a22c6ddecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of elements in the given list. <br /></td></tr>
+<tr class="separator:af1a1a2b4366afab82ef894a22c6ddecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6c5177cc4f69354be8040a134c01f1d"><td class="memItemLeft" align="right" valign="top"><a id="ab6c5177cc4f69354be8040a134c01f1d" name="ab6c5177cc4f69354be8040a134c01f1d"></a>
+void *&#160;</td><td class="memItemRight" valign="bottom"><b>list_get</b> (<a class="el" href="structlist.html">listptr</a> lst, size_t index)</td></tr>
+<tr class="separator:ab6c5177cc4f69354be8040a134c01f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="afd635f542dabf96e3618f39f9975319b" name="afd635f542dabf96e3618f39f9975319b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd635f542dabf96e3618f39f9975319b">&#9670;&nbsp;</a></span>construct_list()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void construct_list </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structlist.html">list</a> *&#160;</td>
-          <td class="paramname"><em>lst</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>List constructor. </p>
-<p >Initializes the given list. It must not be called on an already initialized list. </p>
-
-</div>
-</div>
-<a id="a1b254c2a5c7521bf6bc2ac0772793392" name="a1b254c2a5c7521bf6bc2ac0772793392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b254c2a5c7521bf6bc2ac0772793392">&#9670;&nbsp;</a></span>destroy_list()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void destroy_list </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structlist.html">list</a> *&#160;</td>
-          <td class="paramname"><em>lst</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>List destructor. </p>
-<p >It free()'s the internal array, and sets the capacity to 0. The data pointed to by void* elements must be free'd by the user. </p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

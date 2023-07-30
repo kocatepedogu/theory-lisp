@@ -26,6 +26,8 @@ libtlisp_la_SOURCES =\
     utils/heap-format.h\
     utils/list.c\
     utils/list.h\
+    utils/stack.c\
+    utils/stack.h\
     utils/file.c\
     utils/file.h\
     scanner/scanner.c\
@@ -50,6 +52,8 @@ libtlisp_la_SOURCES =\
     expressions/identifier_expr.h\
     expressions/expanded_expr.c\
     expressions/expanded_expr.h\
+    expressions/pn_expr.c\
+    expressions/pn_expr.h\
     parser/parser.c\
     parser/parser.h\
     interpreter/variable.c\

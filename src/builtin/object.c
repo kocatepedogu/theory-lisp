@@ -40,6 +40,14 @@ object_t builtin_equals(size_t n, object_t *args, stack_frame_ptr sf) {
   return make_boolean(true);
 }
 
+object_t builtin_not_equals(size_t n, object_t *args, stack_frame_ptr sf) {
+  assert (n >= 1);
+  object_t eq = builtin_equals(n, args, sf);
+  object_t result = make_boolean(!boolean_value(eq));
+  destroy_object(eq);
+  return result;
+}
+
 object_t builtin_less(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n == 2);
   return object_less(args[0], args[1]);

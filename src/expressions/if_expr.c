@@ -29,62 +29,54 @@
 #include "../utils/heap-format.h"
 #include "expression.h"
 
+/* (if (cond) true-case false-case) */
+typedef struct {
+  exprptr condition;
+  exprptr true_case;
+  exprptr false_case;
+} if_expr;
+
 static const char if_expr_name[] = "if_expr";
 
 static const expr_vtable if_expr_vtable = {.deallocate = delete_if_expr,
-                                           .destructor = destroy_if_expr,
-					   .clone = clone_if_expr,
+					                                 .clone = clone_if_expr,
                                            .to_string = if_expr_tostring,
                                            .interpret = interpret_if};
 
-void construct_if_expr(exprptr e, exprptr condition, exprptr true_case,
-                       exprptr false_case) {
+exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case) {
   if_expr *ie = malloc(sizeof(if_expr));
   ie->condition = condition;
   ie->true_case = true_case;
   ie->false_case = false_case;
+
+  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
   e->data = ie;
   e->vtable = &if_expr_vtable;
   e->expr_name = if_expr_name;
-}
-
-exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case) {
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  construct_if_expr(e, condition, true_case, false_case);
   return e;
 }
 
-void destroy_if_expr(exprptr e) {
-  if_expr *expr = e->data;
+void delete_if_expr(exprptr self) {
+  if_expr *expr = self->data;
   delete_expr(expr->condition);
   delete_expr(expr->true_case);
   delete_expr(expr->false_case);
   free(expr);
+  free(self);
 }
 
-void delete_if_expr(exprptr e) {
-  destroy_if_expr(e);
-  free(e);
-}
-
-exprptr clone_if_expr(exprptr e) {
-  if_expr *self_ie = e->data;
+exprptr clone_if_expr(exprptr self) {
+  if_expr *self_ie = self->data;
   if_expr *new_ie = (if_expr *)malloc(sizeof(if_expr));
   new_ie->condition = clone_expr(self_ie->condition);
   new_ie->false_case = clone_expr(self_ie->false_case);
   new_ie->true_case = clone_expr(self_ie->true_case);
 
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = new_ie;
-  new_expr->expr_name = if_expr_name;
-  new_expr->vtable = &if_expr_vtable;
-  new_expr->line_number = e->line_number;
-  new_expr->column_number = e->column_number;
-  return new_expr;
+  return base_clone(self, new_ie);
 }
 
-char *if_expr_tostring(exprptr e) {
-  if_expr *expr = e->data;
+char *if_expr_tostring(exprptr self) {
+  if_expr *expr = self->data;
   static const char *if_expr_format = "(if %s\n\t%s\n\t%s)";
   char *cond_str = expr_tostring(expr->condition);
   char *true_case_str = expr_tostring(expr->true_case);
@@ -97,7 +89,7 @@ char *if_expr_tostring(exprptr e) {
   return result;
 }
 
-exprptr if_expr_parse(list *tokens, int *index) {
+exprptr if_expr_parse(listptr tokens, int *index) {
   token_t *if_token = list_get(tokens, (*index)++);
   assert(if_token->type == TOKEN_IF);
 
@@ -131,8 +123,8 @@ bool is_if_expr(exprptr e) {
   return strcmp(e->expr_name, if_expr_name) == 0;
 }
 
-object_t interpret_if(exprptr e, stack_frame_ptr sf) {
-  if_expr *ie = e->data;
+object_t interpret_if(exprptr self, stack_frame_ptr sf) {
+  if_expr *ie = self->data;
 
   object_t condition_result = interpret_expr(ie->condition, sf);
   if (is_error(condition_result)) {

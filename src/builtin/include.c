@@ -71,8 +71,8 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   free(include_guard);
 
   /* Parse included file */
-  list *tokens = scanner(code);
-  list *parse_tree = parser(tokens);
+  listptr tokens = scanner(code);
+  listptr parse_tree = parser(tokens);
   if (!parse_tree) {
     delete_token_list(tokens);
     free(code);

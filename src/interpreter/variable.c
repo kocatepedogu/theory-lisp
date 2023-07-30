@@ -21,21 +21,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-variable_t *new_variable(const char *name, object_t value) {
-  variable_t *var = (variable_t *)malloc(sizeof(variable_t));
+struct variable {
+  char *name;
+  object_t value;
+};
+
+variableptr new_variable(const char *name, object_t value) {
+  variableptr var = (variableptr)malloc(sizeof(struct variable));
   var->name = strdup(name);
   var->value = clone_object(value);
   return var;
 }
 
-void delete_variable(variable_t *var) {
+variableptr clone_variable(variableptr var) {
+  return new_variable(var->name, var->value);
+}
+
+void delete_variable(variableptr var) {
   free(var->name);
   destroy_object(var->value);
   free(var);
 }
 
-object_t variable_get_value(variable_t *var) { return clone_object(var->value); }
+object_t variable_get_value(variableptr var) { return clone_object(var->value); }
 
-void variable_set_value(variable_t *var, object_t value) { var->value = value; }
+void variable_set_value(variableptr var, object_t value) { var->value = value; }
 
-char *variable_get_name(variable_t *var) { return var->name; }
+char *variable_get_name(variableptr var) { return var->name; }

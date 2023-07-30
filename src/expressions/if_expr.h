@@ -28,39 +28,25 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* (if (cond) true-case false-case) */
-typedef struct {
-  exprptr condition;
-  exprptr true_case;
-  exprptr false_case;
-} if_expr;
-
-/* if_expr constructor */
-void construct_if_expr(exprptr e, exprptr condition, exprptr true_case,
-                           exprptr false_case);
-
 /* if_expr "new" operation */
 exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case);
 
-/* if_expr destructor */
-void destroy_if_expr(exprptr e);
-
 /* if_expr "delete" operation */
-void delete_if_expr(exprptr e);
+void delete_if_expr(exprptr self);
 
 /* if_expr clone */
-exprptr clone_if_expr(exprptr e);
+exprptr clone_if_expr(exprptr self);
 
 /* if_expr tostring */
-char *if_expr_tostring(exprptr e); 
+char *if_expr_tostring(exprptr self); 
 
 /* if_expr parser */
-exprptr if_expr_parse(list *tokens, int *index);
+exprptr if_expr_parse(listptr tokens, int *index);
 
 /* true if e is if_expr */
 bool is_if_expr(exprptr e);
 
 /* evaluates if expression */
-object_t interpret_if(exprptr e, stack_frame_ptr sf);
+object_t interpret_if(exprptr self, stack_frame_ptr sf);
 
 #endif

@@ -30,7 +30,7 @@ START_TEST(test_pair_common) {
 #define CONVERSION_TEST_SIZE 100
 
 START_TEST(test_list_conversions) {
-  list *internal_list = new_list();
+  listptr internal_list = new_list();
   for (int i = 0; i < CONVERSION_TEST_SIZE; i++) {
     object_t *obj = (object_t *)malloc(sizeof(object_t));
     *obj = make_integer(i);
@@ -38,7 +38,7 @@ START_TEST(test_list_conversions) {
   } 
 
   object_t cons_list = internal_list_to_cons_list(internal_list);
-  list *new_internal_list = new_list();
+  listptr new_internal_list = new_list();
   ck_assert(cons_list_to_internal_list(cons_list, new_internal_list));
   for (int i = 0; i < CONVERSION_TEST_SIZE; i++) {
     object_t *obj = list_get(new_internal_list, i);

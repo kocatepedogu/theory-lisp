@@ -136,19 +136,22 @@ $(document).ready(function(){initNavTree('expanded__expr_8h_source.html',''); in
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">/* expanded expression &quot;delete&quot; operation */</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> delete_expanded_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/* expanded expression tostring implementation */</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keywordtype">char</span> *expanded_expr_tostring(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">/* expanded expression clone */</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><a class="code hl_struct" href="structexpr.html">exprptr</a> clone_expanded_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">/* true if e is expanded expression */</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">bool</span> is_expanded_expression(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">/* expanded expression tostring implementation */</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">char</span> *expanded_expr_tostring(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/* expanded expression interpreter */</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><a class="code hl_struct" href="structobject.html">object_t</a> interpret_expanded_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">/* true if e is expanded expression */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keywordtype">bool</span> is_expanded_expression(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructexpr_html"><div class="ttname"><a href="structexpr.html">expr</a></div><div class="ttdef"><b>Definition:</b> expression.h:42</div></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">/* expanded expression interpreter */</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><a class="code hl_struct" href="structobject.html">object_t</a> interpret_expanded_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="astructexpr_html"><div class="ttname"><a href="structexpr.html">expr</a></div><div class="ttdef"><b>Definition:</b> expression.h:43</div></div>
 <div class="ttc" id="astructobject_html"><div class="ttname"><a href="structobject.html">object</a></div><div class="ttdoc">object_t contains the type and value information of objects in Theory Lisp programs.</div><div class="ttdef"><b>Definition:</b> types/object.h:28</div></div>
-<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdoc">A container for local variables.</div><div class="ttdef"><b>Definition:</b> stack_frame.h:30</div></div>
+<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdef"><b>Definition:</b> stack_frame.c:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

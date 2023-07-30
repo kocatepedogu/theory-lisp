@@ -28,40 +28,28 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* (proc arg1 arg2 arg3 ...) */
-typedef struct {
-  exprptr procexpr;
-  list arguments; /* list of exprptr's */
-} evaluation_expr;
-
-/* evaluation_expr constructor */
-void construct_evaluation_expr(exprptr e, exprptr proc);
-
 /* evaluation_expr "new" operation */
 exprptr new_evaluation_expr(exprptr proc);
 
-/* evaluation_expr destructor */
-void destroy_evaluation_expr(exprptr e);
-
 /* evaluation_expr "delete" operation */
-void delete_evaluation_expr(exprptr e);
+void delete_evaluation_expr(exprptr self);
 
 /* evaluation_expr clone */
-exprptr clone_evaluation_expr(exprptr e);
+exprptr clone_evaluation_expr(exprptr self);
 
 /* Adds an argument to an evulation expression */
-void evaluation_expr_add_arg(exprptr e, exprptr argument);
+void evaluation_expr_add_arg(exprptr self, exprptr argument);
 
 /* evalation_expr tostring implementation */
-char *evaluation_expr_tostring(exprptr e);
+char *evaluation_expr_tostring(exprptr self);
 
 /* evaluation_expr parser */
-exprptr evaluation_expr_parse(list *tokens, int *index);
+exprptr evaluation_expr_parse(listptr tokens, int *index);
 
 /* true if e is evaluation expression */
 bool is_evaluation_expr(exprptr e);
 
 /* evaluates evaluation expression */
-object_t interpret_evaluation(exprptr e, stack_frame_ptr sf);
+object_t interpret_evaluation(exprptr self, stack_frame_ptr sf);
 
 #endif

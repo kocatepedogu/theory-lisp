@@ -28,33 +28,25 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* identifier */
-typedef struct {
-  char *name;
-} identifier_expr;
-
-/* identifier_expr constructor */
-void construct_identifier_expr(exprptr e, const char *name);
-
 /* identifier_expr "new" operation */
 exprptr new_identifier_expr(const char *name);
 
-/* identifier_expr destructor */
-void destroy_identifier_expr(exprptr e);
-
 /* identifier_expr "delete" operation */
-void delete_identifier_expr(exprptr e);
+void delete_identifier_expr(exprptr self);
 
 /* identifier_expr clone */
-exprptr clone_identifier_expr(exprptr e);
+exprptr clone_identifier_expr(exprptr self);
 
 /* identifier_expr tostring implementation */
-char *identifier_expr_tostring(exprptr e);
+char *identifier_expr_tostring(exprptr self);
+
+/* returns name of the identifier */
+const char *identifier_expr_get_name(exprptr self);
 
 /* true if e is identifier expression */
 bool is_identifier_expr(exprptr e);
 
 /* evaluates identifier expression */
-object_t interpret_identifier(exprptr e, stack_frame_ptr sf);
+object_t interpret_identifier(exprptr self, stack_frame_ptr sf);
 
 #endif

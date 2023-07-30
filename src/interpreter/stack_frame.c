@@ -25,35 +25,32 @@
 #include "variable.h"
 #include "../builtin/builtin.h"
 
-void construct_stack_frame(stack_frame_ptr sf, stack_frame_ptr previous) {
-  construct_list(&sf->local_variables);
-  sf->saved_frame_pointer = previous;
-}
+struct stack_frame {
+  listptr local_variables;
+  struct stack_frame *saved_frame_pointer;
+};
 
 stack_frame_ptr new_stack_frame(stack_frame_ptr previous) {
-  stack_frame_ptr sf = (stack_frame_ptr)malloc(sizeof(stack_frame_t));
-  construct_stack_frame(sf, previous);
+  stack_frame_ptr sf = (stack_frame_ptr)malloc(sizeof(struct stack_frame));
+  sf->local_variables = new_list();
+  sf->saved_frame_pointer = previous;
   return sf;
 }
 
-void destroy_stack_frame(stack_frame_ptr sf) {
-  for (size_t i = 0; i < list_size(&sf->local_variables); i++) {
-    variable_t *var = list_get(&sf->local_variables, i);
+void delete_stack_frame(stack_frame_ptr sf) {
+  for (size_t i = 0; i < list_size(sf->local_variables); i++) {
+    variableptr var = list_get(sf->local_variables, i);
     delete_variable(var);
   }
-  destroy_list(&sf->local_variables);
+  delete_list(sf->local_variables);
   sf->saved_frame_pointer = NULL;
-}
-
-void delete_stack_frame(stack_frame_ptr sf) {
-  destroy_stack_frame(sf);
   free(sf);
 }
 
-static variable_t *find_variable_locally(stack_frame_ptr sf, const char *name) {
-  list *local_vars = &sf->local_variables;
+static variableptr find_variable_locally(stack_frame_ptr sf, const char *name) {
+  listptr local_vars = sf->local_variables;
   for (size_t i = 0; i < list_size(local_vars); i++) {
-    variable_t *var = list_get(local_vars, i);
+    variableptr var = list_get(local_vars, i);
     if (strcmp(variable_get_name(var), name) == 0) {
       return var;
     }
@@ -61,9 +58,9 @@ static variable_t *find_variable_locally(stack_frame_ptr sf, const char *name) {
   return NULL;
 }
 
-static variable_t *find_variable(stack_frame_ptr sf, const char *name) {
+static variableptr find_variable(stack_frame_ptr sf, const char *name) {
   while (sf) {
-    variable_t *var = find_variable_locally(sf, name);
+    variableptr var = find_variable_locally(sf, name);
     if (var) {
       return var;
     }
@@ -75,12 +72,12 @@ static variable_t *find_variable(stack_frame_ptr sf, const char *name) {
 }
 
 void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value) {
-  variable_t *var = find_variable_locally(sf, name);
+  variableptr var = find_variable_locally(sf, name);
   if (var) {
     variable_set_value(var, value);
   } else {
     var = new_variable(name, value);
-    list_add(&sf->local_variables, var);
+    list_add(sf->local_variables, var);
   }
 }
 
@@ -93,7 +90,7 @@ void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
 }
 
 object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name) {
-  variable_t *var = find_variable(sf, name);
+  variableptr var = find_variable(sf, name);
   if (var) {
     return variable_get_value(var);
   }

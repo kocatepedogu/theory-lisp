@@ -32,7 +32,6 @@ typedef struct expr *exprptr;
 
 /* Expression vtable */
 typedef struct {
-  void (*destructor)(exprptr e);
   exprptr (*clone)(exprptr e);
   void (*deallocate)(exprptr e);
   char *(*to_string)(exprptr e);
@@ -50,22 +49,26 @@ typedef struct expr {
 
 typedef expr_t *exprptr;
 
-/* Expression destructor */
-void destroy_expr(exprptr e);
+/* Expression base constructor */
+exprptr new_expr(void *data, const expr_vtable *vtable, const char *expr_name,
+                 size_t line_number, size_t column_number);
+
+/* Expression base copy constructor */
+exprptr base_clone(exprptr other, void *new_data);
 
 /* Expression clone */
-exprptr clone_expr(exprptr e);
+exprptr clone_expr(exprptr self);
 
 /* Expression "delete" operation */
-void delete_expr(exprptr e);
+void delete_expr(exprptr self);
 
 /* Expression tostring */
-char *expr_tostring(exprptr e);
+char *expr_tostring(exprptr self);
 
 /* Expression parser */
-exprptr expr_parse(list *tokens, int *index);
+exprptr expr_parse(listptr tokens, int *index);
 
 /* Expression interpreter */
-object_t interpret_expr(exprptr e, stack_frame_ptr sf);
+object_t interpret_expr(exprptr self, stack_frame_ptr sf);
 
 #endif

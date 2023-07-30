@@ -92,7 +92,6 @@ $(document).ready(function(){initNavTree('variable_8h.html',''); initResizable()
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">variable.h File Reference</div></div>
@@ -101,51 +100,48 @@ $(document).ready(function(){initNavTree('variable_8h.html',''); initResizable()
 
 <p><a href="variable_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvariable.html">variable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the name and values of a variable.  <a href="structvariable.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a27139b9bbb94033e18e5f35ecbb51168"><td class="memItemLeft" align="right" valign="top"><a id="a27139b9bbb94033e18e5f35ecbb51168" name="a27139b9bbb94033e18e5f35ecbb51168"></a>
-typedef struct <a class="el" href="structvariable.html">variable</a>&#160;</td><td class="memItemRight" valign="bottom"><b>variable_t</b></td></tr>
-<tr class="memdesc:a27139b9bbb94033e18e5f35ecbb51168"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the name and values of a variable. <br /></td></tr>
-<tr class="separator:a27139b9bbb94033e18e5f35ecbb51168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7ccef38dc64a81074b89da4435abd82"><td class="memItemLeft" align="right" valign="top"><a id="af7ccef38dc64a81074b89da4435abd82" name="af7ccef38dc64a81074b89da4435abd82"></a>
+typedef struct <a class="el" href="structvariable.html">variable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>variableptr</b></td></tr>
+<tr class="separator:af7ccef38dc64a81074b89da4435abd82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2ea27d26a539def0e79e19f6b4d7e455"><td class="memItemLeft" align="right" valign="top"><a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="variable_8h.html#a2ea27d26a539def0e79e19f6b4d7e455">new_variable</a> (char *name, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> value)</td></tr>
-<tr class="memdesc:a2ea27d26a539def0e79e19f6b4d7e455"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a malloc'ed variable with the given name and value.  <a href="variable_8h.html#a2ea27d26a539def0e79e19f6b4d7e455">More...</a><br /></td></tr>
-<tr class="separator:a2ea27d26a539def0e79e19f6b4d7e455"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c2d271c54e1dfa34cad127c758e2f10"><td class="memItemLeft" align="right" valign="top"><a id="a6c2d271c54e1dfa34cad127c758e2f10" name="a6c2d271c54e1dfa34cad127c758e2f10"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_variable</b> (<a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *)</td></tr>
-<tr class="memdesc:a6c2d271c54e1dfa34cad127c758e2f10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates the given variable. <br /></td></tr>
-<tr class="separator:a6c2d271c54e1dfa34cad127c758e2f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bc172c7ced9ad746825543a8de4b38f"><td class="memItemLeft" align="right" valign="top"><a id="a3bc172c7ced9ad746825543a8de4b38f" name="a3bc172c7ced9ad746825543a8de4b38f"></a>
-<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_value</b> (<a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *var)</td></tr>
-<tr class="memdesc:a3bc172c7ced9ad746825543a8de4b38f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value stored in the given variable. <br /></td></tr>
-<tr class="separator:a3bc172c7ced9ad746825543a8de4b38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f6d8f688191d92b4d635cc0023e828d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="variable_8h.html#a1f6d8f688191d92b4d635cc0023e828d">variable_set_value</a> (<a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *var, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> value)</td></tr>
-<tr class="memdesc:a1f6d8f688191d92b4d635cc0023e828d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the value of an existing variable.  <a href="variable_8h.html#a1f6d8f688191d92b4d635cc0023e828d">More...</a><br /></td></tr>
-<tr class="separator:a1f6d8f688191d92b4d635cc0023e828d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91cd9bada00379aee2a47c5567c6121a"><td class="memItemLeft" align="right" valign="top"><a id="a91cd9bada00379aee2a47c5567c6121a" name="a91cd9bada00379aee2a47c5567c6121a"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_name</b> (<a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *var)</td></tr>
-<tr class="memdesc:a91cd9bada00379aee2a47c5567c6121a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the given variable. <br /></td></tr>
-<tr class="separator:a91cd9bada00379aee2a47c5567c6121a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a738f30650aaff3c7df7027840833675e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structvariable.html">variableptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="variable_8h.html#a738f30650aaff3c7df7027840833675e">new_variable</a> (const char *name, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> value)</td></tr>
+<tr class="memdesc:a738f30650aaff3c7df7027840833675e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a malloc'ed variable with the given name and value.  <a href="variable_8h.html#a738f30650aaff3c7df7027840833675e">More...</a><br /></td></tr>
+<tr class="separator:a738f30650aaff3c7df7027840833675e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a710cc66476edc078d79b9c82829c1aed"><td class="memItemLeft" align="right" valign="top"><a id="a710cc66476edc078d79b9c82829c1aed" name="a710cc66476edc078d79b9c82829c1aed"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_variable</b> (<a class="el" href="structvariable.html">variableptr</a> var)</td></tr>
+<tr class="memdesc:a710cc66476edc078d79b9c82829c1aed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates the given variable. <br /></td></tr>
+<tr class="separator:a710cc66476edc078d79b9c82829c1aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3f1f99691541dd1b0e4d1b29a78b06b"><td class="memItemLeft" align="right" valign="top"><a id="aa3f1f99691541dd1b0e4d1b29a78b06b" name="aa3f1f99691541dd1b0e4d1b29a78b06b"></a>
+<a class="el" href="structvariable.html">variableptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clone_variable</b> (<a class="el" href="structvariable.html">variableptr</a> var)</td></tr>
+<tr class="memdesc:aa3f1f99691541dd1b0e4d1b29a78b06b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clones variable. <br /></td></tr>
+<tr class="separator:aa3f1f99691541dd1b0e4d1b29a78b06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bfb19f4790497c95de7c3581cf5e5bb"><td class="memItemLeft" align="right" valign="top"><a id="a7bfb19f4790497c95de7c3581cf5e5bb" name="a7bfb19f4790497c95de7c3581cf5e5bb"></a>
+<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_value</b> (<a class="el" href="structvariable.html">variableptr</a> var)</td></tr>
+<tr class="memdesc:a7bfb19f4790497c95de7c3581cf5e5bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value stored in the given variable. <br /></td></tr>
+<tr class="separator:a7bfb19f4790497c95de7c3581cf5e5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43cc67ff6137009182710a0926d6ab12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="variable_8h.html#a43cc67ff6137009182710a0926d6ab12">variable_set_value</a> (<a class="el" href="structvariable.html">variableptr</a> var, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> value)</td></tr>
+<tr class="memdesc:a43cc67ff6137009182710a0926d6ab12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the value of an existing variable.  <a href="variable_8h.html#a43cc67ff6137009182710a0926d6ab12">More...</a><br /></td></tr>
+<tr class="separator:a43cc67ff6137009182710a0926d6ab12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a448037421977aff1e6fa5c2fcdcca775"><td class="memItemLeft" align="right" valign="top"><a id="a448037421977aff1e6fa5c2fcdcca775" name="a448037421977aff1e6fa5c2fcdcca775"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_name</b> (<a class="el" href="structvariable.html">variableptr</a> var)</td></tr>
+<tr class="memdesc:a448037421977aff1e6fa5c2fcdcca775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the given variable. <br /></td></tr>
+<tr class="separator:a448037421977aff1e6fa5c2fcdcca775"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a2ea27d26a539def0e79e19f6b4d7e455" name="a2ea27d26a539def0e79e19f6b4d7e455"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ea27d26a539def0e79e19f6b4d7e455">&#9670;&nbsp;</a></span>new_variable()</h2>
+<a id="a738f30650aaff3c7df7027840833675e" name="a738f30650aaff3c7df7027840833675e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a738f30650aaff3c7df7027840833675e">&#9670;&nbsp;</a></span>new_variable()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> * new_variable </td>
+          <td class="memname"><a class="el" href="structvariable.html">variableptr</a> new_variable </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
@@ -167,8 +163,8 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_name</
 
 </div>
 </div>
-<a id="a1f6d8f688191d92b4d635cc0023e828d" name="a1f6d8f688191d92b4d635cc0023e828d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f6d8f688191d92b4d635cc0023e828d">&#9670;&nbsp;</a></span>variable_set_value()</h2>
+<a id="a43cc67ff6137009182710a0926d6ab12" name="a43cc67ff6137009182710a0926d6ab12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43cc67ff6137009182710a0926d6ab12">&#9670;&nbsp;</a></span>variable_set_value()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +172,7 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>variable_get_name</
         <tr>
           <td class="memname">void variable_set_value </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="variable_8h.html#a27139b9bbb94033e18e5f35ecbb51168">variable_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structvariable.html">variableptr</a>&#160;</td>
           <td class="paramname"><em>var</em>, </td>
         </tr>
         <tr>

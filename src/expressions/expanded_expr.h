@@ -29,28 +29,22 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* expanded expression constructor */
-void construct_expanded_expr(exprptr e, exprptr inner);
-
 /* expanded expression "new" operation */
 exprptr new_expanded_expr(exprptr proc);
 
-/* expanded expression destructor */
-void destroy_expanded_expr(exprptr e);
-
 /* expanded expression "delete" operation */
-void delete_expanded_expr(exprptr e);
+void delete_expanded_expr(exprptr self);
 
 /* expanded expression clone */
-exprptr clone_expanded_expr(exprptr e);
+exprptr clone_expanded_expr(exprptr self);
 
 /* expanded expression tostring implementation */
-char *expanded_expr_tostring(exprptr e);
+char *expanded_expr_tostring(exprptr self);
 
 /* true if e is expanded expression */
 bool is_expanded_expression(exprptr e);
 
 /* expanded expression interpreter */
-object_t interpret_expanded_expr(exprptr e, stack_frame_ptr sf);
+object_t interpret_expanded_expr(exprptr self, stack_frame_ptr sf);
 
 #endif

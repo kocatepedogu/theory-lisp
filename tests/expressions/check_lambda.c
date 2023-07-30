@@ -5,13 +5,22 @@
 #include "../../src/types/integer.h"
 #include "parse.h"
 
+typedef struct {
+  bool variadic;
+  size_t pn_arity;
+  bool pn_given;
+  listptr captured_vars;
+  listptr params;
+  exprptr body;
+} lambda_expr;
+
 START_TEST(test_lambda_empty_args) {
   exprptr e = NULL;
   parse(e, "(lambda () 10)");
 
   ck_assert(is_lambda_expr(e));
   lambda_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->params), 0);
+  ck_assert_uint_eq(list_size(le->params), 0);
   ck_assert_int_eq(le->variadic, false);
   assert_integer(le->body, 10);
 
@@ -24,7 +33,7 @@ START_TEST(test_lambda) {
 
   ck_assert(is_lambda_expr(e));
   lambda_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->params), 3);
+  ck_assert_uint_eq(list_size(le->params), 3);
   ck_assert_int_eq(le->variadic, false);
   assert_identifier(le->body, "y");
 
@@ -37,7 +46,7 @@ START_TEST(test_lambda_empty_args_variadic) {
 
   ck_assert(is_lambda_expr(e));
   lambda_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->params), 0);
+  ck_assert_uint_eq(list_size(le->params), 0);
   ck_assert_int_eq(le->variadic, true);
   assert_identifier(le->body, "va_args");
 
@@ -50,7 +59,7 @@ START_TEST(test_lambda_variadic) {
 
   ck_assert(is_lambda_expr(e));
   lambda_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->params), 2);
+  ck_assert_uint_eq(list_size(le->params), 2);
   ck_assert_int_eq(le->variadic, true);
   assert_identifier(le->body, "x");
 

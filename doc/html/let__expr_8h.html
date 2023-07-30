@@ -92,7 +92,6 @@ $(document).ready(function(){initNavTree('let__expr_8h.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">let_expr.h File Reference</div></div>
@@ -101,13 +100,6 @@ $(document).ready(function(){initNavTree('let__expr_8h.html',''); initResizable(
 
 <p><a href="let__expr_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvar__declaration.html">var_declaration</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlet__expr.html">let_expr</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a81742f0e511b9fd646c0e315486294c9"><td class="memItemLeft" align="right" valign="top"><a id="a81742f0e511b9fd646c0e315486294c9" name="a81742f0e511b9fd646c0e315486294c9"></a>
@@ -128,15 +120,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroy_let_expr</b> 
 <tr class="memitem:ad3b17d2a83b9d701a6f31e295a3a1c7d"><td class="memItemLeft" align="right" valign="top"><a id="ad3b17d2a83b9d701a6f31e295a3a1c7d" name="ad3b17d2a83b9d701a6f31e295a3a1c7d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_let_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:ad3b17d2a83b9d701a6f31e295a3a1c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7640fd7a25652e55d748f6f20af76ea3"><td class="memItemLeft" align="right" valign="top"><a id="a7640fd7a25652e55d748f6f20af76ea3" name="a7640fd7a25652e55d748f6f20af76ea3"></a>
+<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clone_let_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
+<tr class="separator:a7640fd7a25652e55d748f6f20af76ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66fa53b4be6375a4a1b385ac05ac2263"><td class="memItemLeft" align="right" valign="top"><a id="a66fa53b4be6375a4a1b385ac05ac2263" name="a66fa53b4be6375a4a1b385ac05ac2263"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>let_expr_add_declaration</b> (<a class="el" href="structexpr.html">exprptr</a> <a class="el" href="structlet__expr.html">let_expr</a>, const char *name, <a class="el" href="structexpr.html">exprptr</a> <a class="el" href="structexpr.html">expr</a>)</td></tr>
 <tr class="separator:a66fa53b4be6375a4a1b385ac05ac2263"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ffb76dae42c00608c40373dae905998"><td class="memItemLeft" align="right" valign="top"><a id="a3ffb76dae42c00608c40373dae905998" name="a3ffb76dae42c00608c40373dae905998"></a>
 char *&#160;</td><td class="memItemRight" valign="bottom"><b>let_expr_tostring</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:a3ffb76dae42c00608c40373dae905998"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacfd003293ab27b31a809652ffcff663"><td class="memItemLeft" align="right" valign="top"><a id="aacfd003293ab27b31a809652ffcff663" name="aacfd003293ab27b31a809652ffcff663"></a>
-<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>let_expr_parse</b> (<a class="el" href="structlist.html">list</a> *tokens, int *index)</td></tr>
-<tr class="separator:aacfd003293ab27b31a809652ffcff663"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9059192090d43aa07c0198ba4c8cfe7"><td class="memItemLeft" align="right" valign="top"><a id="ae9059192090d43aa07c0198ba4c8cfe7" name="ae9059192090d43aa07c0198ba4c8cfe7"></a>
+<a class="el" href="structexpr.html">exprptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>let_expr_parse</b> (<a class="el" href="structlist.html">listptr</a> tokens, int *index)</td></tr>
+<tr class="separator:ae9059192090d43aa07c0198ba4c8cfe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba419b57443e5f2d0d547c1901b7f1c4"><td class="memItemLeft" align="right" valign="top"><a id="aba419b57443e5f2d0d547c1901b7f1c4" name="aba419b57443e5f2d0d547c1901b7f1c4"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_let_expr</b> (<a class="el" href="structexpr.html">exprptr</a> e)</td></tr>
 <tr class="separator:aba419b57443e5f2d0d547c1901b7f1c4"><td class="memSeparator" colspan="2">&#160;</td></tr>

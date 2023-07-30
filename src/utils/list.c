@@ -21,37 +21,33 @@
 #include <string.h>
 #include <assert.h>
 
+struct list {
+  void **data;
+  size_t number_of_elements;
+  size_t capacity;
+};
+
 static const size_t default_list_size = 4;
 
-/* List constructor */
-void construct_list(list *lst) {
+/* List "new" operator. */
+listptr new_list(void) {
+  listptr lst = (listptr)malloc(sizeof(struct list));
   lst->data = malloc(default_list_size * sizeof(void *));
   lst->capacity = default_list_size;
   lst->number_of_elements = 0;
-}
-
-/* List "new" operator. */
-list *new_list(void) {
-  list *lst = (list *)malloc(sizeof(list));
-  construct_list(lst);
   return lst;
 }
 
-/* list destructor */
-void destroy_list(list* lst) {
+/* list "delete" operation */
+void delete_list(listptr lst) {
   free(lst->data);
   lst->capacity = 0;
   lst->number_of_elements = 0;
-}
-
-/* list "delete" operation */
-void delete_list(list* lst) {
-  destroy_list(lst);
   free(lst);
 }
 
 /* adds element to given list */
-void list_add(list *lst, void *element) {
+void list_add(listptr lst, void *element) {
   if (lst->number_of_elements == lst->capacity) {
     lst->capacity *= 2;
     void **new_data = malloc(lst->capacity * sizeof(void *));
@@ -64,17 +60,17 @@ void list_add(list *lst, void *element) {
 }
 
 /* adds all elements of other list to given list */
-void list_add_all(list *lst, list *other) {
+void list_add_all(listptr lst, listptr other) {
   for (size_t i = 0; i < list_size(other); i++) {
     list_add(lst, list_get(other, i));
   }
 }
 
 /* returns the number of elements in the given list */
-size_t list_size(list *lst) { return lst->number_of_elements; }
+size_t list_size(listptr lst) { return lst->number_of_elements; }
 
 /* returns the element at the given index */
-void *list_get(list *lst, size_t index) {
+void *list_get(listptr lst, size_t index) {
   assert (index < list_size(lst));
   return lst->data[index];
 }

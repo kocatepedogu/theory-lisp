@@ -118,40 +118,40 @@ $(document).ready(function(){initNavTree('lambda__expr_8h_source.html',''); init
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;../types/object.h&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;../utils/list.h&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;../interpreter/interpreter.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">struct </span><a class="code hl_struct" href="structexpr.html">expr</a>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structexpr.html">expr</a> *<a class="code hl_struct" href="structexpr.html">exprptr</a>;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">/* (lambda (p1 p2 .. pn) (expr)) */</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structlambda__expr.html">   34</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">bool</span> variadic;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_struct" href="structlist.html">list</a> params; <span class="comment">/* list of char*&#39;s */</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_struct" href="structexpr.html">exprptr</a> body;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>} <a class="code hl_struct" href="structlambda__expr.html">lambda_expr</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;../types/procedure.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;../interpreter/interpreter.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span><a class="code hl_struct" href="structexpr.html">expr</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structexpr.html">expr</a> *<a class="code hl_struct" href="structexpr.html">exprptr</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">/* lambda_expr constructor */</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> construct_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <a class="code hl_struct" href="structexpr.html">exprptr</a> body, <span class="keywordtype">bool</span> variadic);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">/* lambda_expr &quot;new&quot; operation */</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><a class="code hl_struct" href="structexpr.html">exprptr</a> new_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> body, <span class="keywordtype">bool</span> variadic);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">/* lambda_expr constructor */</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keywordtype">void</span> construct_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <a class="code hl_struct" href="structexpr.html">exprptr</a> body, <span class="keywordtype">bool</span> variadic);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">/* Lambda expression destructor */</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keywordtype">void</span> destroy_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">/* lambda_expr &quot;new&quot; operation */</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><a class="code hl_struct" href="structexpr.html">exprptr</a> new_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> body, <span class="keywordtype">bool</span> variadic);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">/* Lambda expression delete operation */</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">void</span> delete_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">/* Lambda expression destructor */</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keywordtype">void</span> destroy_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">/* Lambda expression clone */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><a class="code hl_struct" href="structexpr.html">exprptr</a> clone_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">/* Lambda expression delete operation */</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keywordtype">void</span> delete_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">/* Adds a formal parameter to the lambda function */</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keywordtype">void</span> lambda_expr_add_param(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">/* Adds a formal parameter to the lambda function */</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keywordtype">void</span> lambda_expr_add_param(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">/* Changes Polish Notation arity of the lambda function */</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keywordtype">void</span> lambda_expr_set_pn_arity(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <span class="keywordtype">size_t</span> arity);</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">/* Lambda expression tostring implementation */</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">char</span> *lambda_expr_tostring(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">/* lambda_expr parser */</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><a class="code hl_struct" href="structexpr.html">exprptr</a> lambda_expr_parse(<a class="code hl_struct" href="structlist.html">list</a> *tokens, <span class="keywordtype">int</span> *index);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><a class="code hl_struct" href="structexpr.html">exprptr</a> lambda_expr_parse(<a class="code hl_struct" href="structlist.html">listptr</a> tokens, <span class="keywordtype">int</span> *index);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">/* true if e is lambda expression */</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">bool</span> is_lambda_expr(<a class="code hl_struct" href="structexpr.html">exprptr</a> e);</div>
@@ -160,15 +160,14 @@ $(document).ready(function(){initNavTree('lambda__expr_8h_source.html',''); init
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><a class="code hl_struct" href="structobject.html">object_t</a> interpret_lambda(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">/* evaluates a lambda with arguments */</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><a class="code hl_struct" href="structobject.html">object_t</a> call_lambda(<a class="code hl_struct" href="structexpr.html">exprptr</a> e, <span class="keywordtype">size_t</span> number_of_args,</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><a class="code hl_struct" href="structobject.html">object_t</a> call_lambda(<a class="code hl_struct" href="structexpr.html">exprptr</a> lambda, <a class="code hl_struct" href="structlist.html">listptr</a> closure, <span class="keywordtype">size_t</span> number_of_args,</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                         <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructexpr_html"><div class="ttname"><a href="structexpr.html">expr</a></div><div class="ttdef"><b>Definition:</b> expression.h:42</div></div>
-<div class="ttc" id="astructlambda__expr_html"><div class="ttname"><a href="structlambda__expr.html">lambda_expr</a></div><div class="ttdef"><b>Definition:</b> lambda_expr.h:34</div></div>
-<div class="ttc" id="astructlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdoc">A generic list type that stores void* pointers.</div><div class="ttdef"><b>Definition:</b> utils/list.h:37</div></div>
+<div class="ttc" id="astructexpr_html"><div class="ttname"><a href="structexpr.html">expr</a></div><div class="ttdef"><b>Definition:</b> expression.h:43</div></div>
+<div class="ttc" id="astructlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdef"><b>Definition:</b> utils/list.c:24</div></div>
 <div class="ttc" id="astructobject_html"><div class="ttname"><a href="structobject.html">object</a></div><div class="ttdoc">object_t contains the type and value information of objects in Theory Lisp programs.</div><div class="ttdef"><b>Definition:</b> types/object.h:28</div></div>
-<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdoc">A container for local variables.</div><div class="ttdef"><b>Definition:</b> stack_frame.h:30</div></div>
+<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdef"><b>Definition:</b> stack_frame.c:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

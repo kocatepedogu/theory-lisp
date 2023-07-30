@@ -33,7 +33,7 @@
 #define LINE_MAX 2048
 #endif
 
-static exprptr get_expression(list *parse_tree, size_t i, bool verbose) {
+static exprptr get_expression(listptr parse_tree, size_t i, bool verbose) {
   exprptr expr = list_get(parse_tree, i);
   if (verbose) {
     char *expr_str = expr_tostring(expr);
@@ -61,35 +61,12 @@ static object_t evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet
   return result;
 }
 
-static void print_variables(stack_frame_ptr sf, bool verbose) {
-  if (verbose) {
-    list *vars = &sf->local_variables;
-    size_t length = list_size(vars);
-
-    if (length == 0) {
-      puts("No global variables");
-    } else {
-      puts("Global variables:");
-    }
-
-    for (size_t i = 0; i < length; i++) {
-      variable_t *var = list_get(vars, i);
-      char *obj_str = object_tostring(var->value);
-      printf("  %s: %s = %s\n", var->name, var->value.type, obj_str);
-      free(obj_str);
-    }
-
-    puts("");
-  }
-}
-
-object_t interpreter(list *parse_tree, bool verbose, bool quiet, stack_frame_ptr sf) {
+object_t interpreter(listptr parse_tree, bool verbose, bool quiet, stack_frame_ptr sf) {
   object_t result = make_void();
 
   for (size_t i = 0; !is_error(result) && i < list_size(parse_tree); i++) {
     exprptr e = get_expression(parse_tree, i, verbose);
     assign_object(&result, evaluate(e, sf, verbose, quiet));
-    print_variables(sf, verbose);
   }
 
   return result;
@@ -110,16 +87,17 @@ void repl(stack_frame_ptr sf) {
       return;
     }
 
-    list *tokens = scanner(line);
-    list *parse_tree = parser(tokens);
+    listptr tokens = scanner(line);
+    listptr parse_tree = parser(tokens);
     delete_token_list(tokens);
     
     if (parse_tree) {
       object_t result = interpreter(parse_tree, false, false, sf);
       delete_parse_tree(parse_tree);
 
-      if (is_exit(result)) {
-        destroy_object(result);
+      bool exit = is_exit(result);
+      destroy_object(result);
+      if (exit) {
         return;
       }
     }

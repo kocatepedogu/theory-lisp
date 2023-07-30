@@ -31,46 +31,50 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* (lambda (p1 p2 .. pn) (expr)) */
-typedef struct {
-  bool variadic;
-  list captured_vars; /* list of char*'s */
-  list params; /* list of char*'s */
-  exprptr body;
-} lambda_expr;
-
-/* lambda_expr constructor */
-void construct_lambda_expr(exprptr e, exprptr body, bool variadic);
-
 /* lambda_expr "new" operation */
 exprptr new_lambda_expr(exprptr body, bool variadic);
 
-/* Lambda expression destructor */
-void destroy_lambda_expr(exprptr e);
-
-/* Lambda expression delete operation */
-void delete_lambda_expr(exprptr e);
+/* Lambda expression "delete" operation */
+void delete_lambda_expr(exprptr self);
 
 /* Lambda expression clone */
-exprptr clone_lambda_expr(exprptr e);
+exprptr clone_lambda_expr(exprptr self);
 
 /* Adds a formal parameter to the lambda function */
-void lambda_expr_add_param(exprptr e, const char *name);
+void lambda_expr_add_param(exprptr self, const char *name);
+
+/* Adds a captured variable to the lambda function */
+void lambda_expr_add_captured_var(exprptr self, const char *name);
+
+/* Changes Polish Notation arity of the lambda function */
+void lambda_expr_set_pn_arity(exprptr self, size_t arity);
+
+/* Returns Polish Notation arity of the lambda function */
+size_t lambda_expr_get_pn_arity(exprptr self);
+
+/* Returns arity of the lambda function */
+size_t lambda_expr_get_arity(exprptr self);
+
+/* Returns whether PN arity is given */
+bool lambda_expr_is_pn_arity_given(exprptr self);
+
+/* Returns whether lambda is variadic */
+bool lambda_expr_is_variadic(exprptr self);
 
 /* Lambda expression tostring implementation */
-char *lambda_expr_tostring(exprptr e);
+char *lambda_expr_tostring(exprptr self);
 
 /* lambda_expr parser */
-exprptr lambda_expr_parse(list *tokens, int *index);
+exprptr lambda_expr_parse(listptr tokens, int *index);
 
 /* true if e is lambda expression */
 bool is_lambda_expr(exprptr e);
 
 /* evaluates lambda expression to an object value */
-object_t interpret_lambda(exprptr e, stack_frame_ptr sf);
+object_t interpret_lambda(exprptr self, stack_frame_ptr sf);
 
 /* evaluates a lambda with arguments */
-object_t call_lambda(proc_t *proc, size_t number_of_args,
+object_t call_lambda(exprptr lambda, listptr closure, size_t number_of_args,
                          object_t *args, stack_frame_ptr sf);
 
 #endif

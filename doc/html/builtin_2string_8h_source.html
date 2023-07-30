@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.3"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Theory Lisp: error.h Source File</title>
+<title>Theory Lisp: string.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('error_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('builtin_2string_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -91,10 +91,10 @@ $(document).ready(function(){initNavTree('error_8h_source.html',''); initResizab
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">error.h</div></div>
+  <div class="headertitle"><div class="title">builtin/string.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="error_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright 2023 Doğu Kocatepe</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This file is part of Theory Lisp.</span></div>
@@ -112,41 +112,33 @@ $(document).ready(function(){initNavTree('error_8h_source.html',''); initResizab
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef ERROR_H</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define ERROR_H</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;object.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="error_8h.html#a41088072d1797f61c6e3ed2ce704e0b7">   27</a></span><span class="keyword">typedef</span> <span class="keywordtype">char</span> *<a class="code hl_typedef" href="error_8h.html#a41088072d1797f61c6e3ed2ce704e0b7">error_t</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef BUILTIN_STRING_H</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define BUILTIN_STRING_H</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;../types/string.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;../interpreter/stack_frame.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_strlen(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_strcat(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><a class="code hl_struct" href="structobject.html">object_t</a> <a class="code hl_function" href="error_8h.html#a067004bbaa14f1306f015f496b5335ca">make_error</a>(<a class="code hl_typedef" href="error_8h.html#a41088072d1797f61c6e3ed2ce704e0b7">error_t</a> fmt, ...);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><a class="code hl_struct" href="structobject.html">object_t</a> <a class="code hl_function" href="error_8h.html#a33f119c16480609e4829919d876db91a">clone_error</a>(<a class="code hl_struct" href="structobject.html">object_t</a> self);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> <a class="code hl_function" href="error_8h.html#a0727842454f03cf5528ba91f681bfd8c">destroy_error</a>(<a class="code hl_struct" href="structobject.html">object_t</a> self);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keywordtype">bool</span> <a class="code hl_function" href="error_8h.html#a49729dee3a86984c66db001aba11a9d4">error_equals</a>(<a class="code hl_struct" href="structobject.html">object_t</a> self, <a class="code hl_struct" href="structobject.html">object_t</a> other);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">char</span> *<a class="code hl_function" href="error_8h.html#a618cf9dc538c2cfdeff15b9cad542621">error_tostring</a>(<a class="code hl_struct" href="structobject.html">object_t</a> self);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keywordtype">bool</span> <a class="code hl_function" href="error_8h.html#a791eee5f1c424fb8c219df28d5c8ca2f">is_error</a>(<a class="code hl_struct" href="structobject.html">object_t</a> obj);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aerror_8h_html_a067004bbaa14f1306f015f496b5335ca"><div class="ttname"><a href="error_8h.html#a067004bbaa14f1306f015f496b5335ca">make_error</a></div><div class="ttdeci">object_t make_error(error_t fmt,...)</div><div class="ttdoc">Creates an error object with the given error mesage.</div><div class="ttdef"><b>Definition:</b> error.c:38</div></div>
-<div class="ttc" id="aerror_8h_html_a0727842454f03cf5528ba91f681bfd8c"><div class="ttname"><a href="error_8h.html#a0727842454f03cf5528ba91f681bfd8c">destroy_error</a></div><div class="ttdeci">void destroy_error(object_t self)</div><div class="ttdoc">Error destructor.</div><div class="ttdef"><b>Definition:</b> error.c:62</div></div>
-<div class="ttc" id="aerror_8h_html_a33f119c16480609e4829919d876db91a"><div class="ttname"><a href="error_8h.html#a33f119c16480609e4829919d876db91a">clone_error</a></div><div class="ttdeci">object_t clone_error(object_t self)</div><div class="ttdoc">Clones an error object.</div><div class="ttdef"><b>Definition:</b> error.c:52</div></div>
-<div class="ttc" id="aerror_8h_html_a41088072d1797f61c6e3ed2ce704e0b7"><div class="ttname"><a href="error_8h.html#a41088072d1797f61c6e3ed2ce704e0b7">error_t</a></div><div class="ttdeci">char * error_t</div><div class="ttdoc">Error type.</div><div class="ttdef"><b>Definition:</b> error.h:27</div></div>
-<div class="ttc" id="aerror_8h_html_a49729dee3a86984c66db001aba11a9d4"><div class="ttname"><a href="error_8h.html#a49729dee3a86984c66db001aba11a9d4">error_equals</a></div><div class="ttdeci">bool error_equals(object_t self, object_t other)</div><div class="ttdoc">Returns true if and only if both errors have the same error message.</div><div class="ttdef"><b>Definition:</b> error.c:67</div></div>
-<div class="ttc" id="aerror_8h_html_a618cf9dc538c2cfdeff15b9cad542621"><div class="ttname"><a href="error_8h.html#a618cf9dc538c2cfdeff15b9cad542621">error_tostring</a></div><div class="ttdeci">char * error_tostring(object_t self)</div><div class="ttdoc">Returns the stored error message.</div><div class="ttdef"><b>Definition:</b> error.c:76</div></div>
-<div class="ttc" id="aerror_8h_html_a791eee5f1c424fb8c219df28d5c8ca2f"><div class="ttname"><a href="error_8h.html#a791eee5f1c424fb8c219df28d5c8ca2f">is_error</a></div><div class="ttdeci">bool is_error(object_t obj)</div><div class="ttdoc">Return true if and only if obj is an error.</div><div class="ttdef"><b>Definition:</b> error.c:34</div></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_charat(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_substr(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_strcar(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><a class="code hl_struct" href="structobject.html">object_t</a> builtin_strcdr(<span class="keywordtype">size_t</span> n, <a class="code hl_struct" href="structobject.html">object_t</a> *args, <a class="code hl_struct" href="structstack__frame.html">stack_frame_ptr</a> sf);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructobject_html"><div class="ttname"><a href="structobject.html">object</a></div><div class="ttdoc">object_t contains the type and value information of objects in Theory Lisp programs.</div><div class="ttdef"><b>Definition:</b> types/object.h:28</div></div>
+<div class="ttc" id="astructstack__frame_html"><div class="ttname"><a href="structstack__frame.html">stack_frame</a></div><div class="ttdef"><b>Definition:</b> stack_frame.c:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0c0c9fa8a58db41e576adc3ce68c5ee9.html">types</a></li><li class="navelem"><a class="el" href="error_8h.html">error.h</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_373c2c7059a28a5fb56f71d9101aecc4.html">builtin</a></li><li class="navelem"><b>string.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>

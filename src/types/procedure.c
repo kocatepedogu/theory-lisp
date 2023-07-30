@@ -29,8 +29,14 @@
 #include "../utils/heap-format.h"
 #include "../interpreter/variable.h"
 #include "../interpreter/stack_frame.h"
+#include "../types/error.h"
 
-
+typedef struct {
+  /// Expression obtained from parse tree
+  void *lambda;
+  /// List of variables that existed in the original environment
+  listptr closure;
+} proc_t;
 
 static const object_vtable_t procedure_vtable = {
     .clone = clone_procedure,
@@ -45,28 +51,21 @@ inline bool is_procedure(object_t obj) {
   return strcmp(procedure_type_name, obj.type) == 0;
 }
 
-inline proc_t *procedure_value(object_t obj) {
+inline lambda_t procedure_get_lambda(object_t obj) {
   assert(is_procedure(obj));
-  return obj.value;
+  return ((proc_t*)(obj.value))->lambda;
 }
 
-object_t make_procedure(procedure_t proc, stack_frame_ptr environment) {
+inline listptr procedure_get_closure(object_t obj) {
+  assert(is_procedure(obj));
+  return ((proc_t*)(obj.value))->closure;
+}
+
+object_t make_procedure(lambda_t proc) {
   proc_t *p = (proc_t *)malloc(sizeof(proc_t));
   p->lambda = clone_expr(proc);
-  construct_list(&p->closure);
-
-  /* Capture variables from the environment */
-  if (environment) {
-    lambda_expr *le = ((exprptr)p->lambda)->data;
-    for (size_t i = 0; i < list_size(&le->captured_vars); i++) {
-      char *name = list_get(&le->captured_vars, i);
-      object_t value = stack_frame_get_variable(environment, name);
-      variable_t *var = new_variable(name, value);
-      list_add(&p->closure, var);
-      destroy_object(value);
-    }
-  }
-
+  p->closure = new_list();
+  
   object_t obj;
   obj.value = p;
   obj.type = procedure_type_name;
@@ -82,11 +81,11 @@ object_t clone_procedure(object_t self) {
   new_p->lambda = clone_expr(self_p->lambda);
 
   /* Clone values of captured variables */
-  construct_list(&new_p->closure);
-  for (size_t i = 0; i < list_size(&self_p->closure); i++) {
-    variable_t *self_var = list_get(&self_p->closure, i);
-    variable_t *new_var = new_variable(self_var->name, self_var->value);
-    list_add(&new_p->closure, new_var);
+  new_p->closure = new_list();
+  for (size_t i = 0; i < list_size(self_p->closure); i++) {
+    variableptr self_var = list_get(self_p->closure, i);
+    variableptr new_var = clone_variable(self_var);
+    list_add(new_p->closure, new_var);
   }
 
   object_t new_procedure;
@@ -102,10 +101,10 @@ void destroy_procedure(object_t self) {
   proc_t *p = self.value;
 
   /* Delete captured variables */
-  for (size_t i = 0; i < list_size(&p->closure); i++) {
-    delete_variable(list_get(&p->closure, i));
+  for (size_t i = 0; i < list_size(p->closure); i++) {
+    delete_variable(list_get(p->closure, i));
   }
-  destroy_list(&p->closure);
+  delete_list(p->closure);
 
   /* Delete lambda */
   delete_expr(p->lambda);
@@ -120,7 +119,7 @@ char *procedure_tostring(object_t self) {
    * representation of the lambda itself is enough
    * to describe the procedure object. 
    */
-  if (list_size(&p->closure) == 0) {
+  if (list_size(p->closure) == 0) {
     return expr_tostring(p->lambda);
   }
 
@@ -130,9 +129,12 @@ char *procedure_tostring(object_t self) {
    * gives a procedure object with captured values.
    */
   exprptr le = new_let_expr(clone_expr(p->lambda));
-  for (size_t i = 0; i < list_size(&p->closure); i++) {
-    variable_t *var = list_get(&p->closure, i);
-    let_expr_add_declaration(le, var->name, new_data_expr(var->value));
+  for (size_t i = 0; i < list_size(p->closure); i++) {
+    variableptr var = list_get(p->closure, i);
+    object_t value = variable_get_value(var);
+    exprptr de = new_data_expr(value);
+    let_expr_add_declaration(le, variable_get_name(var), de);
+    destroy_object(value);
   }
 
   char *result = expr_tostring(le);
@@ -145,3 +147,30 @@ bool procedure_equals(object_t self, object_t other) {
   return false; 
 }
 
+void procedure_add_closure_variable(object_t self, 
+                                    const char *name,
+                                    object_t value) {
+  proc_t *p = self.value;
+  variableptr var = new_variable(name, value);
+  list_add(p->closure, var);
+}
+
+size_t procedure_get_pn_arity(object_t self) {
+  proc_t *p = self.value;
+  return lambda_expr_get_pn_arity(p->lambda);
+}
+
+size_t procedure_get_arity(object_t self) {
+  proc_t *p = self.value;
+  return lambda_expr_get_arity(p->lambda);
+}
+
+bool procedure_is_pn_arity_given(object_t self) {
+  proc_t *p = self.value;
+  return lambda_expr_is_pn_arity_given(p->lambda);
+}
+
+bool procedure_is_variadic(object_t self) {
+  proc_t *p = self.value;
+  return lambda_expr_is_variadic(p->lambda); 
+}

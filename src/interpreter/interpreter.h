@@ -35,7 +35,7 @@
  * be printed before getting evaluated, and global variables will
  * be displayed after evaluating each expression.
  */
-object_t interpreter(list *parse_tree, bool verbose, bool show, stack_frame_ptr sf);
+object_t interpreter(listptr parse_tree, bool verbose, bool show, stack_frame_ptr sf);
 
 /**
  * Read-Evaluate-Print-Loop

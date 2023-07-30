@@ -31,9 +31,9 @@ void *parser_error(size_t line, size_t column, char *format, ...) {
   return NULL;
 }
 
-list *parser(list *token_list) {
+listptr parser(listptr token_list) {
   int token_index = 0;
-  list *parse_tree = new_list();
+  listptr parse_tree = new_list();
   while (((token_t *)list_get(token_list, token_index))->type !=
          TOKEN_END_OF_FILE) {
     exprptr e = expr_parse(token_list, &token_index);
@@ -47,7 +47,7 @@ list *parser(list *token_list) {
   return parse_tree;
 }
 
-void delete_parse_tree(list *parse_tree) {
+void delete_parse_tree(listptr parse_tree) {
   if (parse_tree) {
     for (size_t i = 0; i < list_size(parse_tree); i++) {
       delete_expr(list_get(parse_tree, i));

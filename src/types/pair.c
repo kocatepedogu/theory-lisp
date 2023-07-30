@@ -26,6 +26,12 @@
 #include "../types/null.h"
 #include "object.h"
 
+/** Cons pair type */
+typedef struct pair {
+  object_t first;
+  object_t second;
+} pair_t;
+
 static const object_vtable_t pair_vtable = {
     .clone = clone_pair,
     .destroy = destroy_pair,
@@ -39,9 +45,14 @@ inline bool is_pair(object_t obj) {
   return strcmp(pair_typename, obj.type) == 0;
 }
 
-inline pair_t pair_value(object_t obj) { 
+inline object_t pair_first(object_t obj) { 
   assert(is_pair(obj));
-  return *(pair_t *)obj.value; 
+  return (*(pair_t *)obj.value).first; 
+}
+
+inline object_t pair_second(object_t obj) {
+  assert(is_pair(obj));
+  return (*(pair_t*)obj.value).second;
 }
 
 object_t make_pair(object_t first, object_t second) {
@@ -103,7 +114,7 @@ bool pair_equals(object_t self, object_t other) {
          object_equals(self_value->second, other_value->second);
 }
 
-bool cons_list_to_internal_list(object_t list_object, list *output_list) {
+bool cons_list_to_internal_list(object_t list_object, listptr output_list) {
   if (is_null(list_object)) {
     return true;
   }
@@ -132,7 +143,7 @@ bool cons_list_to_internal_list(object_t list_object, list *output_list) {
   return false;
 }
 
-object_t internal_list_to_cons_list(list *input_list) {
+object_t internal_list_to_cons_list(listptr input_list) {
   size_t len = list_size(input_list);
 
   if (len == 0) {

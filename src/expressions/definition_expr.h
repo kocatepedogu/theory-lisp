@@ -28,37 +28,25 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* (define name expr) */
-typedef struct {
-  char *name;
-  exprptr value;
-} definition_expr;
-
-/* definition_expr constructor */
-void construct_definition_expr(exprptr e, const char *name, exprptr body);
-
 /* definition_expr "new" operation */
 exprptr new_definition_expr(const char *name, exprptr body);
 
-/* definition_expr destructor */
-void destroy_definition_expr(exprptr e);
-
 /* definiton_expr "delete" operation */
-void delete_definition_expr(exprptr e);
+void delete_definition_expr(exprptr self);
 
 /* definition_expr clone */
-exprptr clone_definition_expr(exprptr e);
+exprptr clone_definition_expr(exprptr self);
 
 /* definition_expr tostring implementation */
-char *definition_expr_tostring(exprptr e);
+char *definition_expr_tostring(exprptr self);
 
 /* definition_expr parser */
-exprptr definition_expr_parse(list *tokens, int *index);
+exprptr definition_expr_parse(listptr tokens, int *index);
 
 /* true if e is definition expression */
 bool is_definition_expr(exprptr e);
 
 /* evaluates definition expression */
-object_t interpret_definition(exprptr e, stack_frame_ptr ptr);
+object_t interpret_definition(exprptr self, stack_frame_ptr ptr);
 
 #endif

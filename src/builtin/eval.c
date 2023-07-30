@@ -34,8 +34,8 @@ object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
   }
 
   char *str = string_value(*args);
-  list *tokens = scanner(str);
-  list *expressions = parser(tokens);
+  listptr tokens = scanner(str);
+  listptr expressions = parser(tokens);
 
   if (expressions == NULL) {
     delete_token_list(tokens);

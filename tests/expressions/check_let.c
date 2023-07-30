@@ -5,13 +5,18 @@
 #include "../../src/types/integer.h"
 #include "parse.h"
 
+typedef struct {
+  listptr declarations;
+  exprptr body;
+} let_expr;
+
 START_TEST(test_empty_let_expr) {
   exprptr e = NULL;
   parse(e, "(let () 0)");
 
   ck_assert(is_let_expr(e));
   let_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->declarations), 0);
+  ck_assert_uint_eq(list_size(le->declarations), 0);
   assert_integer(le->body, 0); 
 
   delete_expr(e);
@@ -24,7 +29,7 @@ START_TEST(test_let_expr) {
 
   ck_assert(is_let_expr(e));
   let_expr *le = e->data;
-  ck_assert_uint_eq(list_size(&le->declarations), 2);
+  ck_assert_uint_eq(list_size(le->declarations), 2);
   assert_identifier(le->body, "x");
   
   delete_expr(e);

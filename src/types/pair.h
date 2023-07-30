@@ -24,12 +24,6 @@
 #include "object.h"
 #include "../utils/list.h"
 
-/** Cons pair type */
-typedef struct pair {
-  object_t first;
-  object_t second;
-} pair_t;
-
 /**
  * Pair constructor.
  * Calls copy constructors of the given objects to make a deep copy.
@@ -71,9 +65,14 @@ bool pair_equals(object_t obj, object_t other);
 bool is_pair(object_t obj);
 
 /**
- * Returns the internally stored pair struct 
+ * Returns the first element in the pair
  */
-pair_t pair_value(object_t obj);
+object_t pair_first(object_t obj);
+
+/**
+ * Returns the second element in the pair
+ */
+object_t pair_second(object_t obj);
 
 /**
  * Theory Lisp programs use linked chains of cons pairs to form lists,
@@ -82,7 +81,7 @@ pair_t pair_value(object_t obj);
  * to an internal list. If the given object is not a proper cons list,
  * it will return false.
  */
-bool cons_list_to_internal_list(object_t list_object, list *output_list);
+bool cons_list_to_internal_list(object_t list_object, listptr output_list);
 
 /**
  * Theory Lisp programs use linked chains of cons pairs to form lists,
@@ -91,6 +90,6 @@ bool cons_list_to_internal_list(object_t list_object, list *output_list);
  * to a cons list. Internal lists are always assumed to be well-formed,
  * so this function should always succeed.
  */
-object_t internal_list_to_cons_list(list *input_list);
+object_t internal_list_to_cons_list(listptr input_list);
 
 #endif

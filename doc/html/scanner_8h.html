@@ -122,11 +122,17 @@ Enumerations</h2></td></tr>
 , <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a20bd045ad2e31cda0e56d92fb94d911d">TOKEN_LEFT_PARENTHESIS</a>
 , <br />
 &#160;&#160;<a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197">TOKEN_RIGHT_PARENTHESIS</a>
+, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa69f0c3082471ba3b06b4aecccec390b">TOKEN_LEFT_SQUARE_BRACKET</a>
+, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ace1a9097c863a1377032c84862f0cfa9">TOKEN_RIGHT_SQUARE_BRACKET</a>
+, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69aa77cecc238ed4e8268ea98d25ad384bc">TOKEN_LEFT_CURLY_BRACKET</a>
+, <br />
+&#160;&#160;<a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a04f17c4563e653de0093b8c48df91d6c">TOKEN_RIGHT_CURLY_BRACKET</a>
+, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a04d79b81666e686448ea4bd2592f438b">TOKEN_BACKSLASH</a>
 , <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86">TOKEN_COND</a>
 , <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d">TOKEN_DEFINE</a>
-, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2">TOKEN_IF</a>
 , <br />
-&#160;&#160;<a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89">TOKEN_LAMBDA</a>
+&#160;&#160;<a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a6d39f93a351e0b853977018d48c47ca2">TOKEN_IF</a>
+, <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a54bdf1672254f59fd94d29bc4adcaa89">TOKEN_LAMBDA</a>
 , <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a92b794297c24c547a4d479550c21622e">TOKEN_LET</a>
 , <a class="el" href="scanner_8h.html#ad04fc3241884cc3eb19ccad1ce5afa69a69f223553afe3f6829b72cb8f3d5c7d4">TOKEN_END_OF_FILE</a>
 <br />
@@ -135,16 +141,16 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aeec4143454f6bbf986749c3afb04b747"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlist.html">list</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scanner_8h.html#aeec4143454f6bbf986749c3afb04b747">scanner</a> (const char *input)</td></tr>
-<tr class="memdesc:aeec4143454f6bbf986749c3afb04b747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a char array and returns a list of tokens.  <a href="scanner_8h.html#aeec4143454f6bbf986749c3afb04b747">More...</a><br /></td></tr>
-<tr class="separator:aeec4143454f6bbf986749c3afb04b747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4ac36fd4f074159a160d191d5fdb4d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlist.html">listptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scanner_8h.html#aa4ac36fd4f074159a160d191d5fdb4d2">scanner</a> (const char *input)</td></tr>
+<tr class="memdesc:aa4ac36fd4f074159a160d191d5fdb4d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a char array and returns a list of tokens.  <a href="scanner_8h.html#aa4ac36fd4f074159a160d191d5fdb4d2">More...</a><br /></td></tr>
+<tr class="separator:aa4ac36fd4f074159a160d191d5fdb4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6576d9d26375e39db457a4f747d68692"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scanner_8h.html#a6576d9d26375e39db457a4f747d68692">token_tostring</a> (<a class="el" href="structtoken__t.html">token_t</a> *token)</td></tr>
 <tr class="memdesc:a6576d9d26375e39db457a4f747d68692"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the string representation of a token.  <a href="scanner_8h.html#a6576d9d26375e39db457a4f747d68692">More...</a><br /></td></tr>
 <tr class="separator:a6576d9d26375e39db457a4f747d68692"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae50c405a9f7c1713e16e2462c164d424"><td class="memItemLeft" align="right" valign="top"><a id="ae50c405a9f7c1713e16e2462c164d424" name="ae50c405a9f7c1713e16e2462c164d424"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_token_list</b> (<a class="el" href="structlist.html">list</a> *token_list)</td></tr>
-<tr class="memdesc:ae50c405a9f7c1713e16e2462c164d424"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates all tokens from the given token list and then deletes the list itself. <br /></td></tr>
-<tr class="separator:ae50c405a9f7c1713e16e2462c164d424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0310cb1c847f096206989831bd1a154a"><td class="memItemLeft" align="right" valign="top"><a id="a0310cb1c847f096206989831bd1a154a" name="a0310cb1c847f096206989831bd1a154a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_token_list</b> (<a class="el" href="structlist.html">listptr</a> token_list)</td></tr>
+<tr class="memdesc:a0310cb1c847f096206989831bd1a154a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates all tokens from the given token list and then deletes the list itself. <br /></td></tr>
+<tr class="separator:a0310cb1c847f096206989831bd1a154a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="ad04fc3241884cc3eb19ccad1ce5afa69" name="ad04fc3241884cc3eb19ccad1ce5afa69"></a>
@@ -177,6 +183,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_token_list</b>
 </td></tr>
 <tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197" name="ad04fc3241884cc3eb19ccad1ce5afa69adafc4e822bae18e3c444059d10e17197"></a>TOKEN_RIGHT_PARENTHESIS&#160;</td><td class="fielddoc"><p >) </p>
 </td></tr>
+<tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69aa69f0c3082471ba3b06b4aecccec390b" name="ad04fc3241884cc3eb19ccad1ce5afa69aa69f0c3082471ba3b06b4aecccec390b"></a>TOKEN_LEFT_SQUARE_BRACKET&#160;</td><td class="fielddoc"><p >[ </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69ace1a9097c863a1377032c84862f0cfa9" name="ad04fc3241884cc3eb19ccad1ce5afa69ace1a9097c863a1377032c84862f0cfa9"></a>TOKEN_RIGHT_SQUARE_BRACKET&#160;</td><td class="fielddoc"><p >] </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69aa77cecc238ed4e8268ea98d25ad384bc" name="ad04fc3241884cc3eb19ccad1ce5afa69aa77cecc238ed4e8268ea98d25ad384bc"></a>TOKEN_LEFT_CURLY_BRACKET&#160;</td><td class="fielddoc"><p >{ </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69a04f17c4563e653de0093b8c48df91d6c" name="ad04fc3241884cc3eb19ccad1ce5afa69a04f17c4563e653de0093b8c48df91d6c"></a>TOKEN_RIGHT_CURLY_BRACKET&#160;</td><td class="fielddoc"><p >} </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69a04d79b81666e686448ea4bd2592f438b" name="ad04fc3241884cc3eb19ccad1ce5afa69a04d79b81666e686448ea4bd2592f438b"></a>TOKEN_BACKSLASH&#160;</td><td class="fielddoc"><p >"\" </p>
+</td></tr>
 <tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86" name="ad04fc3241884cc3eb19ccad1ce5afa69ad736f7af7c281de59d950306961f2f86"></a>TOKEN_COND&#160;</td><td class="fielddoc"><p >cond </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d" name="ad04fc3241884cc3eb19ccad1ce5afa69a24fefb5e0c2dfd0c5e4e5aa1a5c7557d"></a>TOKEN_DEFINE&#160;</td><td class="fielddoc"><p >define </p>
@@ -194,14 +210,14 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>delete_token_list</b>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="aeec4143454f6bbf986749c3afb04b747" name="aeec4143454f6bbf986749c3afb04b747"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeec4143454f6bbf986749c3afb04b747">&#9670;&nbsp;</a></span>scanner()</h2>
+<a id="aa4ac36fd4f074159a160d191d5fdb4d2" name="aa4ac36fd4f074159a160d191d5fdb4d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4ac36fd4f074159a160d191d5fdb4d2">&#9670;&nbsp;</a></span>scanner()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structlist.html">list</a> * scanner </td>
+          <td class="memname"><a class="el" href="structlist.html">listptr</a> scanner </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>input</em></td><td>)</td>

@@ -2,7 +2,7 @@
 #include "../../src/scanner/scanner.h"
 
 START_TEST(test_empty) {
-  list *tokens = scanner("");
+  listptr tokens = scanner("");
   ck_assert_uint_eq(list_size(tokens), 1);
 
   token_t *tkn = list_get(tokens, 0);
@@ -20,7 +20,7 @@ START_TEST(test_keywords) {
     TOKEN_COND, TOKEN_NULL, TOKEN_END_OF_FILE
   };
 
-  list *tokens = scanner(keywords);
+  listptr tokens = scanner(keywords);
   for (int i = 0; i < sizeof token_types / sizeof(token_type_t); i++) {
     token_t *tkn = list_get(tokens, i);
     ck_assert_int_eq(tkn->type, token_types[i]);
@@ -32,7 +32,7 @@ START_TEST(test_keywords) {
 START_TEST(test_boolean) {
   static const char words[] = "#t  #f\t     #t\n#f   ";
   static const bool values[] = {true, false, true, false};
-  list *tokens = scanner(words);
+  listptr tokens = scanner(words);
   for (int i = 0; i < list_size(tokens) - 1; i++) {
     token_t *tkn = list_get(tokens, i);
     ck_assert_int_eq(tkn->type, TOKEN_BOOLEAN);
@@ -44,7 +44,7 @@ START_TEST(test_boolean) {
 
 START_TEST(test_numbers) {
   static const char words[] = "2.25 1234 0 0.0 1.75";
-  list *tokens = scanner(words);
+  listptr tokens = scanner(words);
   ck_assert_uint_eq(list_size(tokens), 6);
 
   token_t *t1 = list_get(tokens, 0);
@@ -78,7 +78,7 @@ START_TEST(test_numbers) {
 
 START_TEST(test_mixed_alphanumeric) {
   static const char words[] = "123abc \"first string word\" xyzt123 iflambda \"long string\" ";
-  list *tokens = scanner(words);
+  listptr tokens = scanner(words);
   ck_assert_uint_eq(list_size(tokens), 7);
 
   token_t *t1 = list_get(tokens, 0);
@@ -128,7 +128,7 @@ START_TEST(test_mixed_with_parenthesis) {
     TOKEN_END_OF_FILE
   };
 
-  list *tokens = scanner(words);
+  listptr tokens = scanner(words);
   for (int i = 0; i < list_size(tokens); i++) {
     token_t *tkn = list_get(tokens, i);
     ck_assert_int_eq(tkn->type, expected_token_types[i]);

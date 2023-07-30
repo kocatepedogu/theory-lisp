@@ -39,6 +39,7 @@ typedef struct {
   const char *name;
   builtin_function_ptr func;
   size_t arity;
+  size_t pn_arity;
   bool variadic;
 } builtin_function;
 

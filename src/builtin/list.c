@@ -32,9 +32,8 @@ object_t builtin_cons(size_t n, object_t *args, stack_frame_ptr sf) {
 object_t builtin_car(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n == 1);
 
-  if (is_pair(args[0])) {
-    pair_t p = pair_value(args[0]);
-    return clone_object(p.first);
+  if (is_pair(args[0])) {;
+    return clone_object(pair_first(*args));
   }
 
   return make_error("car argument is not a pair.");
@@ -44,8 +43,7 @@ object_t builtin_cdr(size_t n, object_t *args, stack_frame_ptr sf) {
   assert(n == 1);
 
   if (is_pair(args[0])) {
-    pair_t p = pair_value(args[0]);
-    return clone_object(p.second);
+    return clone_object(pair_second(*args));
   }
 
   return make_error("cdr argument is not a pair");

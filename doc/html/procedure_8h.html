@@ -102,15 +102,15 @@ $(document).ready(function(){initNavTree('procedure_8h.html',''); initResizable(
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a8f3522cad73a13bd7021bfe17016ac2d"><td class="memItemLeft" align="right" valign="top"><a id="a8f3522cad73a13bd7021bfe17016ac2d" name="a8f3522cad73a13bd7021bfe17016ac2d"></a>
-typedef void *&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_t</b></td></tr>
-<tr class="separator:a8f3522cad73a13bd7021bfe17016ac2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ed1cabbdaaed8386f695fae97cced73"><td class="memItemLeft" align="right" valign="top"><a id="a2ed1cabbdaaed8386f695fae97cced73" name="a2ed1cabbdaaed8386f695fae97cced73"></a>
+typedef void *&#160;</td><td class="memItemRight" valign="bottom"><b>lambda_t</b></td></tr>
+<tr class="separator:a2ed1cabbdaaed8386f695fae97cced73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aaaead47289aa5911e459e7d21dc0009e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="procedure_8h.html#aaaead47289aa5911e459e7d21dc0009e">make_procedure</a> (procedure_t proc)</td></tr>
-<tr class="memdesc:aaaead47289aa5911e459e7d21dc0009e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Procedure constructor.  <a href="procedure_8h.html#aaaead47289aa5911e459e7d21dc0009e">More...</a><br /></td></tr>
-<tr class="separator:aaaead47289aa5911e459e7d21dc0009e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b923d7877bc63bc1f16b129cf94f191"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="procedure_8h.html#a2b923d7877bc63bc1f16b129cf94f191">make_procedure</a> (lambda_t proc)</td></tr>
+<tr class="memdesc:a2b923d7877bc63bc1f16b129cf94f191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Procedure constructor.  <a href="procedure_8h.html#a2b923d7877bc63bc1f16b129cf94f191">More...</a><br /></td></tr>
+<tr class="separator:a2b923d7877bc63bc1f16b129cf94f191"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b33ef9165b19039fc679215dd5ca869"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="procedure_8h.html#a1b33ef9165b19039fc679215dd5ca869">clone_procedure</a> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> self)</td></tr>
 <tr class="memdesc:a1b33ef9165b19039fc679215dd5ca869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Procedure clone.  <a href="procedure_8h.html#a1b33ef9165b19039fc679215dd5ca869">More...</a><br /></td></tr>
 <tr class="separator:a1b33ef9165b19039fc679215dd5ca869"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,10 +127,18 @@ Functions</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_procedure</b> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> obj)</td></tr>
 <tr class="memdesc:a8e03a377ec4fb0324bc9d4daff2983b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if and only if the given object is a procedure object. <br /></td></tr>
 <tr class="separator:a8e03a377ec4fb0324bc9d4daff2983b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d3bfb58f0bfd10f3e53fc9e5fff7569"><td class="memItemLeft" align="right" valign="top"><a id="a8d3bfb58f0bfd10f3e53fc9e5fff7569" name="a8d3bfb58f0bfd10f3e53fc9e5fff7569"></a>
-void *&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_value</b> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> obj)</td></tr>
-<tr class="memdesc:a8d3bfb58f0bfd10f3e53fc9e5fff7569"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the lambda expression pointed to by the procedure object. <br /></td></tr>
-<tr class="separator:a8d3bfb58f0bfd10f3e53fc9e5fff7569"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b346a9540c99bd3046da3ec08f84c30"><td class="memItemLeft" align="right" valign="top"><a id="a8b346a9540c99bd3046da3ec08f84c30" name="a8b346a9540c99bd3046da3ec08f84c30"></a>
+lambda_t&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_get_lambda</b> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> obj)</td></tr>
+<tr class="memdesc:a8b346a9540c99bd3046da3ec08f84c30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the lambda expression pointed to by the procedure object. <br /></td></tr>
+<tr class="separator:a8b346a9540c99bd3046da3ec08f84c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c92dcf9c7af8df7b1287658659df854"><td class="memItemLeft" align="right" valign="top"><a id="a1c92dcf9c7af8df7b1287658659df854" name="a1c92dcf9c7af8df7b1287658659df854"></a>
+<a class="el" href="structlist.html">listptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_get_closure</b> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> obj)</td></tr>
+<tr class="memdesc:a1c92dcf9c7af8df7b1287658659df854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the closure list of the procedure object. <br /></td></tr>
+<tr class="separator:a1c92dcf9c7af8df7b1287658659df854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaf23889196d4e33b6ff0ffc8505905d"><td class="memItemLeft" align="right" valign="top"><a id="acaf23889196d4e33b6ff0ffc8505905d" name="acaf23889196d4e33b6ff0ffc8505905d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_add_closure_variable</b> (<a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> self, const char *name, <a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> value)</td></tr>
+<tr class="memdesc:acaf23889196d4e33b6ff0ffc8505905d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a variable to the closure. <br /></td></tr>
+<tr class="separator:acaf23889196d4e33b6ff0ffc8505905d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a1b33ef9165b19039fc679215dd5ca869" name="a1b33ef9165b19039fc679215dd5ca869"></a>
@@ -175,8 +183,8 @@ void *&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_value</b>
 
 </div>
 </div>
-<a id="aaaead47289aa5911e459e7d21dc0009e" name="aaaead47289aa5911e459e7d21dc0009e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaaead47289aa5911e459e7d21dc0009e">&#9670;&nbsp;</a></span>make_procedure()</h2>
+<a id="a2b923d7877bc63bc1f16b129cf94f191" name="a2b923d7877bc63bc1f16b129cf94f191"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b923d7877bc63bc1f16b129cf94f191">&#9670;&nbsp;</a></span>make_procedure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +192,7 @@ void *&#160;</td><td class="memItemRight" valign="bottom"><b>procedure_value</b>
         <tr>
           <td class="memname"><a class="el" href="types_2object_8h.html#a9be1c971ceceb085e924ae9cbdb50223">object_t</a> make_procedure </td>
           <td>(</td>
-          <td class="paramtype">procedure_t&#160;</td>
+          <td class="paramtype">lambda_t&#160;</td>
           <td class="paramname"><em>proc</em></td><td>)</td>
           <td></td>
         </tr>

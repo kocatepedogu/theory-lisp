@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['boolean_2eh_0',['boolean.h',['../types_2boolean_8h.html',1,'']]],
-  ['object_2eh_1',['object.h',['../types_2object_8h.html',1,'']]]
+  ['scanner_2eh_0',['scanner.h',['../scanner_8h.html',1,'']]],
+  ['stack_5fframe_2eh_1',['stack_frame.h',['../stack__frame_8h.html',1,'']]]
 ];

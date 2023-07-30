@@ -24,30 +24,31 @@
 #include "../types/object.h"
 
 /** Stores the name and values of a variable */
-typedef struct variable {
-  char *name;
-  object_t value;
-} variable_t;
+struct variable;
+typedef struct variable *variableptr;
 
 /**
  * Returns a malloc'ed variable with the given name and value.
  * A clone of the given parameter value is stored internally.
  */
-variable_t *new_variable(const char *name, object_t value);
+variableptr new_variable(const char *name, object_t value);
 
 /** Deallocates the given variable */
-void delete_variable(variable_t *);
+void delete_variable(variableptr var);
+
+/** Clones variable */
+variableptr clone_variable(variableptr var);
 
 /** Returns the value stored in the given variable */
-object_t variable_get_value(variable_t *var);
+object_t variable_get_value(variableptr var);
 
 /**
  * Sets the value of an existing variable.
  * A clone of the given parameter value is stored internally.
  */
-void variable_set_value(variable_t *var, object_t value);
+void variable_set_value(variableptr var, object_t value);
 
 /** Returns the name of the given variable */
-char *variable_get_name(variable_t *var);
+char *variable_get_name(variableptr var);
 
 #endif

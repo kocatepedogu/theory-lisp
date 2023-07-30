@@ -36,10 +36,13 @@ static const struct {
                 {"cond", TOKEN_COND},
                 {")", TOKEN_RIGHT_PARENTHESIS},
                 {"(", TOKEN_LEFT_PARENTHESIS},
-		{"]", TOKEN_RIGHT_SQUARE_BRACKET},
-		{"[", TOKEN_LEFT_SQUARE_BRACKET},
+                {"]", TOKEN_RIGHT_SQUARE_BRACKET},
+                {"[", TOKEN_LEFT_SQUARE_BRACKET},
+                {"}", TOKEN_RIGHT_CURLY_BRACKET},
+                {"{", TOKEN_LEFT_CURLY_BRACKET},
                 {"null", TOKEN_NULL},
-                {"&", TOKEN_AMPERSAND}};
+                {"&", TOKEN_AMPERSAND},
+                {"\\", TOKEN_BACKSLASH}};
 
 typedef enum { 
   ST_WHITESPACE, 
@@ -105,6 +108,9 @@ static bool token_identifier(token_type_t *type, token_value_t *value,
       !strchr(word, '[') &&
       !strchr(word, ']') && 
       !strchr(word, '&') &&
+      !strchr(word, '{') &&
+      !strchr(word, '}') &&
+      !strchr(word, '\\') &&
       !isdigit(word[0]) &&
       word[0] != '\'') {
     *type = TOKEN_IDENTIFIER;
@@ -120,7 +126,7 @@ static inline void chrcat(char *str, char chr) {
   str[len + 1] = '\0';
 }
 
-static bool get_tokens(list *token_list, const char *str, size_t line_number,
+static bool get_tokens(listptr token_list, const char *str, size_t line_number,
                        size_t column_number) {
   size_t offset = 0;
   char current_token[TOKEN_SIZE];
@@ -158,8 +164,8 @@ static bool get_tokens(list *token_list, const char *str, size_t line_number,
   return true;
 }
 
-list *scanner(const char *input) {
-  list *token_list = new_list();
+listptr scanner(const char *input) {
+  listptr token_list = new_list();
 
   char word[WORD_SIZE];
   memset(word, 0, sizeof word);
@@ -284,7 +290,7 @@ char *token_tostring(token_t *token) {
   }
 }
 
-void delete_token_list(list *token_list) {
+void delete_token_list(listptr token_list) {
   for (size_t i = 0; i < list_size(token_list); i++) {
     free(list_get(token_list, i));
   }

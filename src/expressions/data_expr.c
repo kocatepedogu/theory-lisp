@@ -20,58 +20,54 @@
 #include "expression.h"
 #include <string.h>
 
+/* Data */
+typedef struct {
+  object_t obj;
+} data_expr;
+
 static const char data_expr_name[] = "data_expr";
 
 static const expr_vtable data_expr_vtable = {
   .deallocate = delete_data_expr,
-  .destructor = destroy_data_expr,
   .clone = clone_data_expr,
   .to_string = data_expr_tostring,
   .interpret = interpret_data
 };
 
-void construct_data_expr(exprptr e, object_t obj) {
+exprptr new_data_expr(object_t obj) {
   data_expr *de = (data_expr *)malloc(sizeof(data_expr));
   de->obj = clone_object(obj);
+
+  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
   e->data = de;
   e->vtable = &data_expr_vtable;
   e->expr_name = data_expr_name;
-}
-
-exprptr new_data_expr(object_t obj) {
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  construct_data_expr(e, obj);
   return e;
 }
 
-void destroy_data_expr(exprptr e) {
-  data_expr *de = e->data;
+void delete_data_expr(exprptr self) {
+  data_expr *de = self->data;
   destroy_object(de->obj);
   free(de);
+  free(self);
 }
 
-void delete_data_expr(exprptr e) {
-  destroy_data_expr(e);
-  free(e);
-}
-
-exprptr clone_data_expr(exprptr e) {
+exprptr clone_data_expr(exprptr self) {
   data_expr *new_de = (data_expr *)malloc(sizeof(data_expr));
-  data_expr *self_de = e->data;
+  data_expr *self_de = self->data;
   new_de->obj = clone_object(self_de->obj);
 
-  exprptr new_expr = (exprptr)malloc(sizeof(expr_t));
-  new_expr->data = new_de;
-  new_expr->vtable = &data_expr_vtable;
-  new_expr->expr_name = data_expr_name;
-  new_expr->line_number = e->line_number;
-  new_expr->column_number = e->column_number;
-  return new_expr;
+  return base_clone(self, new_de);
 }
 
-char *data_expr_tostring(exprptr e) {
-  data_expr *de = e->data;
+char *data_expr_tostring(exprptr self) {
+  data_expr *de = self->data;
   return object_tostring(de->obj);
+}
+
+object_t get_data_value(exprptr self) {
+  data_expr *de = self->data;
+  return de->obj;
 }
 
 bool is_data_expr(exprptr e) {
@@ -82,7 +78,7 @@ bool is_data_expr(exprptr e) {
   return strcmp(e->expr_name, data_expr_name) == 0;
 }
 
-object_t interpret_data(exprptr e, stack_frame_ptr sf) {
-  data_expr *de = e->data;
+object_t interpret_data(exprptr self, stack_frame_ptr sf) {
+  data_expr *de = self->data;
   return clone_object(de->obj);
 }

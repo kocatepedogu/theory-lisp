@@ -30,36 +30,28 @@
 struct expr;
 typedef struct expr *exprptr;
 
-/* Data */
-typedef struct data_expr {
-  object_t obj;
-} data_expr;
-
-/* data_expr constructor */
-void construct_data_expr(exprptr e, object_t obj);
-
 /* data_expr "new" operation */
 exprptr new_data_expr(object_t obj);
 
-/* data_expr destructor */
-void destroy_data_expr(exprptr e);
-
 /* data_expr "delete" operation */
-void delete_data_expr(exprptr e);
+void delete_data_expr(exprptr self);
 
 /* data_expr clone */
-exprptr clone_data_expr(exprptr e);
+exprptr clone_data_expr(exprptr self);
 
 /* data_expr tostring implementation */
-char *data_expr_tostring(exprptr e);
+char *data_expr_tostring(exprptr self);
+
+/* returns stored value */
+object_t get_data_value(exprptr self); 
 
 /* data_expr parser */
-exprptr data_expr_parse(list *tokens, int *index);
+exprptr data_expr_parse(listptr tokens, int *index);
 
 /* true if e is data expression */
 bool is_data_expr(exprptr e);
 
 /* evaluates data expression */
-object_t interpret_data(exprptr e, stack_frame_ptr sf);
+object_t interpret_data(exprptr self, stack_frame_ptr sf);
 
 #endif

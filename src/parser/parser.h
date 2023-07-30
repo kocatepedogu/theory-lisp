@@ -46,11 +46,11 @@ void *parser_error(size_t line, size_t column, char *format, ...);
  * parse tree is deallocated and NULL is returned. It will print an error
  * message before returning to the caller.
  */
-list *parser(list *token_list);
+listptr parser(listptr token_list);
 
 /**
  * Recursively deallocates the given parse tree.
  */
-void delete_parse_tree(list *parse_tree);
+void delete_parse_tree(listptr parse_tree);
 
 #endif

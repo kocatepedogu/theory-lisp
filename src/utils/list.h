@@ -34,55 +34,37 @@
  * list_add, list_add_all, list_size, list_get should be used to
  * manipulate list's.
  */
-typedef struct {
-  void **data;
-  size_t number_of_elements;
-  size_t capacity;
-} list;
-
-/** 
- * List constructor.
- * Initializes the given list. It must not be called on an
- * already initialized list.
- */
-void construct_list(list *lst);
+struct list;
+typedef struct list *listptr;
 
 /** 
  * Returns a malloc'ed and initialized list.
  */
-list *new_list(void);
-
-/** 
- * List destructor.
- * It free()'s the internal array, and sets the capacity to 0.
- * The data pointed to by void* elements must be free'd by the
- * user.
- */
-void destroy_list(list* lst);
+listptr new_list(void);
 
 /** 
  * Calls list destructor and then free()'s the given list pointer.
  */
-void delete_list(list* lst);
+void delete_list(listptr lst);
 
 /** 
  * Adds element to given list
  */
-void list_add(list *lst, void *element);
+void list_add(listptr lst, void *element);
 
 /** 
  * Adds all elements of another list to given list
  */
-void list_add_all(list *lst, list *other);
+void list_add_all(listptr lst, listptr other);
 
 /** 
  * Returns the number of elements in the given list
  */
-size_t list_size(list *lst);
+size_t list_size(listptr lst);
 
 /* 
  * Returns the element at the given index
  */
-void *list_get(list *lst, size_t index);
+void *list_get(listptr lst, size_t index);
 
 #endif
