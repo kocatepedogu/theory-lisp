@@ -8,23 +8,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "real.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #include "../types/boolean.h"
 #include "../types/error.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "integer.h"
 
 static const object_vtable_t real_vtable = {.clone = clone_real,
@@ -105,7 +106,9 @@ object_t real_less(object_t self, object_t other) {
   return make_error("A real number cannot be compared with a non-number.");
 }
 
-char *real_tostring(object_t obj) { return heap_format("%f", real_value(obj)); }
+char *real_tostring(object_t obj) {
+  return format("%f", real_value(obj));
+}
 
 object_t real_op_add(object_t self, object_t other) {
   assert(is_real(self));
@@ -162,5 +165,3 @@ object_t real_op_div(object_t self, object_t other) {
 
   return make_error("+ operand is not a number.");
 }
-
-

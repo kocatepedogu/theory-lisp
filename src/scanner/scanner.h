@@ -8,22 +8,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file scanner.h
 
-#ifndef SCANNER_H
-#define SCANNER_H
+#ifndef THEORYLISP_SCANNER_SCANNER_H
+#define THEORYLISP_SCANNER_SCANNER_H
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 #include "../utils/list.h"
+#include "../utils/string.h"
 
 #define WORD_SIZE 128
 #define TOKEN_SIZE 128
@@ -34,7 +37,8 @@ typedef enum {
   TOKEN_NULL,
   /// &
   TOKEN_AMPERSAND,
-  /// Unquoted sequence of characters that does not begin with a special character or digit.
+  /** Unquoted sequence of characters that does not begin
+   * with a special character or digit. */
   TOKEN_IDENTIFIER,
   /// A quoted string
   TOKEN_STRING,
@@ -62,12 +66,24 @@ typedef enum {
   TOKEN_COND,
   /// define
   TOKEN_DEFINE,
+  /// set!
+  TOKEN_SET,
   /// if
   TOKEN_IF,
   /// lambda
   TOKEN_LAMBDA,
   /// let
   TOKEN_LET,
+  /// automaton
+  TOKEN_AUTOMATON,
+  /// ->
+  TOKEN_MOVE_RIGHT,
+  /// <-
+  TOKEN_MOVE_LEFT,
+  /// .
+  TOKEN_NOP,
+  /// :
+  TOKEN_COLON,
   /// Placed at the end of token list by scanner
   TOKEN_END_OF_FILE
 } token_type_t;
@@ -90,13 +106,22 @@ typedef struct {
   size_t column;
 } token_t;
 
+typedef token_t *tokenptr;
+
+typedef struct tokenstream{
+  listptr tokens;
+  size_t index;
+} tokenstream_t;
+
+typedef tokenstream_t *tokenstreamptr;
+
 /**
  * Takes a char array and returns a list of tokens
  *
  * If an error occurs during scanning, the constructed portion of the list is
  * deallocated and NULL is returned.
  */
-listptr scanner(const char *input);
+tokenstreamptr scanner(const char *input);
 
 /**
  * Returns the string representation of a token.
@@ -105,7 +130,12 @@ listptr scanner(const char *input);
  */
 char *token_tostring(token_t *token);
 
-/** Deallocates all tokens from the given token list and then deletes the list itself. */
-void delete_token_list(listptr token_list);
+void delete_tokenstream(tokenstreamptr tkns);
+
+tokenptr next_tkn(tokenstreamptr tkns);
+
+tokenptr current_tkn(tokenstreamptr tkns);
+
+tokenptr ahead_tkn(tokenstreamptr tkns);
 
 #endif

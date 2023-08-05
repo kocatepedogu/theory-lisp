@@ -1,18 +1,31 @@
+/*
+ *
+ * Copyright 2023 Doğu Kocatepe
+ * This file is part of Theory Lisp.
+
+ * Theory Lisp is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "file.h"
-#include "init.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INITIAL_BUFFER_LENGTH 10000
-#define ASCII_MAX_VALUE 127
+#include "init.h"
 
-static inline char int_to_char(int c) {
-  if (0 <= c && c <= ASCII_MAX_VALUE) {
-    return c;
-  }
-  return '\0';
-}
+#define MAX_FILENAME_SIZE 1024
+#define INITIAL_BUFFER_LENGTH 10000
 
 char *read_file(char *filename) {
   FILE *file = fopen(filename, "r");
@@ -25,8 +38,8 @@ char *read_file(char *filename) {
 
   int c = 0;
   size_t length = 0;
-  while((c = fgetc(file)) != EOF) {
-    code[length++] = int_to_char(c);
+  while ((c = fgetc(file)) != EOF) {
+    code[length++] = c;
 
     if (length == capacity) {
       capacity *= 2;

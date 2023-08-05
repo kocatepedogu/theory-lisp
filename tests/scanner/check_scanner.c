@@ -1,16 +1,19 @@
 #include <check.h>
+#include <wchar.h>
+
 #include "../../src/scanner/scanner.h"
 
-START_TEST(test_empty) {
-  listptr tokens = scanner("");
-  ck_assert_uint_eq(list_size(tokens), 1);
 
-  token_t *tkn = list_get(tokens, 0);
+START_TEST(test_empty) {
+  tokenstreamptr tkns = scanner("");
+  ck_assert_uint_eq(list_size(tkns->tokens), 1);
+
+  tokenptr tkn = next_tkn(tkns);
   ck_assert_uint_eq(tkn->line, 1);
   ck_assert_uint_eq(tkn->column, 1);
   ck_assert_int_eq(tkn->type, TOKEN_END_OF_FILE);
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 } END_TEST
 
 START_TEST(test_keywords) {
@@ -20,39 +23,39 @@ START_TEST(test_keywords) {
     TOKEN_COND, TOKEN_NULL, TOKEN_END_OF_FILE
   };
 
-  listptr tokens = scanner(keywords);
+  tokenstreamptr tkns = scanner(keywords);
   for (int i = 0; i < sizeof token_types / sizeof(token_type_t); i++) {
-    token_t *tkn = list_get(tokens, i);
+    token_t *tkn = list_get(tkns->tokens, i);
     ck_assert_int_eq(tkn->type, token_types[i]);
   }
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 } END_TEST
 
 START_TEST(test_boolean) {
   static const char words[] = "#t  #f\t     #t\n#f   ";
   static const bool values[] = {true, false, true, false};
-  listptr tokens = scanner(words);
-  for (int i = 0; i < list_size(tokens) - 1; i++) {
-    token_t *tkn = list_get(tokens, i);
+  tokenstreamptr tkns = scanner(words);
+  for (int i = 0; i < list_size(tkns->tokens) - 1; i++) {
+    token_t *tkn = next_tkn(tkns);
     ck_assert_int_eq(tkn->type, TOKEN_BOOLEAN);
     ck_assert_int_eq(tkn->value.boolean, values[i]);
   }
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 } END_TEST
 
 START_TEST(test_numbers) {
   static const char words[] = "2.25 1234 0 0.0 1.75";
-  listptr tokens = scanner(words);
-  ck_assert_uint_eq(list_size(tokens), 6);
+  tokenstreamptr tkns = scanner(words);
+  ck_assert_uint_eq(list_size(tkns->tokens), 6);
 
-  token_t *t1 = list_get(tokens, 0);
-  token_t *t2 = list_get(tokens, 1);
-  token_t *t3 = list_get(tokens, 2);
-  token_t *t4 = list_get(tokens, 3);
-  token_t *t5 = list_get(tokens, 4);
-  token_t *t6 = list_get(tokens, 5);
+  tokenptr t1 = next_tkn(tkns);
+  tokenptr t2 = next_tkn(tkns);
+  tokenptr t3 = next_tkn(tkns);
+  tokenptr t4 = next_tkn(tkns);
+  tokenptr t5 = next_tkn(tkns);
+  tokenptr t6 = next_tkn(tkns);
 
   ck_assert_int_eq(t1->type, TOKEN_REAL);
   ck_assert_double_eq(t1->value.real, 2.25);
@@ -71,23 +74,23 @@ START_TEST(test_numbers) {
 
   ck_assert_int_eq(t6->type, TOKEN_END_OF_FILE);
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 } END_TEST
 
 #include <stdio.h>
 
 START_TEST(test_mixed_alphanumeric) {
   static const char words[] = "123abc \"first string word\" xyzt123 iflambda \"long string\" ";
-  listptr tokens = scanner(words);
-  ck_assert_uint_eq(list_size(tokens), 7);
+  tokenstreamptr tkns = scanner(words);
+  ck_assert_uint_eq(list_size(tkns->tokens), 7);
 
-  token_t *t1 = list_get(tokens, 0);
-  token_t *t2 = list_get(tokens, 1);
-  token_t *t3 = list_get(tokens, 2);
-  token_t *t4 = list_get(tokens, 3);
-  token_t *t5 = list_get(tokens, 4);
-  token_t *t6 = list_get(tokens, 5);
-  token_t *t7 = list_get(tokens, 6);
+  tokenptr t1 = next_tkn(tkns);
+  tokenptr t2 = next_tkn(tkns);
+  tokenptr t3 = next_tkn(tkns);
+  tokenptr t4 = next_tkn(tkns);
+  tokenptr t5 = next_tkn(tkns);
+  tokenptr t6 = next_tkn(tkns);
+  tokenptr t7 = next_tkn(tkns);
 
   ck_assert(t1->type == TOKEN_INTEGER);
   ck_assert_int_eq(t1->value.integer, 123);
@@ -109,7 +112,7 @@ START_TEST(test_mixed_alphanumeric) {
 
   ck_assert(t7->type == TOKEN_END_OF_FILE);
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 } END_TEST
 
 START_TEST(test_mixed_with_parenthesis) {
@@ -128,13 +131,13 @@ START_TEST(test_mixed_with_parenthesis) {
     TOKEN_END_OF_FILE
   };
 
-  listptr tokens = scanner(words);
-  for (int i = 0; i < list_size(tokens); i++) {
-    token_t *tkn = list_get(tokens, i);
+  tokenstreamptr tkns = scanner(words);
+  for (int i = 0; i < list_size(tkns->tokens); i++) {
+    tokenptr tkn = next_tkn(tkns);
     ck_assert_int_eq(tkn->type, expected_token_types[i]);
   }
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
 
 } END_TEST
 

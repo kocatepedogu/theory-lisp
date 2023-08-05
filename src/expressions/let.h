@@ -8,25 +8,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file let_expr.h
 
-#ifndef LET_EXPR_H
-#define LET_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_LET_H
+#define THEORYLISP_EXPRESSIONS_LET_H
 
+#include "expression.h"
 #include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
-
-struct expr;
-typedef struct expr *exprptr;
+#include "../scanner/scanner.h"
 
 /* let_expr "new" operation */
 exprptr new_let_expr(exprptr body);
@@ -45,7 +45,7 @@ void let_expr_add_declaration(exprptr let_expr, const char *name,
 char *let_expr_tostring(exprptr self);
 
 /* let_expr parser */
-exprptr let_expr_parse(listptr tokens, int *index);
+exprptr let_expr_parse(tokenstreamptr tkns);
 
 /* true if e is let_expr */
 bool is_let_expr(exprptr e);

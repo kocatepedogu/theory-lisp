@@ -1,6 +1,7 @@
 #include <check.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <wchar.h>
 #include "../../src/types/void.h"
 
 START_TEST(test_void_all) {

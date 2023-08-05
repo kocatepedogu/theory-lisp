@@ -8,18 +8,19 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file list.h
 
-#ifndef BUILTIN_LIST_H
-#define BUILTIN_LIST_H
+#ifndef THEORYLISP_BUILTIN_LIST_H
+#define THEORYLISP_BUILTIN_LIST_H
 
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"

@@ -8,24 +8,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "builtin.h"
 
 #include <string.h>
 
-#include "../expressions/lambda_expr.h"
-#include "../expressions/evaluation_expr.h"
-#include "../expressions/identifier_expr.h"
-#include "../expressions/expanded_expr.h"
+#include "../expressions/lambda.h"
+#include "../expressions/evaluation.h"
+#include "../expressions/identifier.h"
+#include "../expressions/expanded.h"
 #include "../expressions/expression.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "eval.h"
 #include "object.h"
 
@@ -67,6 +68,11 @@ const builtin_function builtin_functions[] = {
     {"substr", builtin_substr, 3},
     {"strcar", builtin_strcar, 1},
     {"strcdr", builtin_strcdr, 1},
+    {"newline", builtin_newline, 0},
+    {"tab", builtin_tab, 0},
+    {"backspace", builtin_backspace, 0},
+    {"i2s", builtin_i2s, 0, MAX_PN_ARITY, true},
+    {"s2i", builtin_s2i, 1},
     {"eval", builtin_eval, 1},
     {"defined?", builtin_defined, 1},
     {"error", builtin_error, 1},
@@ -98,7 +104,7 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
           new_expanded_expr(new_identifier_expr("va_args")));
     } else {
       for (size_t i = 0; i < f->arity; i++) {
-        char *id = heap_format("arg%ld", i);
+        char *id = format("arg%ld", i);
         evaluation_expr_add_arg(lambda_body, new_identifier_expr(id));
         free(id);
       }
@@ -111,13 +117,13 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
     else {
       lambda_expr_set_pn_arity(lambda, f->arity);
       for (size_t i = 0; i < f->arity; i++) {
-        char *id = heap_format("arg%ld", i);
+        char *id = format("arg%ld", i);
         lambda_expr_add_param(lambda, id);
         free(id);
       }
     }
 
-    object_t procedure = make_procedure(lambda);
+    object_t procedure = make_procedure(lambda, NULL, sf);
     stack_frame_set_global_variable(sf, f->name, procedure);
     destroy_object(procedure);
     delete_expr(lambda);

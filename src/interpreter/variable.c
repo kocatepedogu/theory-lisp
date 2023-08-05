@@ -8,18 +8,20 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "variable.h"
 
 #include <stdlib.h>
 #include <string.h>
+
 
 struct variable {
   char *name;
@@ -45,6 +47,8 @@ void delete_variable(variableptr var) {
 
 object_t variable_get_value(variableptr var) { return clone_object(var->value); }
 
-void variable_set_value(variableptr var, object_t value) { var->value = value; }
+void variable_set_value(variableptr var, object_t value) { 
+  assign_object(&var->value, clone_object(value));
+}
 
 char *variable_get_name(variableptr var) { return var->name; }

@@ -8,12 +8,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "parser.h"
@@ -21,22 +22,23 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-void *parser_error(size_t line, size_t column, char *format, ...) {
+#include "../utils/string.h"
+#include "../scanner/scanner.h"
+
+void *parser_error(token_t *tkn, const char *format, ...) {
   va_list args;
   va_start(args, format);
-  fprintf(stderr, "Error at line %ld, column %ld: ", line, column);
+  fprintf(stderr, "Error at line %ld, column %ld: ", tkn->line, tkn->column);
   vfprintf(stderr, format, args);
-  fputc('\n', stderr);
+  fputc(L'\n', stderr);
   va_end(args);
   return NULL;
 }
 
-listptr parser(listptr token_list) {
-  int token_index = 0;
+listptr parser(tokenstreamptr tkns) {
   listptr parse_tree = new_list();
-  while (((token_t *)list_get(token_list, token_index))->type !=
-         TOKEN_END_OF_FILE) {
-    exprptr e = expr_parse(token_list, &token_index);
+  while (current_tkn(tkns)->type != TOKEN_END_OF_FILE) {
+    exprptr e = expr_parse(tkns);
     if (e == NULL) {
       delete_parse_tree(parse_tree);
       return NULL;

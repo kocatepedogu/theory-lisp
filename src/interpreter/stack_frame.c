@@ -8,18 +8,20 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "stack_frame.h"
 
 #include <stdio.h>
 #include <string.h>
+
 
 #include "../types/error.h"
 #include "variable.h"
@@ -71,8 +73,18 @@ static variableptr find_variable(stack_frame_ptr sf, const char *name) {
   return NULL;
 }
 
-void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value) {
+void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, object_t value) {
   variableptr var = find_variable_locally(sf, name);
+  if (var) {
+    variable_set_value(var, value);
+  } else {
+    var = new_variable(name, value);
+    list_add(sf->local_variables, var);
+  }
+}
+
+void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value) {
+  variableptr var = find_variable(sf, name);
   if (var) {
     variable_set_value(var, value);
   } else {
@@ -86,7 +98,7 @@ void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
   while (sf->saved_frame_pointer != NULL) {
     sf = sf->saved_frame_pointer;
   }
-  stack_frame_set_variable(sf, name, value);
+  stack_frame_set_local_variable(sf, name, value);
 }
 
 object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name) {

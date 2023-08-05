@@ -1,6 +1,8 @@
 #include <check.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <locale.h>
 #include "../../src/types/string.h"
 
 #define STRING "test string"

@@ -8,9 +8,9 @@
 
 START_TEST(test_stack_frame) {
   stack_frame_ptr sf = new_stack_frame(NULL);
-  stack_frame_set_variable(sf, "x", move(make_integer(10)));
-  stack_frame_set_variable(sf, "y", move(make_integer(20)));
-  stack_frame_set_variable(sf, "z", move(make_integer(30)));
+  stack_frame_set_local_variable(sf, "x", move(make_integer(10)));
+  stack_frame_set_local_variable(sf, "y", move(make_integer(20)));
+  stack_frame_set_local_variable(sf, "z", move(make_integer(30)));
 
   object_t result = make_void();
   assign_object(&result, stack_frame_get_variable(sf, "x"));
@@ -35,9 +35,9 @@ START_TEST(test_stack_frame) {
 
 START_TEST(test_nested_stack_frame) {
   stack_frame_ptr sf_global = new_stack_frame(NULL);
-  stack_frame_set_variable(sf_global, "x", move(make_integer(10)));
+  stack_frame_set_local_variable(sf_global, "x", move(make_integer(10)));
   stack_frame_ptr sf_local = new_stack_frame(sf_global);
-  stack_frame_set_variable(sf_local, "x", move(make_integer(20)));
+  stack_frame_set_local_variable(sf_local, "x", move(make_integer(20)));
 
   object_t result = make_void();
   assign_object(&result, stack_frame_get_variable(sf_local, "x"));

@@ -1,8 +1,9 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../../src/expressions/evaluation_expr.h"
-#include "../../src/expressions/let_expr.h"
-#include "../../src/expressions/lambda_expr.h"
+#include "../../src/expressions/evaluation.h"
+#include "../../src/expressions/expression_base.h"
+#include "../../src/expressions/let.h"
+#include "../../src/expressions/lambda.h"
 #include "parse.h"
 
 typedef struct {
@@ -74,9 +75,9 @@ START_TEST(test_call_using_expr_complex_params) {
   exprptr e = NULL;
   parse(e, "((lambda (x ...) (* x (+ &va_args)))"
            "  10"
-	   "  (let ((a 3) (b 4)) (- a b))"
-	   "  (let ((a 5) (b 7)) (- a b))"
-	   ")");
+           "  (let ((a 3) (b 4)) (- a b))"
+           "  (let ((a 5) (b 7)) (- a b))"
+           " )");
 
   ck_assert(is_evaluation_expr(e));
   evaluation_expr *ee = e->data;

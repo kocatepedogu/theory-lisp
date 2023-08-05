@@ -8,12 +8,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "interpreter.h"
@@ -54,7 +55,7 @@ static object_t evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet
 
   bool show_result = !quiet && !is_void(result);
   if (!is_exit(result) && (is_error(result) || show_result || verbose)) {
-    puts(result_str);
+    printf("%s\n", result_str);
   }
 
   free(result_str);
@@ -87,9 +88,9 @@ void repl(stack_frame_ptr sf) {
       return;
     }
 
-    listptr tokens = scanner(line);
-    listptr parse_tree = parser(tokens);
-    delete_token_list(tokens);
+    tokenstreamptr tkns = scanner(line);
+    listptr parse_tree = parser(tkns);
+    delete_tokenstream(tkns);
     
     if (parse_tree) {
       object_t result = interpreter(parse_tree, false, false, sf);

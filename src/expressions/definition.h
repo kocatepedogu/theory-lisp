@@ -8,25 +8,26 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file definition_expr.h
 
-#ifndef DEFINITION_EXPR_H
-#define DEFINITION_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_DEFINITION_H
+#define THEORYLISP_EXPRESSIONS_DEFINITION_H
+
+#include "expression.h"
 
 #include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
-
-struct expr;
-typedef struct expr *exprptr;
+#include "../scanner/scanner.h"
 
 /* definition_expr "new" operation */
 exprptr new_definition_expr(const char *name, exprptr body);
@@ -41,7 +42,7 @@ exprptr clone_definition_expr(exprptr self);
 char *definition_expr_tostring(exprptr self);
 
 /* definition_expr parser */
-exprptr definition_expr_parse(listptr tokens, int *index);
+exprptr definition_expr_parse(tokenstreamptr tkns);
 
 /* true if e is definition expression */
 bool is_definition_expr(exprptr e);

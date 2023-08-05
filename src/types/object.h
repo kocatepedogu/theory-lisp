@@ -8,23 +8,29 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file object.h
 
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef THEORYLISP_TYPES_OBJECT_H
+#define THEORYLISP_TYPES_OBJECT_H
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-/** object_t contains the type and value information of objects in Theory Lisp programs. */
+#include "../utils/string.h"
+
+/**
+ * object_t contains the type and value information of objects in
+ * Theory Lisp programs.
+ */
 typedef struct object {
   /// Data contained in the object.
   void *value;
@@ -60,6 +66,9 @@ typedef struct object_vtable {
   object_t (*op_or)(object_t, object_t);
   object_t (*op_xor)(object_t, object_t);
   object_t (*op_not)(object_t);
+
+  object_t (*op_call)(object_t, size_t, object_t *, void *);
+  object_t (*op_call_internal)(object_t, void *, void *);
 } object_vtable_t;
 
 /** Object destructor (Must be implemented) */
@@ -84,7 +93,8 @@ object_t move(object_t obj);
 /** Returns string representation of object (Must be implemented) */
 char *object_tostring(object_t obj);
 
-/** Returns true if and only if given objects are equal to each other (Must be implemented) */
+/** Returns true if and only if given objects are equal to each other (Must be
+ * implemented) */
 bool object_equals(object_t obj, object_t other);
 
 /** Returns true if obj is less than other (Optional operation) */
@@ -113,5 +123,10 @@ object_t object_op_xor(object_t obj, object_t other);
 
 /** Boolean NOT operator (Optional operation) */
 object_t object_op_not(object_t obj);
+
+object_t object_op_call(object_t obj, size_t nargs, object_t *args,
+                        void *sf); 
+
+object_t object_op_call_internal(object_t obj, void *args, void *sf);
 
 #endif

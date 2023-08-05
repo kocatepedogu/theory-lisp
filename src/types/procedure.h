@@ -8,21 +8,23 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file procedure.h
 
-#ifndef PROCEDURE_H
-#define PROCEDURE_H
+#ifndef THEORYLISP_TYPES_PROCEDURE_H
+#define THEORYLISP_TYPES_PROCEDURE_H
 
-#include "object.h"
 #include "../interpreter/stack_frame.h"
+#include "object.h"
+#include "../utils/string.h"
 
 /* Procedure type */
 typedef void *lambda_t;
@@ -32,12 +34,12 @@ typedef void *lambda_t;
  * No memory allocation occurs. Created object refers to the given lambda
  * expression in the parse tree.
  */
-object_t make_procedure(lambda_t proc);
+object_t make_procedure(lambda_t proc, listptr captures, stack_frame_ptr sf);
 
 /**
  * Procedure clone.
  * No memory allocation occurs. The new object still points to the same
- * lambda expression in the parse tree. This is not a violation of the 
+ * lambda expression in the parse tree. This is not a violation of the
  * rule that all objects must do a deep copy, because the lambda is
  * never mutated or free()'d during program execution.
  */
@@ -56,9 +58,7 @@ void destroy_procedure(object_t procedure);
  * If the returned string is substituted as input to scanner, and then
  * to the parser, the resulting lambda expression must be
  * exactly the same as the lambda expression pointed to by the procedure
- * object. This is how Theory Lisp can implement the special form eval
- * without requiring the entire code to be in the list form. 
- * If this constraint is violated, it should be reported as a bug.
+ * object. If this constraint is violated, it should be reported as a bug.
  */
 char *procedure_tostring(object_t obj);
 
@@ -67,8 +67,10 @@ char *procedure_tostring(object_t obj);
  * assertions are enabled in compile options, otherwise it will return false.
  *
  * The reasons for this implementation are:
- * 1. Testing whether two procedures do the same thing is an undecidable problem.
- * 2. Testing whether two objects point to the same lambda expression is useless.
+ * 1. Testing whether two procedures do the same thing is
+ * an undecidable problem.
+ * 2. Testing whether two objects point to the same lambda
+ * expression is useless.
  */
 bool procedure_equals(object_t obj, object_t other);
 
@@ -78,27 +80,17 @@ bool procedure_equals(object_t obj, object_t other);
 bool is_procedure(object_t obj);
 
 /**
- * Returns a pointer to the lambda expression pointed to by the procedure object.
- */
-lambda_t procedure_get_lambda(object_t obj);
-
-/**
- * Returns a pointer to the closure list of the procedure object.
- */
-listptr procedure_get_closure(object_t obj);
-
-/**
  * Returns PN arity of the lambda
  */
 size_t procedure_get_pn_arity(object_t self);
 
 /**
- * Returns arity of the lambda 
+ * Returns arity of the lambda
  */
 size_t procedure_get_arity(object_t self);
 
 /**
- * Returns whether explicit PN arity is given 
+ * Returns whether explicit PN arity is given
  */
 bool procedure_is_pn_arity_given(object_t self);
 
@@ -108,9 +100,15 @@ bool procedure_is_pn_arity_given(object_t self);
 bool procedure_is_variadic(object_t self);
 
 /**
- * Adds a variable to the closure
+ * Calls the procedure
  */
-void procedure_add_closure_variable(object_t self, const char *name,
-                                    object_t value);
+object_t procedure_op_call(object_t self, size_t nargs, object_t *args,
+                           void *sf);
+
+/**
+ * Calls the procedure (used internally)
+ */
+
+object_t procedure_op_call_internal(object_t self, void *args, void *sf);
 
 #endif

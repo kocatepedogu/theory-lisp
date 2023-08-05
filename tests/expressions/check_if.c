@@ -1,6 +1,7 @@
 #include <check.h>
-#include "../../src/expressions/if_expr.h"
-#include "../../src/expressions/data_expr.h"
+#include "../../src/expressions/if.h"
+#include "../../src/expressions/data.h"
+#include "../../src/expressions/expression_base.h"
 #include "../../src/types/real.h"
 #include "../../src/types/integer.h"
 #include "../../src/types/boolean.h"

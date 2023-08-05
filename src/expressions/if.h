@@ -8,25 +8,27 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file if_expr.h
 
-#ifndef IF_EXPR_H
-#define IF_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_IF_H
+#define THEORYLISP_EXPRESSIONS_IF_H
 
+#include "expression.h"
 #include "../utils/list.h"
-#include <stdbool.h>
-#include "../interpreter/interpreter.h"
 
-struct expr;
-typedef struct expr *exprptr;
+#include <stdbool.h>
+
+#include "../interpreter/interpreter.h"
+#include "../scanner/scanner.h"
 
 /* if_expr "new" operation */
 exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case);
@@ -41,7 +43,7 @@ exprptr clone_if_expr(exprptr self);
 char *if_expr_tostring(exprptr self); 
 
 /* if_expr parser */
-exprptr if_expr_parse(listptr tokens, int *index);
+exprptr if_expr_parse(tokenstreamptr tkns);
 
 /* true if e is if_expr */
 bool is_if_expr(exprptr e);

@@ -8,19 +8,22 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "definition_expr.h"
+#include "definition.h"
 #include "expression.h"
+#include "expression_base.h"
 #include <string.h>
 #include <assert.h>
-#include "../utils/heap-format.h"
+
+#include "../utils/string.h"
 #include "../scanner/scanner.h"
 #include "../parser/parser.h"
 #include "../types/void.h"
@@ -39,6 +42,14 @@ typedef struct {
 
 static const char definition_expr_name[] = "definition_expr";
 
+bool is_definition_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(definition_expr_name, e->expr_name) == 0; 
+}
+
 static const expr_vtable definition_expr_vtable = {
   .deallocate = delete_definition_expr,
   .clone = clone_definition_expr,
@@ -51,11 +62,7 @@ exprptr new_definition_expr(const char *name, exprptr body) {
   de->name = strdup(name);
   de->value = body;
 
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  e->data = de;
-  e->vtable = &definition_expr_vtable;
-  e->expr_name = definition_expr_name;
-  return e;
+  return base_new(de, &definition_expr_vtable, definition_expr_name, 0, 0);
 }
 
 void delete_definition_expr(exprptr self) {
@@ -78,21 +85,21 @@ exprptr clone_definition_expr(exprptr self) {
 char *definition_expr_tostring(exprptr self) {
   definition_expr *de = self->data;
   char *body_str = expr_tostring(de->value);
-  char *result = heap_format("(define %s %s)", de->name, body_str);
+  char *result = format("(define %s %s)", de->name, body_str);
   free(body_str);
   return result;
 }
 
-exprptr definition_expr_parse(listptr tokens, int *index) {
-  token_t *define_token = list_get(tokens, (*index)++);
+exprptr definition_expr_parse(tokenstreamptr tkns) {
+  tokenptr define_token = next_tkn(tkns);
   assert(define_token->type == TOKEN_DEFINE);
 
-  token_t *name_token = list_get(tokens, (*index)++);
+  tokenptr name_token = next_tkn(tkns);
   if (name_token->type != TOKEN_IDENTIFIER) {
-    return parser_error(name_token->line, name_token->column, ERR_DEF_NAME_IS_NOT_ID);
+    return parser_error(name_token, ERR_DEF_NAME_IS_NOT_ID);
   }
 
-  exprptr value_expression = expr_parse(tokens, index);
+  exprptr value_expression = expr_parse(tkns);
   if (value_expression == NULL) {
     return NULL;
   }
@@ -102,14 +109,6 @@ exprptr definition_expr_parse(listptr tokens, int *index) {
   result->line_number = define_token->line;
   result->column_number = define_token->column;
   return result;
-}
-
-bool is_definition_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(definition_expr_name, e->expr_name) == 0; 
 }
 
 object_t interpret_definition(exprptr self, stack_frame_ptr sf) {

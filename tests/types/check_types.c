@@ -38,7 +38,7 @@ START_TEST(test_operations) {
   object_t bool_obj = make_boolean(true);
   object_t int_obj = make_integer(1);
   object_t pair_obj = make_pair(bool_obj, int_obj);
-  object_t proc_obj = make_procedure(NULL);
+  object_t proc_obj = make_procedure(NULL, NULL, NULL);
   object_t real_obj = make_real(1.0);
   object_t sym_obj = make_string("string word");
   object_t void_obj = make_void(); 

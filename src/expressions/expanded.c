@@ -8,22 +8,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "expanded_expr.h"
+#include "expanded.h"
 
 #include <string.h>
 
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "../types/error.h"
 #include "../types/pair.h"
 #include "expression.h"
+#include "expression_base.h"
 
 static const char expanded_expr_name[] = "expanded_expr";
 
@@ -34,12 +36,16 @@ static const expr_vtable expanded_expr_vtable = {
   .interpret = interpret_expanded_expr
 };
 
+inline bool is_expanded_expression(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, expanded_expr_name) == 0;
+}
+
 exprptr new_expanded_expr(exprptr inner) {
-  expr_t *ee = (expr_t *)malloc(sizeof(expr_t));
-  ee->data = inner;
-  ee->vtable = &expanded_expr_vtable;
-  ee->expr_name = expanded_expr_name;
-  return ee;
+  return base_new(inner, &expanded_expr_vtable, expanded_expr_name, 0, 0);
 }
 
 void delete_expanded_expr(exprptr self) {
@@ -53,17 +59,8 @@ exprptr clone_expanded_expr(exprptr self) {
 
 char *expanded_expr_tostring(exprptr self) {
   char *inner = expr_tostring(self->data);
-  char *result = heap_format("&%s", inner);
-  free(inner);
+  char *result = unique_format("&%s", inner);
   return result;
-}
-
-bool is_expanded_expression(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, expanded_expr_name) == 0;
 }
 
 object_t interpret_expanded_expr(exprptr self, stack_frame_ptr sf) {

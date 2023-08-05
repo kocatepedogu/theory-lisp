@@ -1,8 +1,9 @@
 #include <check.h>
 #include <stdlib.h>
 #include "parse.h"
-#include "../../src/expressions/cond_expr.h"
-#include "../../src/expressions/evaluation_expr.h"
+#include "../../src/expressions/expression_base.h"
+#include "../../src/expressions/cond.h"
+#include "../../src/expressions/evaluation.h"
 
 typedef struct {
   exprptr condition;
@@ -88,8 +89,8 @@ START_TEST(test_arbitrary_cond_constant_expr) {
 START_TEST(test_arbitrary_cond_arbitrary_expr) {
   exprptr e = NULL;
   parse(e, "(cond ((< x 0) (* 2 x))"
-	   "      ((let ((a 1) (b 2)) (< x (+ a b))) (* 3 x))"
-	   "      (bool_variable (* 4 x)))");
+           "      ((let ((a 1) (b 2)) (< x (+ a b))) (* 3 x))"
+           "      (bool_variable (* 4 x)))");
 
   ck_assert(is_cond_expr(e));
   cond_expr *ce = e->data;

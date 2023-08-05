@@ -3,15 +3,15 @@
 
 #include "../../src/parser/parser.h"
 #include "../../src/scanner/scanner.h"
-#include "../../src/expressions/identifier_expr.h"
-#include "../../src/expressions/data_expr.h"
+#include "../../src/expressions/identifier.h"
+#include "../../src/expressions/data.h"
 #include "../../src/types/boolean.h"
 #include "../../src/types/integer.h"
 #include "../../src/types/real.h"
 
 #define parse(e, input) \
   do { \
-    listptr _tokens = scanner(input); \
+    tokenstreamptr _tokens = scanner(input); \
     listptr _parse_tree = parser(_tokens); \
     if (_parse_tree == NULL) { \
       (e) = NULL; \
@@ -52,7 +52,7 @@
 #define assert_identifier(expr, value) \
   do { \
     ck_assert(is_identifier_expr(expr)); \
-    ck_assert_str_eq(identifier_expr_get_name(expr), value); \
+    ck_assert_int_eq(strcmp(identifier_expr_get_name(expr), value), 0); \
   } while(false)
 
 #endif

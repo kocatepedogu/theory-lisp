@@ -8,28 +8,31 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file integer.h
 
-#ifndef INTEGER_H
-#define INTEGER_H
+#ifndef THEORYLISP_TYPES_INTEGER_H
+#define THEORYLISP_TYPES_INTEGER_H
 
 #include "object.h"
 
-/* Integer type 
+#include "../utils/string.h"
+
+/* Integer type
  * All integers are currently implemented using signed long integers.
  */
 typedef long int integer_t;
 
 /**
- * Creates an instance of integer type 
+ * Creates an instance of integer type
  * The resulting object contains a reference to the value.
  */
 object_t make_integer(integer_t value);
@@ -56,7 +59,7 @@ char *integer_tostring(object_t val);
 
 /**
  * Compares two integers for equality.
- * 
+ *
  * If the other object is a real, self will be converted
  * to real before making the comparison.
  */

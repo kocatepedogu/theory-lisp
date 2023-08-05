@@ -8,28 +8,29 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "procedure.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
+#include "../expressions/data.h"
 #include "../expressions/expression.h"
-#include "../expressions/lambda_expr.h"
-#include "../expressions/let_expr.h"
-#include "../expressions/data_expr.h"
-#include "../utils/heap-format.h"
-#include "../interpreter/variable.h"
+#include "../expressions/lambda.h"
+#include "../expressions/let.h"
 #include "../interpreter/stack_frame.h"
+#include "../interpreter/variable.h"
 #include "../types/error.h"
+#include "../utils/string.h"
 
 typedef struct {
   /// Expression obtained from parse tree
@@ -43,6 +44,8 @@ static const object_vtable_t procedure_vtable = {
     .destroy = destroy_procedure,
     .tostring = procedure_tostring,
     .equals = procedure_equals,
+    .op_call = procedure_op_call,
+    .op_call_internal = procedure_op_call_internal
 };
 
 static const char procedure_type_name[] = "procedure";
@@ -51,21 +54,33 @@ inline bool is_procedure(object_t obj) {
   return strcmp(procedure_type_name, obj.type) == 0;
 }
 
-inline lambda_t procedure_get_lambda(object_t obj) {
-  assert(is_procedure(obj));
-  return ((proc_t*)(obj.value))->lambda;
-}
+object_t make_procedure(lambda_t proc, listptr captures, stack_frame_ptr sf) {
+  /* Check that the captured variables declared in the capture list 
+   * are defined in the environment where the procedure object is created. */
+  if (captures) {
+    for (size_t i = 0; i < list_size(captures); i++) {
+      const char *name = list_get(captures, i);
+      if (!stack_frame_defined(sf, name)) {
+        return make_error("Captured variable %s does not exist.", name);
+      }
+    }
+  }
 
-inline listptr procedure_get_closure(object_t obj) {
-  assert(is_procedure(obj));
-  return ((proc_t*)(obj.value))->closure;
-}
-
-object_t make_procedure(lambda_t proc) {
+  /* Create the procedure object */
   proc_t *p = (proc_t *)malloc(sizeof(proc_t));
   p->lambda = clone_expr(proc);
   p->closure = new_list();
-  
+
+  /* Add captured variables to the closure of the procedure object */
+  if (captures) {
+    for (size_t i = 0; i < list_size(captures); i++) {
+      const char *name = list_get(captures, i);
+      object_t value = stack_frame_get_variable(sf, name);
+      list_add(p->closure, new_variable(name, value));
+      destroy_object(value);
+    }
+  }
+
   object_t obj;
   obj.value = p;
   obj.type = procedure_type_name;
@@ -117,13 +132,13 @@ char *procedure_tostring(object_t self) {
 
   /* If there are no captured variables, the string
    * representation of the lambda itself is enough
-   * to describe the procedure object. 
+   * to describe the procedure object.
    */
   if (list_size(p->closure) == 0) {
     return expr_tostring(p->lambda);
   }
 
-  /* Otherwise the captured variables are assigned values 
+  /* Otherwise the captured variables are assigned values
    * in a let expression whose body is the
    * lambda expression, so that evaluating the string representation
    * gives a procedure object with captured values.
@@ -142,17 +157,9 @@ char *procedure_tostring(object_t self) {
   return result;
 }
 
-bool procedure_equals(object_t self, object_t other) { 
+bool procedure_equals(object_t self, object_t other) {
   assert(false);
-  return false; 
-}
-
-void procedure_add_closure_variable(object_t self, 
-                                    const char *name,
-                                    object_t value) {
-  proc_t *p = self.value;
-  variableptr var = new_variable(name, value);
-  list_add(p->closure, var);
+  return false;
 }
 
 size_t procedure_get_pn_arity(object_t self) {
@@ -172,5 +179,37 @@ bool procedure_is_pn_arity_given(object_t self) {
 
 bool procedure_is_variadic(object_t self) {
   proc_t *p = self.value;
-  return lambda_expr_is_variadic(p->lambda); 
+  return lambda_expr_is_variadic(p->lambda);
+}
+
+static stack_frame_ptr construct_stack_frame(listptr closure, stack_frame_ptr sf) {
+  stack_frame_ptr local_frame = new_stack_frame(sf);
+
+  for (size_t i = 0; i < list_size(closure); i++) {
+    variableptr var = list_get(closure, i);
+    const char *name = variable_get_name(var);
+    object_t value = variable_get_value(var);
+    stack_frame_set_local_variable(local_frame, name, value);
+    destroy_object(value);
+  }
+
+  return local_frame;
+}
+
+object_t procedure_op_call(object_t self, size_t nargs, object_t *args,
+                           void *sf) {
+  proc_t *p = self.value;
+  stack_frame_ptr local_frame = construct_stack_frame(p->closure, sf); 
+  object_t result = expr_call(p->lambda, nargs, args, local_frame);
+  delete_stack_frame(local_frame);
+  return result;
+}
+
+
+object_t procedure_op_call_internal(object_t self, void *args, void *sf) {
+  proc_t *p = self.value;
+  stack_frame_ptr local_frame = construct_stack_frame(p->closure, sf);
+  object_t result = expr_call_internal(p->lambda, args, local_frame);
+  delete_stack_frame(local_frame);
+  return result;
 }

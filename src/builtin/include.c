@@ -1,7 +1,28 @@
+/*
+ *
+ * Copyright 2023 Doğu Kocatepe
+ * This file is part of Theory Lisp.
+
+ * Theory Lisp is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "include.h"
 
 #include <assert.h>
 #include <stdio.h>
+
+#include <string.h>
 
 #include "../types/string.h"
 #include "../types/error.h"
@@ -10,7 +31,7 @@
 #include "../scanner/scanner.h"
 #include "../parser/parser.h"
 #include "../utils/init.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 
 /* 
  * This directory is normally given by autotools depending 
@@ -27,9 +48,9 @@ char *read_code(char *file_name) {
     return code;
   }
 
-  /* If the file at the given path is not accessable, search
+  /* If the file at the given path is not accessible, search
    * for the file in the Theory Lisp library directory */
-  char *library_file_name = heap_format("%s/%s", LIBRARY_DIR, file_name);
+  char *library_file_name = format("%s/%s", LIBRARY_DIR, file_name);
   code = read_file(library_file_name);
   if (code) {
     free(library_file_name);
@@ -53,7 +74,7 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   char *file_name = string_value(file_name_obj);
 
   /* Check if the file is already included */
-  char *include_guard = heap_format("%s_included", file_name);
+  char *include_guard = format("%s_included", file_name);
   if (stack_frame_defined(sf, include_guard)) {
     free(include_guard);
     return make_void();
@@ -62,6 +83,7 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   /* Read file */
   char *code = read_code(file_name);
   if (!code) {
+    free(include_guard);
     return make_error("%s is not accessible.", file_name);
   }
 
@@ -71,10 +93,10 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   free(include_guard);
 
   /* Parse included file */
-  listptr tokens = scanner(code);
-  listptr parse_tree = parser(tokens);
+  tokenstreamptr tkns = scanner(code);
+  listptr parse_tree = parser(tkns);
   if (!parse_tree) {
-    delete_token_list(tokens);
+    delete_tokenstream(tkns);
     free(code);
     return make_error("An error occured in the included file");
   }
@@ -83,7 +105,7 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   object_t result = interpreter(parse_tree, false, true, sf);
   destroy_object(result);
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
   delete_parse_tree(parse_tree);
   free(code);
 

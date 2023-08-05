@@ -8,18 +8,20 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "evaluation_expr.h"
+#include "evaluation.h"
 
 #include <stdio.h>
 #include <string.h>
+
 
 #include "../builtin/arithmetic.h"
 #include "../builtin/builtin.h"
@@ -30,12 +32,13 @@
 #include "../types/procedure.h"
 #include "../types/null.h"
 #include "../types/pair.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "../utils/list.h"
-#include "expanded_expr.h"
+#include "expanded.h"
 #include "expression.h"
-#include "identifier_expr.h"
-#include "lambda_expr.h"
+#include "expression_base.h"
+#include "identifier.h"
+#include "lambda.h"
 
 #define ERR_PROC_NAME_IS_NOT_ID "Procedure name must be an identifier"
 #define ERR_UNEXPECTED_EOF "Unexpected end of file"
@@ -61,16 +64,20 @@ static const expr_vtable evaluation_expr_vtable = {
     .to_string = evaluation_expr_tostring,
     .interpret = interpret_evaluation};
 
+inline bool is_evaluation_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, evaluation_expr_name) == 0;
+}
+
 exprptr new_evaluation_expr(exprptr proc) {
   evaluation_expr *ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
   ee->procexpr = proc;
   ee->arguments = new_list();
   
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  e->data = ee;
-  e->vtable = &evaluation_expr_vtable;
-  e->expr_name = evaluation_expr_name;
-  return e;
+  return base_new(ee, &evaluation_expr_vtable, evaluation_expr_name, 0, 0);
 }
 
 void delete_evaluation_expr(exprptr self) {
@@ -107,49 +114,37 @@ char *evaluation_expr_tostring(exprptr self) {
   char *args = NULL;
   for (size_t i = 0; i < list_size(expr->arguments); i++) {
     char *str = expr_tostring((exprptr)list_get(expr->arguments, i));
-    if (!args) {
-      args = str;
-    } else {
-      char *new_args = heap_format("%s %s", args, str);
-      free(args);
-      free(str);
-      args = new_args;
-    }
+    args = unique_append_sep(args, " ", str);
   }
 
   char *proc = expr_tostring(expr->procexpr);
-  char *result =
-      args ? heap_format("(%s %s)", proc, args) : heap_format("(%s)", proc);
-
-  free(args);
-  free(proc);
-  return result;
+  if (args) {
+    return unique_format("(%s %s)", proc, args);
+  } else {
+    return unique_format("(%s)", proc);
+  }
 }
 
-exprptr evaluation_expr_parse(listptr tokens, int *index) {
-  token_t *tkn = list_get(tokens, *index);
+exprptr evaluation_expr_parse(tokenstreamptr tkns) {
+  tokenptr tkn = current_tkn(tkns);
   if (tkn->type == TOKEN_INTEGER) {
-    return parser_error(tkn->line, tkn->column, ERR_INT_AS_PROCEDURE,
-                        tkn->value.integer);
+    return parser_error(tkn, ERR_INT_AS_PROCEDURE, tkn->value.integer);
   }
   if (tkn->type == TOKEN_REAL) {
-    return parser_error(tkn->line, tkn->column, ERR_REAL_AS_PROCEDURE,
-                        tkn->value.real);
+    return parser_error(tkn, ERR_REAL_AS_PROCEDURE, tkn->value.real);
   }
   if (tkn->type == TOKEN_STRING) {
-    return parser_error(tkn->line, tkn->column, ERR_SYM_AS_PROCEDURE,
-                        tkn->value.character_sequence);
+    return parser_error(tkn, ERR_SYM_AS_PROCEDURE, tkn->value.character_sequence);
   }
 
-  exprptr proc_expr = expr_parse(tokens, index);
+  exprptr proc_expr = expr_parse(tkns);
   if (proc_expr == NULL) {
     return NULL;
   }
 
   exprptr eval_expr = new_evaluation_expr(proc_expr);
-  while (((token_t *)list_get(tokens, *index))->type !=
-         TOKEN_RIGHT_PARENTHESIS) {
-    exprptr arg = expr_parse(tokens, index);
+  while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
+    exprptr arg = expr_parse(tkns);
     if (arg == NULL) {
       delete_expr(eval_expr);
       return NULL;
@@ -160,14 +155,6 @@ exprptr evaluation_expr_parse(listptr tokens, int *index) {
   eval_expr->line_number = tkn->line;
   eval_expr->column_number = tkn->column;
   return eval_expr;
-}
-
-bool is_evaluation_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, evaluation_expr_name) == 0;
 }
 
 static object_t interpret_args(listptr arglist, size_t *argsize,
@@ -241,24 +228,14 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
   return is_builtin_call;
 }
 
-static object_t interpret_lambda_call(exprptr procexpr, stack_frame_ptr sf,
+static object_t interpret_proc_call(exprptr procexpr, stack_frame_ptr sf,
                                       size_t args_size, object_t *args) {
   object_t proc = interpret_expr(procexpr, sf);
   if (is_error(proc)) {
     return proc;
   }
 
-  if (!is_procedure(proc)) {
-    char *str = object_tostring(proc);
-    object_t result = make_error(ERR_NOT_PROCEDURE, str);
-    free(str);
-    destroy_object(proc);
-    return result;
-  }
-
-  exprptr lambda = procedure_get_lambda(proc);
-  listptr closure = procedure_get_closure(proc);
-  object_t result = call_lambda(lambda, closure, args_size, args, sf);
+  object_t result = object_op_call(proc, args_size, args, sf);
   destroy_object(proc);
   return result;
 }
@@ -274,7 +251,7 @@ object_t interpret_evaluation(exprptr self, stack_frame_ptr sf) {
   object_t *args = NULL;
   if (!is_error(result = interpret_args(arglist, &argsize, sf, &args))) {
     if (!interpret_builtin_call(proc, sf, argsize, args, &result)) {
-      assign_object(&result, interpret_lambda_call(proc, sf, argsize, args));
+      assign_object(&result, interpret_proc_call(proc, sf, argsize, args));
     }
   }
 

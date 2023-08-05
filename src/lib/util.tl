@@ -1,3 +1,13 @@
+(include "list.tl")
+
+; An instance of void
+(define voidobj (define voidobj null))
+
+; Takes unlimited arguments and returns void
+(define void
+  (lambda (...)
+    voidobj))
+
 ; Sequencing
 (define begin
   (lambda (...) (last va_args)))

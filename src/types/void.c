@@ -8,20 +8,22 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "void.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
 #include "error.h"
+#include "../utils/string.h"
 
 static const object_vtable_t void_vtable = {
     .clone = clone_void,
@@ -32,7 +34,9 @@ static const object_vtable_t void_vtable = {
 
 static const char void_type_name[] = "void";
 
-inline bool is_void(object_t obj) { return strcmp(void_type_name, obj.type) == 0; }
+inline bool is_void(object_t obj) {
+  return strcmp(void_type_name, obj.type) == 0;
+}
 
 object_t make_void(void) {
   object_t obj;
@@ -43,9 +47,7 @@ object_t make_void(void) {
   return obj;
 }
 
-void destroy_void(object_t self) {
-  assert(is_void(self));
-}
+void destroy_void(object_t self) { assert(is_void(self)); }
 
 object_t clone_void(object_t self) {
   assert(is_void(self));

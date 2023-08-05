@@ -8,28 +8,33 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <locale.h>
+
 #include "builtin/builtin.h"
-#include "interpreter/stack_frame.h"
-#include "utils/file.h"
-#include "utils/init.h"
 #include "expressions/expression.h"
+#include "interpreter/interpreter.h"
+#include "interpreter/stack_frame.h"
 #include "parser/parser.h"
 #include "scanner/scanner.h"
-#include "interpreter/interpreter.h"
-#include "types/void.h"
 #include "types/error.h"
-
-#include <stdlib.h>
+#include "types/void.h"
+#include "utils/file.h"
+#include "utils/init.h"
 
 int main(int argc, char **argv) {
+  setlocale(LC_ALL, "");
+
   program_arguments args;
   parse_args(argc, argv, &args);
 
@@ -44,7 +49,7 @@ int main(int argc, char **argv) {
       print_error_and_exit(2, "Cannot read file %s\n", args.filename);
     }
 
-    listptr tokens = scanner(code);
+    tokenstreamptr tokens = scanner(code);
     free(code);
     if (!tokens) {
       delete_stack_frame(global_frame);
@@ -52,17 +57,17 @@ int main(int argc, char **argv) {
     }
 
     listptr parse_tree = parser(tokens);
-    delete_token_list(tokens);
+    delete_tokenstream(tokens);
     if (!parse_tree) {
       delete_stack_frame(global_frame);
       print_error_and_exit(4, "A parser error has occured.\n");
     }
 
-    assign_object(&result, interpreter(
-          parse_tree, args.verbose, args.quiet, global_frame));
+    assign_object(&result, interpreter(parse_tree, args.verbose, args.quiet,
+                                       global_frame));
     delete_parse_tree(parse_tree);
   }
-  
+
   if (!is_error(result) && !args.exit) {
     repl(global_frame);
   }

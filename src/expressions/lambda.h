@@ -8,28 +8,28 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file lambda_expr.h
 
-#ifndef LAMBDA_EXPR_H
-#define LAMBDA_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_LAMBDA_H
+#define THEORYLISP_EXPRESSIONS_LAMBDA_H
 
+#include "expression.h"
 #include "../types/object.h"
 #include "../utils/list.h"
 #include "../types/procedure.h"
 #include "../interpreter/interpreter.h"
+#include "../scanner/scanner.h"
 
 #include <stdbool.h>
-
-struct expr;
-typedef struct expr *exprptr;
 
 /* lambda_expr "new" operation */
 exprptr new_lambda_expr(exprptr body, bool variadic);
@@ -65,16 +65,16 @@ bool lambda_expr_is_variadic(exprptr self);
 char *lambda_expr_tostring(exprptr self);
 
 /* lambda_expr parser */
-exprptr lambda_expr_parse(listptr tokens, int *index);
+exprptr lambda_expr_parse(tokenstreamptr tkns);
 
 /* true if e is lambda expression */
 bool is_lambda_expr(exprptr e);
 
 /* evaluates lambda expression to an object value */
-object_t interpret_lambda(exprptr self, stack_frame_ptr sf);
+object_t lambda_interpret(exprptr self, stack_frame_ptr sf);
 
 /* evaluates a lambda with arguments */
-object_t call_lambda(exprptr lambda, listptr closure, size_t number_of_args,
-                         object_t *args, stack_frame_ptr sf);
+object_t lambda_call(exprptr lambda, size_t nargs,
+                     object_t *args, stack_frame_ptr sf);
 
 #endif

@@ -8,20 +8,22 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "null.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
 #include "error.h"
+#include "../utils/string.h"
 
 static const object_vtable_t null_vtable = {
     .clone = clone_null,
@@ -32,7 +34,9 @@ static const object_vtable_t null_vtable = {
 
 static const char null_type_name[] = "null";
 
-inline bool is_null(object_t obj) { return strcmp(null_type_name, obj.type) == 0; }
+inline bool is_null(object_t obj) {
+  return strcmp(null_type_name, obj.type) == 0;
+}
 
 object_t make_null(void) {
   object_t obj;
@@ -43,9 +47,7 @@ object_t make_null(void) {
   return obj;
 }
 
-void destroy_null(object_t self) {
-  assert(is_null(self));
-}
+void destroy_null(object_t self) { assert(is_null(self)); }
 
 object_t clone_null(object_t self) {
   assert(is_null(self));

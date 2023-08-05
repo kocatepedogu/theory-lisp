@@ -1,7 +1,8 @@
 #include <check.h>
-#include "../../src/expressions/lambda_expr.h"
-#include "../../src/expressions/data_expr.h"
-#include "../../src/expressions/identifier_expr.h"
+#include "../../src/expressions/lambda.h"
+#include "../../src/expressions/data.h"
+#include "../../src/expressions/identifier.h"
+#include "../../src/expressions/expression_base.h"
 #include "../../src/types/integer.h"
 #include "parse.h"
 

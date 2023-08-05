@@ -8,22 +8,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "integer.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
+
 
 #include "../types/boolean.h"
 #include "../types/error.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "real.h"
 
 static const object_vtable_t integer_vtable = {.clone = clone_integer,
@@ -79,7 +81,7 @@ void destroy_integer(object_t self) {
 
 char *integer_tostring(object_t self) {
   assert(is_integer(self));
-  return heap_format("%ld", int_value(self));
+  return format("%ld", int_value(self));
 }
 
 bool integer_equals(object_t self, object_t other) {
@@ -101,8 +103,8 @@ object_t integer_op_add(object_t self, object_t other) {
 
   if (is_integer(other)) {
     return make_integer(self_value + int_value(other));
-  } 
-  
+  }
+
   if (is_real(other)) {
     return make_real((real_t)self_value + real_value(other));
   }
@@ -116,7 +118,7 @@ object_t integer_op_mul(object_t self, object_t other) {
 
   if (is_integer(other)) {
     return make_integer(self_value * int_value(other));
-  } 
+  }
   if (is_real(other)) {
     return make_real((real_t)self_value * real_value(other));
   }
@@ -144,7 +146,7 @@ object_t integer_op_div(object_t self, object_t other) {
 
   if (is_integer(other)) {
     return make_integer(self_value / int_value(other));
-  } 
+  }
   if (is_real(other)) {
     return make_real((real_t)self_value / real_value(other));
   }
@@ -158,12 +160,10 @@ object_t integer_less(object_t self, object_t other) {
 
   if (is_integer(other)) {
     return make_boolean(self_value < int_value(other));
-  } 
+  }
   if (is_real(other)) {
     return make_boolean((real_t)self_value < real_value(other));
   }
 
   return make_error("An integer cannot be compared with a non-number value.");
 }
-
-

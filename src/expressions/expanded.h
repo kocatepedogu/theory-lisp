@@ -8,26 +8,27 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file expanded_expr.h
 
-#ifndef EXPANDED_EXPR_H
-#define EXPANDED_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_EXPANDED_H
+#define THEORYLISP_EXPRESSIONS_EXPANDED_H
+
+#include "expression.h"
 
 #include <stdbool.h>
 
+
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
-
-struct expr;
-typedef struct expr *exprptr;
 
 /* expanded expression "new" operation */
 exprptr new_expanded_expr(exprptr proc);

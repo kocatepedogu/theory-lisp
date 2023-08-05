@@ -8,17 +8,20 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "data_expr.h"
+#include "data.h"
 #include "expression.h"
+#include "expression_base.h"
 #include <string.h>
+
 
 /* Data */
 typedef struct {
@@ -34,15 +37,19 @@ static const expr_vtable data_expr_vtable = {
   .interpret = interpret_data
 };
 
+bool is_data_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, data_expr_name) == 0;
+}
+
 exprptr new_data_expr(object_t obj) {
   data_expr *de = (data_expr *)malloc(sizeof(data_expr));
   de->obj = clone_object(obj);
 
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  e->data = de;
-  e->vtable = &data_expr_vtable;
-  e->expr_name = data_expr_name;
-  return e;
+  return base_new(de, &data_expr_vtable, data_expr_name, 0, 0);
 }
 
 void delete_data_expr(exprptr self) {
@@ -68,14 +75,6 @@ char *data_expr_tostring(exprptr self) {
 object_t get_data_value(exprptr self) {
   data_expr *de = self->data;
   return de->obj;
-}
-
-bool is_data_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, data_expr_name) == 0;
 }
 
 object_t interpret_data(exprptr self, stack_frame_ptr sf) {

@@ -8,17 +8,19 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "eval.h"
 
 #include <assert.h>
+
 
 #include "../types/error.h"
 #include "../types/string.h"
@@ -34,16 +36,16 @@ object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
   }
 
   char *str = string_value(*args);
-  listptr tokens = scanner(str);
-  listptr expressions = parser(tokens);
+  tokenstreamptr tkns = scanner(str);
+  listptr expressions = parser(tkns);
 
   if (expressions == NULL) {
-    delete_token_list(tokens);
+    delete_tokenstream(tkns);
     return make_error("Parse error has occured during eval operation");
   }
 
   if (list_size(expressions) > 1) {
-    delete_token_list(tokens);
+    delete_tokenstream(tkns);
     delete_parse_tree(expressions);
     return make_error("Evaluated string yield multiple expressions");
   }
@@ -51,7 +53,7 @@ object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
   exprptr e = list_get(expressions, 0);
   object_t result = interpret_expr(e, sf);
 
-  delete_token_list(tokens);
+  delete_tokenstream(tkns);
   delete_parse_tree(expressions);
 
   return result;

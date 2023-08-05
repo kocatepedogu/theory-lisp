@@ -8,12 +8,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "boolean.h"
@@ -23,8 +24,7 @@
 
 #include "error.h"
 
-#define ERR_OPERAND_NOT_BOOL \
-  "Boolean AND operands must be booleans"
+#define ERR_OPERAND_NOT_BOOL "Boolean AND operands must be booleans"
 
 static const object_vtable_t boolean_vtable = {.clone = clone_boolean,
                                                .destroy = destroy_boolean,
@@ -37,9 +37,9 @@ static const object_vtable_t boolean_vtable = {.clone = clone_boolean,
 
 static const char boolean_type_name[] = "boolean";
 
-inline boolean_t boolean_value(object_t obj) { 
+inline boolean_t boolean_value(object_t obj) {
   assert(is_boolean(obj));
-  return *(boolean_t *)obj.value; 
+  return *(boolean_t *)obj.value;
 }
 
 inline bool is_boolean(object_t obj) {
@@ -72,9 +72,9 @@ object_t clone_boolean(object_t self) {
   return obj;
 }
 
-void destroy_boolean(object_t obj) { 
+void destroy_boolean(object_t obj) {
   assert(is_boolean(obj));
-  free(obj.value); 
+  free(obj.value);
 }
 
 char *boolean_tostring(object_t obj) {
@@ -122,5 +122,3 @@ object_t boolean_op_not(object_t obj) {
   assert(is_boolean(obj));
   return make_boolean(!boolean_value(obj));
 }
-
-

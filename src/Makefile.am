@@ -22,8 +22,8 @@ libtlisp_la_SOURCES =\
     types/error.h\
     utils/init.c\
     utils/init.h\
-    utils/heap-format.c\
-    utils/heap-format.h\
+    utils/string.c\
+    utils/string.h\
     utils/list.c\
     utils/list.h\
     utils/stack.c\
@@ -34,26 +34,33 @@ libtlisp_la_SOURCES =\
     scanner/scanner.h\
     expressions/expression.c\
     expressions/expression.h\
-    expressions/if_expr.c\
-    expressions/if_expr.h\
-    expressions/cond_expr.c\
-    expressions/cond_expr.h\
-    expressions/evaluation_expr.c\
-    expressions/evaluation_expr.h\
-    expressions/definition_expr.c\
-    expressions/definition_expr.h\
-    expressions/let_expr.c\
-    expressions/let_expr.h\
-    expressions/lambda_expr.c\
-    expressions/lambda_expr.h\
-    expressions/data_expr.c\
-    expressions/data_expr.h\
-    expressions/identifier_expr.c\
-    expressions/identifier_expr.h\
-    expressions/expanded_expr.c\
-    expressions/expanded_expr.h\
-    expressions/pn_expr.c\
-    expressions/pn_expr.h\
+    expressions/expression_base.h\
+    expressions/if.c\
+    expressions/if.h\
+    expressions/cond.c\
+    expressions/cond.h\
+    expressions/evaluation.c\
+    expressions/evaluation.h\
+    expressions/definition.c\
+    expressions/definition.h\
+    expressions/set.c\
+    expressions/set.h\
+    expressions/let.c\
+    expressions/let.h\
+    expressions/lambda.c\
+    expressions/lambda.h\
+    expressions/data.c\
+    expressions/data.h\
+    expressions/identifier.c\
+    expressions/identifier.h\
+    expressions/expanded.c\
+    expressions/expanded.h\
+    expressions/polish.c\
+    expressions/polish.h\
+    expressions/automaton.c\
+    expressions/automaton.h\
+    expressions/common.c\
+    expressions/common.h\
     parser/parser.c\
     parser/parser.h\
     interpreter/variable.c\
@@ -81,12 +88,16 @@ libtlisp_la_SOURCES =\
     builtin/eval.c \
     builtin/eval.h \
     builtin/error.c \
-    builtin/error.h
+    builtin/error.h \
+    automaton/automaton.c \
+    automaton/automaton.h
 
 tlispdir = $(libdir)/tlisp
 tlisp_DATA =\
     lib/list.tl\
-    lib/util.tl
+    lib/util.tl\
+    lib/primitives.tl\
+    lib/string.tl
 
 libtlisp_la_CFLAGS = -DLIBRARY_DIR='"$(tlispdir)"'
 

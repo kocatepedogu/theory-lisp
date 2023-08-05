@@ -8,27 +8,27 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file data_expr.h
 
-#ifndef DATA_EXPR_H
-#define DATA_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_DATA_H
+#define THEORYLISP_EXPRESSIONS_DATA_H
 
+#include "expression.h"
 #include "../types/object.h"
 #include "../utils/list.h"
 #include "../interpreter/interpreter.h"
 
 #include <stdbool.h>
 
-struct expr;
-typedef struct expr *exprptr;
 
 /* data_expr "new" operation */
 exprptr new_data_expr(object_t obj);
@@ -44,9 +44,6 @@ char *data_expr_tostring(exprptr self);
 
 /* returns stored value */
 object_t get_data_value(exprptr self); 
-
-/* data_expr parser */
-exprptr data_expr_parse(listptr tokens, int *index);
 
 /* true if e is data expression */
 bool is_data_expr(exprptr e);

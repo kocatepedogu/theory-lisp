@@ -8,18 +8,21 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file stack_frame.h
 
-#ifndef STACK_FRAME_H
-#define STACK_FRAME_H
+#ifndef THEORYLISP_INTERPRETER_STACK_FRAME_H
+#define THEORYLISP_INTERPRETER_STACK_FRAME_H
+
+
 
 #include "../types/object.h"
 #include "../utils/list.h"
@@ -53,7 +56,7 @@ void delete_stack_frame(stack_frame_ptr sf);
  *
  * Variables with the same name in outer scopes/stack frames are not affected.
  */
-void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value);
+void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, object_t value);
 
 /**
  * Sets the value of a global variable.
@@ -65,6 +68,16 @@ void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t val
  */
 void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
                                      object_t value);
+
+/**
+ * Sets the value of a variable.
+ *
+ * If the variable does not exist, it is created locally and then assigned the given value.
+ * If the variable exists in some stack frame (it may not be the local one), modifies its value.
+ */
+
+void stack_frame_set_variable(stack_frame_ptr sf, const char *name,
+                              object_t value);
 
 /**
  * Returns the value of the variable with the given name.

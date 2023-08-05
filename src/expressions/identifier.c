@@ -8,19 +8,23 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "identifier_expr.h"
-#include "expression.h"
-#include "../utils/heap-format.h"
+#include "identifier.h"
+#include "../utils/string.h"
 
 #include <string.h>
+
+
+#include "expression.h"
+#include "expression_base.h"
 
 /* identifier */
 typedef struct {
@@ -36,15 +40,19 @@ static const expr_vtable identifier_expr_vtable = {
   .interpret = interpret_identifier
 };
 
+inline bool is_identifier_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, identifier_expr_name) == 0;
+}
+
 exprptr new_identifier_expr(const char *name) {
   identifier_expr *ie = malloc(sizeof(identifier_expr));
   ie->name = strdup(name);
   
-  expr_t *e = malloc(sizeof(expr_t));
-  e->data = ie;
-  e->vtable = &identifier_expr_vtable;
-  e->expr_name = identifier_expr_name;
-  return e;
+  return base_new(ie, &identifier_expr_vtable, identifier_expr_name, 0, 0);
 }
 
 void delete_identifier_expr(exprptr self) {
@@ -64,20 +72,12 @@ exprptr clone_identifier_expr(exprptr self) {
 
 char *identifier_expr_tostring(exprptr self) {
   identifier_expr *ie = self->data;
-  return heap_format("%s", ie->name);
+  return format("%s", ie->name);
 }
 
 const char *identifier_expr_get_name(exprptr self) {
   identifier_expr *ie = self->data;
   return ie->name;
-}
-
-bool is_identifier_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, identifier_expr_name) == 0;
 }
 
 object_t interpret_identifier(exprptr self, stack_frame_ptr sf) {

@@ -8,12 +8,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "object.h"
@@ -22,7 +23,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../utils/heap-format.h"
+
+#include "../utils/string.h"
 #include "boolean.h"
 #include "error.h"
 #include "object.h"
@@ -143,6 +145,23 @@ object_t object_op_xor(object_t obj, object_t other) {
 object_t object_op_not(object_t obj) {
   if (obj.vtable->op_not) {
     return obj.vtable->op_not(obj);
+  }
+
+  return make_error(ERR_UNSUPPORTED_OPERATION);
+}
+
+object_t object_op_call(object_t obj, size_t nargs, object_t *args,
+                        void *sf) {
+  if (obj.vtable->op_call) {
+    return obj.vtable->op_call(obj, nargs, args, sf);
+  }
+
+  return make_error(ERR_UNSUPPORTED_OPERATION);
+}
+
+object_t object_op_call_internal(object_t obj, void *args, void *sf) {
+  if (obj.vtable->op_call_internal) {
+    return obj.vtable->op_call_internal(obj, args, sf);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);

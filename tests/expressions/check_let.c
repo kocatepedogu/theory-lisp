@@ -1,7 +1,8 @@
 #include <check.h>
-#include "../../src/expressions/let_expr.h"
-#include "../../src/expressions/data_expr.h"
-#include "../../src/expressions/identifier_expr.h"
+#include "../../src/expressions/let.h"
+#include "../../src/expressions/data.h"
+#include "../../src/expressions/identifier.h"
+#include "../../src/expressions/expression_base.h"
 #include "../../src/types/integer.h"
 #include "parse.h"
 
@@ -41,7 +42,7 @@ START_TEST(test_let_error1) {
 } END_TEST
 
 START_TEST(test_let_error2) {
-  assert_parse_error("(let 0)"); 
+  assert_parse_error("(let 0)");
 } END_TEST
 
 START_TEST(test_let_error3) {

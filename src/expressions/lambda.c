@@ -8,30 +8,34 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "lambda_expr.h"
+#include "lambda.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
+
 #include "../parser/parser.h"
 #include "../scanner/scanner.h"
 #include "../types/error.h"
 #include "../types/procedure.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "../utils/list.h"
 #include "../builtin/list.h"
 #include "../interpreter/stack_frame.h"
 #include "../interpreter/variable.h"
 #include "expression.h"
+#include "expression_base.h"
+#include "common.h"
 
 static const char lambda_expr_name[] = "lambda_expr";
 
@@ -68,7 +72,16 @@ static const expr_vtable lambda_expr_vtable = {
     .deallocate = delete_lambda_expr,
     .clone = clone_lambda_expr,
     .to_string = lambda_expr_tostring,
-    .interpret = interpret_lambda};
+    .interpret = lambda_interpret,
+    .call = lambda_call};
+
+inline bool is_lambda_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, lambda_expr_name) == 0;
+}
 
 exprptr new_lambda_expr(exprptr body, bool variadic) {
   lambda_expr *le = malloc(sizeof(lambda_expr));
@@ -78,13 +91,8 @@ exprptr new_lambda_expr(exprptr body, bool variadic) {
   le->variadic = variadic;
   le->pn_arity = 0;
   le->pn_given = false;
-  
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  e->data = le;
-  e->vtable = &lambda_expr_vtable;
-  e->expr_name = lambda_expr_name;
 
-  return e;
+  return base_new(le, &lambda_expr_vtable, lambda_expr_name, 0, 0);
 }
 
 void delete_lambda_expr(exprptr self) {
@@ -166,75 +174,64 @@ bool lambda_expr_is_variadic(exprptr self) {
   return le->variadic;
 }
 
+/**
+ * Helper function of lambda_expr_tostring to print a list of strings
+ * with spaces between them.
+ */
 char *lambda_expr_tostring_param_list(listptr lst) {
   char *result = NULL;
   for (size_t i = 0; i < list_size(lst); i++) {
     char *str = list_get(lst, i);
-    if (!result) {
-      result = strdup(str);
-    } else {
-      char *new_result = heap_format("%s %s", result, str);
-      free(result);
-      result = new_result;
-    }
+    result = unique_append_sep(result, " ", strdup(str));
   }
   return result;
 }
 
+/**
+ * Returns a string representation of lambda that can be
+ * parsed to obtain the same lambda expression.
+ */
 char *lambda_expr_tostring(exprptr self) {
   lambda_expr *expr = self->data;
 
-  char *captures_str = lambda_expr_tostring_param_list(expr->captured_vars);
-  char *params_str = lambda_expr_tostring_param_list(expr->params);
-
-  char *captures = NULL;
-  if (captures_str) {
-    char *fmt = "[%s] ";
-    captures = heap_format(fmt, captures_str);
-    free(captures_str);
-  } else {
-    char *fmt = "";
-    captures = heap_format(fmt);
-  }
-
-  char *params = NULL;
-  if (params_str) {
+  char *captures = capture_list_tostring(expr->captured_vars);
+  char *params = lambda_expr_tostring_param_list(expr->params);
+  if (params) {
     char *fmt = expr->variadic ? "(%s ...) " : "(%s) ";
-    params = heap_format(fmt, params_str);
-    free(params_str);
+    params = unique_format(fmt, params);
   } else {
     char *fmt = expr->variadic ? "(...) " : "() ";
-    params = heap_format(fmt);
+    params = unique_format(fmt);
   }
 
   char *body = expr_tostring(expr->body);
   char *result = NULL;
   if (expr->variadic && expr->pn_given) {
-    result = heap_format("(lambda\\%ld %s%s%s", expr->pn_arity, captures, params, body);
+    result = unique_format("(lambda\\%ld %s%s%s", expr->pn_arity, captures, params, body);
   } else {
-    result = heap_format("(lambda %s%s%s)", captures, params, body);
+    result = unique_format("(lambda %s%s%s)", captures, params, body);
   }
-
-  free(captures);
-  free(params);
-  free(body);
 
   return result;
 }
 
-static bool lambda_expr_parse_get_pn_arity(listptr tokens, int *index, 
+/**
+ * Helper function of lambda_expr_parse to parse explicit PN arity 
+ * (optional in lambda syntax)
+ */
+static bool lambda_expr_parse_get_pn_arity(tokenstreamptr tkns, 
                                            size_t *pn_arity, bool *pn_given) {
-  token_t *backslash = list_get(tokens, *index);
+  tokenptr backslash = current_tkn(tkns);
 
   if (backslash->type == TOKEN_BACKSLASH) {
-    (*index)++;
+    (void)next_tkn(tkns);
 
-    token_t *arity_token = list_get(tokens, (*index)++);
+    tokenptr arity_token = next_tkn(tkns);
     if (arity_token->type == TOKEN_INTEGER) {
       *pn_arity = arity_token->value.integer;
       *pn_given = true;
     } else {
-      parser_error(backslash->line, backslash->column, ERR_ARITY_FOLLOW_SLASH);
+      parser_error(backslash, ERR_ARITY_FOLLOW_SLASH);
       return true;
     }
   }
@@ -242,79 +239,61 @@ static bool lambda_expr_parse_get_pn_arity(listptr tokens, int *index,
   return false;
 }
 
-static listptr lambda_expr_parse_get_captures(listptr tokens, int *index) {
-  listptr captured_variables = new_list();
-
-  token_t *left_bracket = list_get(tokens, *index);
-  if (left_bracket->type == TOKEN_LEFT_SQUARE_BRACKET) {
-    (*index)++;
-    
-    token_t *captured_token = NULL;
-    while ((captured_token = list_get(tokens, *index))->type == TOKEN_IDENTIFIER) {
-      list_add(captured_variables, captured_token->value.character_sequence);
-      (*index) += 1;
-    }
-
-    token_t *right_bracket = list_get(tokens, (*index)++);
-    if (right_bracket->type != TOKEN_RIGHT_SQUARE_BRACKET) {
-      delete_list(captured_variables);
-      return parser_error(right_bracket->line,
-			  right_bracket->column, "Capture list is incomplete");
-    }
-  }
-
-  return captured_variables;
-}
-
-static listptr lambda_expr_parse_get_params(listptr tokens, int *index, bool *variadic) {
-  token_t *left_par = list_get(tokens, (*index)++);
+/**
+ * Helper function of lambda_expr_parse to parse formal parameter list.
+ */
+static listptr lambda_expr_parse_get_params(tokenstreamptr tkns, bool *variadic) {
+  tokenptr left_par = next_tkn(tkns);
   if (left_par->type != TOKEN_LEFT_PARENTHESIS) {
-    return parser_error(left_par->line, left_par->column, ERR_NO_PARAM);
+    return parser_error(left_par, ERR_NO_PARAM);
   }
 
   listptr formal_parameters = new_list();
-  token_t *param_token = NULL;
-  while ((param_token = list_get(tokens, *index))->type == TOKEN_IDENTIFIER) {
+  tokenptr param_token = NULL;
+  while ((param_token = current_tkn(tkns))->type == TOKEN_IDENTIFIER) {
     if (strcmp(param_token->value.character_sequence, "...") == 0) {
       *variadic = true;
-      *index += 1;
+      (void)next_tkn(tkns);
       break;
     }
 
     list_add(formal_parameters, param_token->value.character_sequence);
-    *index += 1;
+    (void)next_tkn(tkns);
   }
 
-  token_t *right_par = list_get(tokens, (*index)++);
+  tokenptr right_par = next_tkn(tkns);
   if (right_par->type != TOKEN_RIGHT_PARENTHESIS) {
     delete_list(formal_parameters);
-    return parser_error(right_par->line, right_par->column, ERR_LAMBDA_SYNTAX);
+    return parser_error(right_par, ERR_LAMBDA_SYNTAX);
   }
 
   return formal_parameters;
 }
 
-exprptr lambda_expr_parse(listptr tokens, int *index) {
+/**
+ * Parses lambda expression.
+ */
+exprptr lambda_expr_parse(tokenstreamptr tkns) {
   /* Read lambda token */
-  token_t *lambda_token = list_get(tokens, (*index)++);
+  tokenptr lambda_token = next_tkn(tkns);
   assert(lambda_token->type == TOKEN_LAMBDA);
 
   /* Read PN arity if given */
   size_t pn_arity = 0;
   bool pn_given = false;
-  if (lambda_expr_parse_get_pn_arity(tokens, index, &pn_arity, &pn_given)) {
+  if (lambda_expr_parse_get_pn_arity(tkns, &pn_arity, &pn_given)) {
     return NULL;
   }
 
   /* Read captured variables if given */
-  listptr captured_variables = lambda_expr_parse_get_captures(tokens, index);
+  listptr captured_variables = get_capture_list(tkns);
   if (!captured_variables) {
     return NULL;
   }
 
   /* Read formal parameters */
   bool variadic = false;
-  listptr formal_parameters = lambda_expr_parse_get_params(tokens, index, &variadic);
+  listptr formal_parameters = lambda_expr_parse_get_params(tkns, &variadic);
   if (!formal_parameters) {
     delete_list(captured_variables);
     return NULL;
@@ -326,7 +305,7 @@ exprptr lambda_expr_parse(listptr tokens, int *index) {
       if (pn_arity != list_size(formal_parameters)) {
         delete_list(captured_variables);
         delete_list(formal_parameters);
-        return parser_error(lambda_token->line, lambda_token->column, ERR_PN_MISMATCH);
+        return parser_error(lambda_token, ERR_PN_MISMATCH);
       }
     } else {
       pn_arity = list_size(formal_parameters);
@@ -334,7 +313,7 @@ exprptr lambda_expr_parse(listptr tokens, int *index) {
   }
 
   /* Read body */
-  exprptr body = expr_parse(tokens, index);
+  exprptr body = expr_parse(tkns);
   if (body == NULL) {
     delete_list(formal_parameters);
     delete_list(captured_variables);
@@ -366,78 +345,60 @@ exprptr lambda_expr_parse(listptr tokens, int *index) {
   return lambda_expr;
 }
 
-bool is_lambda_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, lambda_expr_name) == 0;
-}
-
-object_t interpret_lambda(exprptr self, stack_frame_ptr sf) {
+/** 
+ * Evaluates the lambda function to a procedure object.
+ */
+object_t lambda_interpret(exprptr self, stack_frame_ptr sf) {
   lambda_expr *le = self->data;
-  
-  /* Capture variables from the environment */
-  for (size_t i = 0; i < list_size(le->captured_vars); i++) {
-    const char *name = list_get(le->captured_vars, i);
-    if (!stack_frame_defined(sf, name)) {
-      return make_error("Captured variable %s does not exist.", name);
-    }
-  }
-
-  object_t procedure = make_procedure(self);
-  for (size_t i = 0; i < list_size(le->captured_vars); i++) {
-    const char *name = list_get(le->captured_vars, i);
-    object_t value = stack_frame_get_variable(sf, name);
-    assert(!is_error(value));
-    procedure_add_closure_variable(procedure, name, value);
-    destroy_object(value);
-  }
-
-  return procedure;
+  return make_procedure(self, le->captured_vars, sf);
 }
 
-object_t call_lambda(exprptr lambda, listptr closure, 
-                     size_t number_of_args, object_t *evaluated_args,
-                     stack_frame_ptr sf) {
-  lambda_expr *le = lambda->data;
-  if (!le->variadic && list_size(le->params) != number_of_args) {
-    char *lstr = lambda_expr_tostring(lambda);
-    object_t err = make_error(ERR_ARITY_MISMATCH, lstr, list_size(le->params),
-                      number_of_args);
-    free(lstr);
-    return err;
-  }
-  if (le->variadic && list_size(le->params) > number_of_args) {
-    char *lstr = lambda_expr_tostring(lambda);
-    object_t err = make_error(ERR_ARITY_AT_LEAST, lstr, list_size(le->params),
-		      number_of_args);
+/** 
+ * Calls a lambda.
+ */
+object_t lambda_call(exprptr self, size_t nargs, object_t *args,
+                     stack_frame_ptr local_frame) {
+  lambda_expr *le = self->data;
+
+  /* Number of fixed parameters */
+  size_t nparams = list_size(le->params);
+  
+  /* If the function has a fixed number of parameters, the number of actual
+   * arguments must match the number of formal parameters */
+    if (!le->variadic && list_size(le->params) != nargs) {
+    char *lstr = lambda_expr_tostring(self);
+    object_t err = make_error(ERR_ARITY_MISMATCH, lstr, nparams, nargs);
     free(lstr);
     return err;
   }
 
-  stack_frame_ptr new_frame = new_stack_frame(sf);
-  for (size_t i = 0; i < list_size(le->params); i++) {
-    object_t arg = evaluated_args[i];
-    stack_frame_set_variable(new_frame, list_get(le->params, i), arg);
-  }
-  for (size_t i = 0; i < list_size(closure); i++) {
-    variableptr var = list_get(closure, i);
-    const char *name = variable_get_name(var);
-    object_t value = variable_get_value(var);
-    stack_frame_set_variable(new_frame, name, value);
+  /* If the function is variadic, but it also has some fixed parameters at the 
+   * beginning of the formal parameter list, the number of actual arguments must 
+   * be greater than or equal to the number of fixed parameters in the formal 
+   * parameter list.*/
+  if (le->variadic && list_size(le->params) > nargs) {
+    char *lstr = lambda_expr_tostring(self);
+    object_t err = make_error(ERR_ARITY_AT_LEAST, lstr, nparams, nargs);
+    free(lstr);
+    return err;
   }
 
+  /* Create local variables from actual arguments */
+  for (size_t i = 0; i < nparams; i++) {
+    object_t arg = args[i];
+    stack_frame_set_local_variable(local_frame, list_get(le->params, i), arg);
+  }
+
+  /* If the function is variadic, create a variable named "va_args" in the local 
+   * stack frame. This is a list formed using linked cons pairs containing 
+   * actual arguments of the function */
   if (le->variadic) {
-    size_t fixed_param_size = list_size(le->params);
-    object_t *varargs = evaluated_args + fixed_param_size;
-    size_t varsize = number_of_args - fixed_param_size;
-    object_t args_object = builtin_list(varsize, varargs, sf);
-    stack_frame_set_variable(new_frame, "va_args", args_object);
+    object_t *va_args = args + nparams;
+    object_t args_object = builtin_list(nargs - nparams, va_args, local_frame);
+    stack_frame_set_local_variable(local_frame, "va_args", args_object);
     destroy_object(args_object); 
   }
 
-  object_t result = interpret_expr(le->body, new_frame);
-  delete_stack_frame(new_frame);
-  return result;
+  /* Compute the result */
+  return interpret_expr(le->body, local_frame);
 }

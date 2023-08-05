@@ -8,18 +8,19 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "list.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
 struct list {
   void **data;
@@ -71,7 +72,6 @@ size_t list_size(listptr lst) { return lst->number_of_elements; }
 
 /* returns the element at the given index */
 void *list_get(listptr lst, size_t index) {
-  assert (index < list_size(lst));
+  assert(index < list_size(lst));
   return lst->data[index];
 }
-

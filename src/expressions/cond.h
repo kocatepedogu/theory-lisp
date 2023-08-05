@@ -8,25 +8,26 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file cond_expr.h
 
-#ifndef COND_EXPR_H
-#define COND_EXPR_H
+#ifndef THEORYLISP_EXPRESSIONS_COND_H
+#define THEORYLISP_EXPRESSIONS_COND_H
 
+#include "expression.h"
 #include "../interpreter/interpreter.h"
+#include "../scanner/scanner.h"
 #include "../utils/list.h"
 #include <stdbool.h>
 
-struct expr;
-typedef struct expr *exprptr;
 
 /* "new" operation for cond_expr */
 exprptr new_cond_expr(void);
@@ -45,7 +46,7 @@ void cond_expr_add_case(exprptr self, exprptr condition,
 char *cond_expr_tostring(exprptr self);
 
 /* cond_expr parser */
-exprptr cond_expr_parse(listptr tokens, int *index);
+exprptr cond_expr_parse(tokenstreamptr tkns);
 
 /* true if e is cond_expr */
 bool is_cond_expr(exprptr e);

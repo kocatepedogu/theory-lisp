@@ -8,21 +8,23 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file pair.h
 
-#ifndef PAIR_H
-#define PAIR_H
+#ifndef THEORYLISP_TYPES_PAIR_H
+#define THEORYLISP_TYPES_PAIR_H
 
-#include "object.h"
 #include "../utils/list.h"
+#include "object.h"
+#include "../utils/string.h"
 
 /**
  * Pair constructor.
@@ -76,7 +78,7 @@ object_t pair_second(object_t obj);
 
 /**
  * Theory Lisp programs use linked chains of cons pairs to form lists,
- * but the internal lists used by the interpreter are implemented using 
+ * but the internal lists used by the interpreter are implemented using
  * arrays for better performance. This function converts a cons list
  * to an internal list. If the given object is not a proper cons list,
  * it will return false.

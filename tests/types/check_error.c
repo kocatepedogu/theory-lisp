@@ -16,7 +16,7 @@ START_TEST(test_error) {
   static const char *expected_result = 
     TEST_STRING " " TEST_INT_STR " " TEST_REAL_STR;
 
-  object_t err_obj = make_error("%s %d %3.3f", 
+  object_t err_obj = make_error("%s %d %3.3f",
       TEST_STRING, TEST_INT, TEST_REAL);
   ck_assert(is_error(err_obj));
   ck_assert(error_equals(err_obj, err_obj));

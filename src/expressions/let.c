@@ -8,23 +8,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "let_expr.h"
+#include "let.h"
 
 #include <assert.h>
 #include <string.h>
 
 #include "../scanner/scanner.h"
-#include "../utils/heap-format.h"
+#include "../utils/string.h"
 #include "../utils/list.h"
 #include "expression.h"
+#include "expression_base.h"
 #include "../parser/parser.h"
 #include "../types/error.h"
 
@@ -64,16 +66,20 @@ static const expr_vtable let_expr_vtable = {.deallocate = delete_let_expr,
 
 static const char let_expr_name[] = "let_expr";
 
+inline bool is_let_expr(exprptr e) {
+  if (e == NULL) {
+    return false;
+  }
+
+  return strcmp(e->expr_name, let_expr_name) == 0;
+}
+
 exprptr new_let_expr(exprptr body) {
   let_expr *le = malloc(sizeof(let_expr));
   le->body = body;
   le->declarations = new_list();
 
-  expr_t *e = (expr_t *)malloc(sizeof(expr_t));
-  e->data = le;
-  e->vtable = &let_expr_vtable;
-  e->expr_name = let_expr_name;
-  return e;
+  return base_new(le, &let_expr_vtable, let_expr_name, 0, 0);
 }
 
 void delete_let_expr(exprptr self) {
@@ -121,46 +127,37 @@ char *let_expr_tostring(exprptr self) {
   for (size_t i = 0; i < list_size(expr->declarations); i++) {
     var_declaration *decl = list_get(expr->declarations, i);
     char *value_str = expr_tostring(decl->value);
-    char *new_decl_str = heap_format("(%s %s)", decl->name, value_str);
+    char *new_decl_str = format("(%s %s)", decl->name, value_str);
     free(value_str);
-    if (!declarations) {
-      declarations = new_decl_str;
-    } else {
-      char *new_declarations = heap_concat(declarations, new_decl_str);
-      free(declarations);
-      free(new_decl_str);
-      declarations = new_declarations;
-    }
+    declarations = unique_append(declarations, new_decl_str);
   }
 
-  char *body_str = expr_tostring(expr->body);
-  char *result = declarations
-                     ? heap_format("(let (%s) %s)", declarations, body_str)
-                     : heap_format("(let () %s)", body_str);
-
-  free(body_str);
-  free(declarations);
-  return result;
+  char *body = expr_tostring(expr->body);
+  if (declarations) {
+    return unique_format("(let (%s) %s)", declarations, body);
+  } else {
+    return unique_format("(let () %s)", body);
+  }
 }
 
-static bool var_declaration_parse(listptr tokens, int *index, listptr var_names,
+static bool var_declaration_parse(tokenstreamptr tkns, listptr var_names,
 			          listptr var_values) {
-  token_t *left_p = list_get(tokens, (*index)++);
+  tokenptr left_p = next_tkn(tkns);
   if (left_p->type != TOKEN_LEFT_PARENTHESIS) {
-    return parser_error(left_p->line, left_p->column, ERR_NO_BEGINNING_PARENTHESIS);
+    return parser_error(left_p, ERR_NO_BEGINNING_PARENTHESIS);
   }
-  token_t *var_name = list_get(tokens, (*index)++);
+  tokenptr var_name = next_tkn(tkns);
   if (var_name->type != TOKEN_IDENTIFIER) {
-    return parser_error(var_name->line, var_name->column, ERR_NAME_IS_NOT_ID);
+    return parser_error(var_name, ERR_NAME_IS_NOT_ID);
   }
-  exprptr var_value = expr_parse(tokens, index);
+  exprptr var_value = expr_parse(tkns);
   if (var_value == NULL) {
     return false;
   }
-  token_t *right_p = list_get(tokens, (*index)++);
+  tokenptr right_p = next_tkn(tkns);
   if (right_p->type != TOKEN_RIGHT_PARENTHESIS) {
     delete_expr(var_value);
-    return parser_error(right_p->line, right_p->column, ERR_NO_END_PARENTHESIS);
+    return parser_error(right_p, ERR_NO_END_PARENTHESIS);
   }
 
   list_add(var_names, var_name);
@@ -177,37 +174,36 @@ static inline exprptr let_expr_parse_error(listptr names, listptr values) {
   return NULL;
 }
 
-exprptr let_expr_parse(listptr tokens, int *index) {
-  token_t *let_token = list_get(tokens, (*index)++);
+exprptr let_expr_parse(tokenstreamptr tkns) {
+  tokenptr let_token = next_tkn(tkns);
   assert(let_token->type == TOKEN_LET);
 
-  token_t *left_p = list_get(tokens, (*index)++);
+  tokenptr left_p = next_tkn(tkns);
   if (left_p->type != TOKEN_LEFT_PARENTHESIS) {
-    return parser_error(left_p->line, left_p->column, ERR_NO_LEFT_PARENTHESIS_IN_DECL_BLOCK);
+    return parser_error(left_p, ERR_NO_LEFT_PARENTHESIS_IN_DECL_BLOCK);
   }
 
   listptr var_names = new_list();
   listptr var_values = new_list();
-  while (((token_t *)list_get(tokens, *index))->type !=
-         TOKEN_RIGHT_PARENTHESIS) {
-    if (!var_declaration_parse(tokens, index, var_names, var_values)) {
+  while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
+    if (!var_declaration_parse(tkns, var_names, var_values)) {
       return let_expr_parse_error(var_names, var_values);
     }
   }
 
-  token_t *right_p = list_get(tokens, (*index)++);
+  tokenptr right_p = next_tkn(tkns);
   if (right_p->type != TOKEN_RIGHT_PARENTHESIS) {
-    return parser_error(right_p->line, right_p->column, ERR_NO_RIGHT_PARENTHESIS_IN_DECL_BLOCK);
+    return parser_error(right_p, ERR_NO_RIGHT_PARENTHESIS_IN_DECL_BLOCK);
   }
 
-  exprptr body = expr_parse(tokens, index);
+  exprptr body = expr_parse(tkns);
   if (body == NULL) {
     return let_expr_parse_error(var_names, var_values);
   }
 
   exprptr le = new_let_expr(body);
   for (size_t i = 0; i < list_size(var_names); i++) {
-    token_t *var_name = list_get(var_names, i);
+    tokenptr var_name = list_get(var_names, i);
     exprptr var_value = list_get(var_values, i);
     let_expr_add_declaration(le, var_name->value.character_sequence,
                              var_value);
@@ -218,14 +214,6 @@ exprptr let_expr_parse(listptr tokens, int *index) {
   le->line_number = let_token->line;
   le->column_number = let_token->column;
   return le;
-}
-
-bool is_let_expr(exprptr e) {
-  if (e == NULL) {
-    return false;
-  }
-
-  return strcmp(e->expr_name, let_expr_name) == 0;
 }
 
 object_t interpret_let(exprptr self, stack_frame_ptr sf) {
@@ -240,7 +228,7 @@ object_t interpret_let(exprptr self, stack_frame_ptr sf) {
       return value;
     }
 
-    stack_frame_set_variable(new_frame, decl->name, value);
+    stack_frame_set_local_variable(new_frame, decl->name, value);
     destroy_object(value);
   }
 

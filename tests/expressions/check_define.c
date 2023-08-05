@@ -1,7 +1,8 @@
 #include <check.h>
 #include "../../src/scanner/scanner.h"
-#include "../../src/expressions/definition_expr.h"
-#include "../../src/expressions/data_expr.h"
+#include "../../src/expressions/definition.h"
+#include "../../src/expressions/expression_base.h"
+#include "../../src/expressions/data.h"
 #include "../../src/types/integer.h"
 #include "parse.h"
 

@@ -8,22 +8,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /// @file real.h
 
-#ifndef REAL_H
-#define REAL_H
+#ifndef THEORYLISP_TYPES_REAL_H
+#define THEORYLISP_TYPES_REAL_H
 
 #include "object.h"
+#include "../utils/string.h"
 
-/** 
+/**
  * Real number type.
  * All real numbers are currently implemented using double precision
  * floating point numbers.
@@ -92,7 +94,7 @@ object_t real_op_add(object_t self, object_t other);
  * Multiplication operator for real numbers.
  * The second operand can have a type different from real
  * as long as it is a number type (currently the only such type is integer)
- * In case it has a different type, it is converted to real, and the 
+ * In case it has a different type, it is converted to real, and the
  * multiplication is done with two real numbers.
  */
 object_t real_op_mul(object_t self, object_t other);

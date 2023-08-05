@@ -8,22 +8,23 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "string.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
-#include "../utils/heap-format.h"
 #include "../types/error.h"
 #include "../types/integer.h"
+#include "../utils/string.h"
 #include "object.h"
 
 static const object_vtable_t string_vtable = {
@@ -35,13 +36,13 @@ static const object_vtable_t string_vtable = {
 
 static const char string_type_name[] = "string";
 
-inline bool is_string(object_t obj) { 
-  return strcmp(string_type_name, obj.type) == 0; 
+inline bool is_string(object_t obj) {
+  return strcmp(string_type_name, obj.type) == 0;
 }
 
-inline string_t string_value(object_t obj) { 
+inline string_t string_value(object_t obj) {
   assert(is_string(obj));
-  return obj.value; 
+  return obj.value;
 }
 
 object_t make_string(const string_t value) {
@@ -72,7 +73,7 @@ void destroy_string(object_t self) {
 
 char *string_tostring(object_t self) {
   assert(is_string(self));
-  return heap_format("\"%s\"", (char *)self.value);
+  return format("\"%s\"", self.value);
 }
 
 bool string_equals(object_t self, object_t other) {
@@ -94,7 +95,7 @@ object_t string_concat(object_t first, object_t second) {
   if (is_string(first)) {
     first_str = clone_object(first);
   } else {
-    char *str = object_tostring(first);
+    char* str = object_tostring(first);
     first_str = make_string(str);
     free(str);
   }
@@ -108,7 +109,7 @@ object_t string_concat(object_t first, object_t second) {
     free(str);
   }
 
-  char *concat = heap_concat(string_value(first_str), string_value(second_str));
+  char *concat = append(string_value(first_str), string_value(second_str));
   object_t result = make_string(concat);
   free(concat);
 
@@ -134,7 +135,7 @@ object_t string_charat(object_t obj, size_t index) {
   }
 
   destroy_object(strlen_obj);
-  char result_string[] = "0";
+  char *result_string = "0";
   result_string[0] = string_value(obj)[index];
   return make_string(result_string);
 }
@@ -153,8 +154,7 @@ object_t string_substring(object_t obj, size_t begin, size_t end) {
     return make_error("Begin index is outside of string");
   }
 
-  if (end >= int_value(strlen_obj)) 
-  {
+  if (end >= int_value(strlen_obj)) {
     return make_error("End index is outside of string");
   }
 
@@ -162,7 +162,7 @@ object_t string_substring(object_t obj, size_t begin, size_t end) {
     return make_error("Begin index is larger than end index");
   }
 
-  char *substr = (char *)malloc(end - begin + 1);
+  char *substr = malloc(end - begin + 1);
   strncpy(substr, &string_value(obj)[begin], end - begin);
   object_t result = make_string(substr);
   free(substr);

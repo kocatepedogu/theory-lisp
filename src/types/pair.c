@@ -8,22 +8,23 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
- * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
 
- * You should have received a copy of the GNU General Public License along with Theory Lisp.
- * If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along
+ * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "pair.h"
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
-#include "../utils/list.h"
-#include "../utils/heap-format.h"
 #include "../types/null.h"
+#include "../utils/string.h"
+#include "../utils/list.h"
 #include "object.h"
 
 /** Cons pair type */
@@ -41,18 +42,18 @@ static const object_vtable_t pair_vtable = {
 
 static const char pair_typename[] = "pair";
 
-inline bool is_pair(object_t obj) { 
+inline bool is_pair(object_t obj) {
   return strcmp(pair_typename, obj.type) == 0;
 }
 
-inline object_t pair_first(object_t obj) { 
+inline object_t pair_first(object_t obj) {
   assert(is_pair(obj));
-  return (*(pair_t *)obj.value).first; 
+  return (*(pair_t *)obj.value).first;
 }
 
 inline object_t pair_second(object_t obj) {
   assert(is_pair(obj));
-  return (*(pair_t*)obj.value).second;
+  return (*(pair_t *)obj.value).second;
 }
 
 object_t make_pair(object_t first, object_t second) {
@@ -96,7 +97,7 @@ char *pair_tostring(object_t self) {
   pair_t *pair_value = self.value;
   char *first_string = object_tostring(pair_value->first);
   char *second_string = object_tostring(pair_value->second);
-  char *result = heap_format("(cons %s %s)", first_string, second_string);
+  char *result = format("(cons %s %s)", first_string, second_string);
   free(first_string);
   free(second_string);
   return result;
@@ -151,16 +152,14 @@ object_t internal_list_to_cons_list(listptr input_list) {
   }
 
   object_t nil = make_null();
-  object_t *arg = list_get(input_list, len-1);
+  object_t *arg = list_get(input_list, len - 1);
   object_t pair = make_pair(*arg, nil);
   if (len >= 2) {
     for (size_t i = len - 1; i != 0; i--) {
-      arg = list_get(input_list, i-1);
+      arg = list_get(input_list, i - 1);
       assign_object(&pair, make_pair(*arg, pair));
     }
   }
 
   return pair;
 }
-
-
