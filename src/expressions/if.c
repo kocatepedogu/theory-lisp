@@ -40,8 +40,7 @@ typedef struct {
 
 static const char if_expr_name[] = "if_expr";
 
-static const expr_vtable if_expr_vtable = {.deallocate = delete_if_expr,
-					                                 .clone = clone_if_expr,
+static const expr_vtable if_expr_vtable = {.destroy = destroy_if_expr,
                                            .to_string = if_expr_tostring,
                                            .interpret = interpret_if};
 
@@ -54,31 +53,20 @@ inline bool is_if_expr(exprptr e) {
 }
 
 exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case) {
-  if_expr *ie = malloc(sizeof(if_expr));
+  if_expr *ie = malloc(sizeof *ie);
   ie->condition = condition;
   ie->true_case = true_case;
   ie->false_case = false_case;
 
-  return base_new(ie, &if_expr_vtable, if_expr_name, 0, 0);
+  return expr_base_new(ie, &if_expr_vtable, if_expr_name, 0, 0);
 }
 
-void delete_if_expr(exprptr self) {
+void destroy_if_expr(exprptr self) {
   if_expr *expr = self->data;
   delete_expr(expr->condition);
   delete_expr(expr->true_case);
   delete_expr(expr->false_case);
   free(expr);
-  free(self);
-}
-
-exprptr clone_if_expr(exprptr self) {
-  if_expr *self_ie = self->data;
-  if_expr *new_ie = (if_expr *)malloc(sizeof(if_expr));
-  new_ie->condition = clone_expr(self_ie->condition);
-  new_ie->false_case = clone_expr(self_ie->false_case);
-  new_ie->true_case = clone_expr(self_ie->true_case);
-
-  return base_clone(self, new_ie);
 }
 
 char *if_expr_tostring(exprptr self) {
@@ -116,16 +104,16 @@ exprptr if_expr_parse(tokenstreamptr tkns) {
   return result;
 }
 
-object_t interpret_if(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_if(exprptr self, stack_frame_ptr sf) {
   if_expr *ie = self->data;
 
-  object_t condition_result = interpret_expr(ie->condition, sf);
+  objectptr condition_result = interpret_expr(ie->condition, sf);
   if (is_error(condition_result)) {
     return condition_result;
   }
 
   if (!is_boolean(condition_result)) {
-    destroy_object(condition_result);
+    delete_object(condition_result);
     return make_error("Condition in if expression does not yield a boolean.");
   }
 
@@ -136,7 +124,7 @@ object_t interpret_if(exprptr self, stack_frame_ptr sf) {
     case_expr = ie->false_case;
   }
 
-  object_t result = interpret_expr(case_expr, sf);
-  destroy_object(condition_result);
+  objectptr result = interpret_expr(case_expr, sf);
+  delete_object(condition_result);
   return result;
 }

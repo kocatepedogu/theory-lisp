@@ -69,8 +69,7 @@ typedef struct {
 } lambda_expr;
 
 static const expr_vtable lambda_expr_vtable = {
-    .deallocate = delete_lambda_expr,
-    .clone = clone_lambda_expr,
+    .destroy = destroy_lambda_expr,
     .to_string = lambda_expr_tostring,
     .interpret = lambda_interpret,
     .call = lambda_call};
@@ -84,7 +83,7 @@ inline bool is_lambda_expr(exprptr e) {
 }
 
 exprptr new_lambda_expr(exprptr body, bool variadic) {
-  lambda_expr *le = malloc(sizeof(lambda_expr));
+  lambda_expr *le = malloc(sizeof *le);
   le->params = new_list();
   le->captured_vars = new_list();
   le->body = body;
@@ -92,50 +91,26 @@ exprptr new_lambda_expr(exprptr body, bool variadic) {
   le->pn_arity = 0;
   le->pn_given = false;
 
-  return base_new(le, &lambda_expr_vtable, lambda_expr_name, 0, 0);
+  return expr_base_new(le, &lambda_expr_vtable, lambda_expr_name, 0, 0);
 }
 
-void delete_lambda_expr(exprptr self) {
+void destroy_lambda_expr(exprptr self) {
   lambda_expr *expr = self->data;
   delete_expr(expr->body);
 
-  for (size_t i = 0; i < list_size(expr->params); i++) {
+  for (size_t i = 0; i < list_size(expr->params); ++i) {
     char *param = list_get(expr->params, i);
     free(param);
   }
   delete_list(expr->params);
 
-  for (size_t i = 0; i < list_size(expr->captured_vars); i++) {
+  for (size_t i = 0; i < list_size(expr->captured_vars); ++i) {
     char *captured_var = list_get(expr->captured_vars, i);
     free(captured_var);
   }
   delete_list(expr->captured_vars);
 
   free(expr);
-  free(self);
-}
-
-exprptr clone_lambda_expr(exprptr self) {
-  lambda_expr *self_le = self->data;
-  lambda_expr *new_le = (lambda_expr *)malloc(sizeof(lambda_expr));
-  new_le->variadic = self_le->variadic;
-  new_le->pn_arity = self_le->pn_arity;
-  new_le->pn_given = self_le->pn_given;
-  new_le->body = clone_expr(self_le->body);
-
-  new_le->params = new_list();
-  for (size_t i = 0; i < list_size(self_le->params); i++) {
-    char *param = list_get(self_le->params, i);
-    list_add(new_le->params, strdup(param));
-  }
-
-  new_le->captured_vars = new_list();
-  for (size_t i = 0; i < list_size(self_le->captured_vars); i++) {
-    char *captured_var = list_get(self_le->captured_vars, i);
-    list_add(new_le->captured_vars, strdup(captured_var));
-  }
-
-  return base_clone(self, new_le);
 }
 
 void lambda_expr_add_param(exprptr self, const char *name) {
@@ -180,7 +155,7 @@ bool lambda_expr_is_variadic(exprptr self) {
  */
 char *lambda_expr_tostring_param_list(listptr lst) {
   char *result = NULL;
-  for (size_t i = 0; i < list_size(lst); i++) {
+  for (size_t i = 0; i < list_size(lst); ++i) {
     char *str = list_get(lst, i);
     result = unique_append_sep(result, " ", strdup(str));
   }
@@ -330,11 +305,11 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
     lambda_expr_set_pn_arity(lambda_expr, pn_arity);
   }
 
-  for (size_t i = 0; i < list_size(formal_parameters); i++) {
+  for (size_t i = 0; i < list_size(formal_parameters); ++i) {
     lambda_expr_add_param(lambda_expr, list_get(formal_parameters, i));
   }
 
-  for (size_t i = 0; i < list_size(captured_variables); i++) {
+  for (size_t i = 0; i < list_size(captured_variables); ++i) {
     lambda_expr_add_captured_var(lambda_expr, list_get(captured_variables, i));
   }
 
@@ -348,7 +323,7 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
 /** 
  * Evaluates the lambda function to a procedure object.
  */
-object_t lambda_interpret(exprptr self, stack_frame_ptr sf) {
+objectptr lambda_interpret(exprptr self, stack_frame_ptr sf) {
   lambda_expr *le = self->data;
   return make_procedure(self, le->captured_vars, sf);
 }
@@ -356,7 +331,7 @@ object_t lambda_interpret(exprptr self, stack_frame_ptr sf) {
 /** 
  * Calls a lambda.
  */
-object_t lambda_call(exprptr self, size_t nargs, object_t *args,
+objectptr lambda_call(exprptr self, size_t nargs, objectptr *args,
                      stack_frame_ptr local_frame) {
   lambda_expr *le = self->data;
 
@@ -367,7 +342,7 @@ object_t lambda_call(exprptr self, size_t nargs, object_t *args,
    * arguments must match the number of formal parameters */
     if (!le->variadic && list_size(le->params) != nargs) {
     char *lstr = lambda_expr_tostring(self);
-    object_t err = make_error(ERR_ARITY_MISMATCH, lstr, nparams, nargs);
+    objectptr err = make_error(ERR_ARITY_MISMATCH, lstr, nparams, nargs);
     free(lstr);
     return err;
   }
@@ -378,14 +353,14 @@ object_t lambda_call(exprptr self, size_t nargs, object_t *args,
    * parameter list.*/
   if (le->variadic && list_size(le->params) > nargs) {
     char *lstr = lambda_expr_tostring(self);
-    object_t err = make_error(ERR_ARITY_AT_LEAST, lstr, nparams, nargs);
+    objectptr err = make_error(ERR_ARITY_AT_LEAST, lstr, nparams, nargs);
     free(lstr);
     return err;
   }
 
   /* Create local variables from actual arguments */
-  for (size_t i = 0; i < nparams; i++) {
-    object_t arg = args[i];
+  for (size_t i = 0; i < nparams; ++i) {
+    objectptr arg = args[i];
     stack_frame_set_local_variable(local_frame, list_get(le->params, i), arg);
   }
 
@@ -393,10 +368,10 @@ object_t lambda_call(exprptr self, size_t nargs, object_t *args,
    * stack frame. This is a list formed using linked cons pairs containing 
    * actual arguments of the function */
   if (le->variadic) {
-    object_t *va_args = args + nparams;
-    object_t args_object = builtin_list(nargs - nparams, va_args, local_frame);
+    objectptr *va_args = args + nparams;
+    objectptr args_object = builtin_list(nargs - nparams, va_args, local_frame);
     stack_frame_set_local_variable(local_frame, "va_args", args_object);
-    destroy_object(args_object); 
+    delete_object(args_object); 
   }
 
   /* Compute the result */

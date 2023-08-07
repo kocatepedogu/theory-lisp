@@ -59,8 +59,7 @@ typedef struct {
   exprptr body;
 } let_expr;
 
-static const expr_vtable let_expr_vtable = {.deallocate = delete_let_expr,
-					                                  .clone = clone_let_expr,
+static const expr_vtable let_expr_vtable = {.destroy = destroy_let_expr,
                                             .to_string = let_expr_tostring,
 					                                  .interpret = interpret_let};
 
@@ -75,17 +74,17 @@ inline bool is_let_expr(exprptr e) {
 }
 
 exprptr new_let_expr(exprptr body) {
-  let_expr *le = malloc(sizeof(let_expr));
+  let_expr *le = malloc(sizeof *le);
   le->body = body;
   le->declarations = new_list();
 
-  return base_new(le, &let_expr_vtable, let_expr_name, 0, 0);
+  return expr_base_new(le, &let_expr_vtable, let_expr_name, 0, 0);
 }
 
-void delete_let_expr(exprptr self) {
+void destroy_let_expr(exprptr self) {
   let_expr *expr = self->data;
   delete_expr(expr->body);
-  for (size_t i = 0; i < list_size(expr->declarations); i++) {
+  for (size_t i = 0; i < list_size(expr->declarations); ++i) {
     var_declaration *decl = list_get(expr->declarations, i);
     free(decl->name);
     delete_expr(decl->value);
@@ -93,29 +92,11 @@ void delete_let_expr(exprptr self) {
   }
   delete_list(expr->declarations);
   free(expr);
-  free(self);
-}
-
-exprptr clone_let_expr(exprptr self) {
-  let_expr *self_le = self->data;
-  let_expr *new_le = (let_expr *)malloc(sizeof(let_expr));
-  new_le->body = clone_expr(self_le->body);
-  new_le->declarations = new_list();
-
-  for (size_t i = 0; i < list_size(self_le->declarations); i++) {
-    var_declaration *self_decl = list_get(self_le->declarations, i);
-    var_declaration *new_decl = (var_declaration *)malloc(sizeof(var_declaration));
-    new_decl->name = strdup(self_decl->name);
-    new_decl->value = clone_expr(self_decl->value);
-    list_add(new_le->declarations, new_decl);
-  }
-
-  return base_clone(self, new_le);
 }
 
 void let_expr_add_declaration(exprptr self, const char *name, exprptr expr) {
   let_expr *le = self->data;
-  var_declaration *decl = malloc(sizeof(var_declaration));
+  var_declaration *decl = malloc(sizeof *decl);
   decl->name = strdup(name);
   decl->value = expr;
   list_add(le->declarations, decl);
@@ -124,7 +105,7 @@ void let_expr_add_declaration(exprptr self, const char *name, exprptr expr) {
 char *let_expr_tostring(exprptr self) {
   let_expr *expr = self->data;
   char *declarations = NULL;
-  for (size_t i = 0; i < list_size(expr->declarations); i++) {
+  for (size_t i = 0; i < list_size(expr->declarations); ++i) {
     var_declaration *decl = list_get(expr->declarations, i);
     char *value_str = expr_tostring(decl->value);
     char *new_decl_str = format("(%s %s)", decl->name, value_str);
@@ -167,7 +148,7 @@ static bool var_declaration_parse(tokenstreamptr tkns, listptr var_names,
 
 static inline exprptr let_expr_parse_error(listptr names, listptr values) {
   delete_list(names);
-  for (size_t i = 0; i < list_size(values); i++) {
+  for (size_t i = 0; i < list_size(values); ++i) {
     delete_expr(list_get(values, i));
   }
   delete_list(values);
@@ -202,7 +183,7 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
   }
 
   exprptr le = new_let_expr(body);
-  for (size_t i = 0; i < list_size(var_names); i++) {
+  for (size_t i = 0; i < list_size(var_names); ++i) {
     tokenptr var_name = list_get(var_names, i);
     exprptr var_value = list_get(var_values, i);
     let_expr_add_declaration(le, var_name->value.character_sequence,
@@ -216,23 +197,23 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
   return le;
 }
 
-object_t interpret_let(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_let(exprptr self, stack_frame_ptr sf) {
   let_expr *le = self->data;
 
   stack_frame_ptr new_frame = new_stack_frame(sf);
-  for (size_t i = 0; i < list_size(le->declarations); i++) {
+  for (size_t i = 0; i < list_size(le->declarations); ++i) {
     var_declaration *decl = list_get(le->declarations, i);
-    object_t value = interpret_expr(decl->value, new_frame);
+    objectptr value = interpret_expr(decl->value, new_frame);
     if (is_error(value)) {
       delete_stack_frame(new_frame);
       return value;
     }
 
     stack_frame_set_local_variable(new_frame, decl->name, value);
-    destroy_object(value);
+    delete_object(value);
   }
 
-  object_t result = interpret_expr(le->body, new_frame);
+  objectptr result = interpret_expr(le->body, new_frame);
   delete_stack_frame(new_frame);
   return result;
 }

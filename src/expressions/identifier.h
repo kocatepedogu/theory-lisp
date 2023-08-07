@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file identifier_expr.h
+/// @file identifier.h
 
 #ifndef THEORYLISP_EXPRESSIONS_IDENTIFIER_H
 #define THEORYLISP_EXPRESSIONS_IDENTIFIER_H
@@ -32,10 +32,7 @@
 exprptr new_identifier_expr(const char *name);
 
 /* identifier_expr "delete" operation */
-void delete_identifier_expr(exprptr self);
-
-/* identifier_expr clone */
-exprptr clone_identifier_expr(exprptr self);
+void destroy_identifier_expr(exprptr self);
 
 /* identifier_expr tostring implementation */
 char *identifier_expr_tostring(exprptr self);
@@ -47,6 +44,6 @@ const char *identifier_expr_get_name(exprptr self);
 bool is_identifier_expr(exprptr e);
 
 /* evaluates identifier expression */
-object_t interpret_identifier(exprptr self, stack_frame_ptr sf);
+objectptr interpret_identifier(exprptr self, stack_frame_ptr sf);
 
 #endif

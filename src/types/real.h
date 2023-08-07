@@ -36,27 +36,21 @@ typedef double real_t;
  * Creates an instance of real number type.
  * The resulting object contains a reference to the value.
  */
-object_t make_real(real_t value);
-
-/**
- * Copies an instance of real number type.
- * The resulting object contains a reference to the value.
- */
-object_t clone_real(object_t self);
+objectptr make_real(real_t value);
 
 /**
  * Destroys an instance of real number type.
  * The memory used by the real number is free()'ed.
  * Given object is no longer valid after this function finishes.
  */
-void destroy_real(object_t val);
+void destroy_real(objectptr val);
 
 /**
  * Returns string representation of real number type.
  * The result is equivalent to the output produced by
  * printf("%f", real_value(val));
  */
-char *real_tostring(object_t val);
+char *real_tostring(objectptr val);
 
 /**
  * Compares two real numbers for equality.
@@ -70,7 +64,7 @@ char *real_tostring(object_t val);
  * If the other object has a different number type, it will be
  * converted to real before making the comparison.
  */
-bool real_equals(object_t val, object_t other);
+bool real_equals(objectptr val, objectptr other);
 
 /**
  * Less than operator for real numbers (self < other).
@@ -79,7 +73,7 @@ bool real_equals(object_t val, object_t other);
  * In case it has a different type, it is converted to real and the comparison
  * is done with two real numbers.
  */
-object_t real_less(object_t self, object_t other);
+objectptr real_less(objectptr self, objectptr other);
 
 /**
  * Addition operator for real numbers.
@@ -88,7 +82,7 @@ object_t real_less(object_t self, object_t other);
  * In case it has a different type, it is converted to real and the addition
  * is done with two real numbers.
  */
-object_t real_op_add(object_t self, object_t other);
+objectptr real_op_add(objectptr self, objectptr other);
 
 /**
  * Multiplication operator for real numbers.
@@ -97,7 +91,7 @@ object_t real_op_add(object_t self, object_t other);
  * In case it has a different type, it is converted to real, and the
  * multiplication is done with two real numbers.
  */
-object_t real_op_mul(object_t self, object_t other);
+objectptr real_op_mul(objectptr self, objectptr other);
 
 /**
  * Subtraction operator for real numbers.
@@ -106,7 +100,7 @@ object_t real_op_mul(object_t self, object_t other);
  * In case it has a different type, it is converted to real, and the subtraction
  * is done with two real numbers.
  */
-object_t real_op_sub(object_t self, object_t other);
+objectptr real_op_sub(objectptr self, objectptr other);
 
 /**
  * Division operator for real numbers.
@@ -115,7 +109,7 @@ object_t real_op_sub(object_t self, object_t other);
  * In case it has a different type, it is converted to real, and the division
  * is done with two real numbers.
  */
-object_t real_op_div(object_t self, object_t other);
+objectptr real_op_div(objectptr self, objectptr other);
 
 /**
  * Returns true if and only if the given object has the real type.
@@ -123,11 +117,11 @@ object_t real_op_div(object_t self, object_t other);
  * It returns false for integer objects, even though integers are,
  * mathematically, real numbers.
  */
-bool is_real(object_t obj);
+bool is_real(objectptr obj);
 
 /**
  * Returns the real number value stored in the given object (unboxing).
  */
-real_t real_value(object_t obj);
+real_t real_value(objectptr obj);
 
 #endif

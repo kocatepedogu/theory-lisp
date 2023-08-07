@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   stack_frame_ptr global_frame = new_stack_frame(NULL);
   define_builtin_function_wrappers(global_frame);
 
-  object_t result = make_void();
+  objectptr result = make_void();
   if (args.filename) {
     char *code = read_file(args.filename);
     if (!code) {
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     repl(global_frame);
   }
 
-  destroy_object(result);
+  delete_object(result);
   delete_stack_frame(global_frame);
 
   return EXIT_SUCCESS;

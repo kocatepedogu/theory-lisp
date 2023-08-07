@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file let_expr.h
+/// @file let.h
 
 #ifndef THEORYLISP_EXPRESSIONS_LET_H
 #define THEORYLISP_EXPRESSIONS_LET_H
@@ -32,10 +32,7 @@
 exprptr new_let_expr(exprptr body);
 
 /* let_expr "delete" operation */
-void delete_let_expr(exprptr self);
-
-/* let_expr clone */
-exprptr clone_let_expr(exprptr self);
+void destroy_let_expr(exprptr self);
 
 /* adds a variable declaration to the let block */
 void let_expr_add_declaration(exprptr let_expr, const char *name, 
@@ -51,6 +48,6 @@ exprptr let_expr_parse(tokenstreamptr tkns);
 bool is_let_expr(exprptr e);
 
 /* evaluates let expression */
-object_t interpret_let(exprptr self, stack_frame_ptr sf);
+objectptr interpret_let(exprptr self, stack_frame_ptr sf);
 
 #endif

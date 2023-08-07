@@ -25,34 +25,34 @@
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_equals(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_equals(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_not_equals(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_not_equals(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_less(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_less(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_less_or_eq(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_less_or_eq(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_greater(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_greater(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_greater_or_eq(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_greater_or_eq(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_null(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_null(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_void(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_void(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_boolean(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_boolean(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_integer(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_integer(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_real(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_real(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_number(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_number(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_string(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_string(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_pair(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_pair(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_is_procedure(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_is_procedure(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

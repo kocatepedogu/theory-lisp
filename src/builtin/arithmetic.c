@@ -24,37 +24,37 @@
 #include "../types/error.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_add(size_t n, object_t *args, stack_frame_ptr sf) {
-  object_t result = make_integer(0);
-  for (size_t i = 0; i < n; i++) {
+objectptr builtin_add(size_t n, objectptr *args, stack_frame_ptr sf) {
+  objectptr result = make_integer(0);
+  for (size_t i = 0; i < n; ++i) {
     assign_object(&result, object_op_add(result, args[i]));
   }
   return result; 
 }
 
-object_t builtin_mul(size_t n, object_t *args, stack_frame_ptr sf) {
-  object_t result = make_integer(1);
-  for (size_t i = 0; i < n; i++) {
+objectptr builtin_mul(size_t n, objectptr *args, stack_frame_ptr sf) {
+  objectptr result = make_integer(1);
+  for (size_t i = 0; i < n; ++i) {
     assign_object(&result, object_op_mul(result, args[i]));
   }
   return result;
 }
 
-object_t builtin_sub(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_sub(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  object_t result = clone_object(*args);
-  for (size_t i = 1; i < n; i++) {
+  objectptr result = clone_object(*args);
+  for (size_t i = 1; i < n; ++i) {
     assign_object(&result, object_op_sub(result, args[i]));
   }
   return result;
 }
 
-object_t builtin_div(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_div(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  object_t result = clone_object(*args);
-  for (size_t i = 1; i < n; i++) {
+  objectptr result = clone_object(*args);
+  for (size_t i = 1; i < n; ++i) {
     assign_object(&result, object_op_div(result, args[i]));
   }
   return result;

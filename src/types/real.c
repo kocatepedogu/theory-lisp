@@ -23,63 +23,44 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "object-base.h"
 #include "../types/boolean.h"
 #include "../types/error.h"
 #include "../utils/string.h"
 #include "integer.h"
 
-static const object_vtable_t real_vtable = {.clone = clone_real,
-                                            .destroy = destroy_real,
+static const object_type_t real_type_id = {{.destroy = destroy_real,
                                             .equals = real_equals,
                                             .tostring = real_tostring,
                                             .op_add = real_op_add,
                                             .op_mul = real_op_mul,
                                             .op_sub = real_op_sub,
                                             .op_div = real_op_div,
-                                            .less = real_less};
+                                            .less = real_less},
+                                            "real"};
 
-static const char real_type_name[] = "real";
-
-inline bool is_real(object_t obj) {
-  return strcmp(real_type_name, obj.type) == 0;
+inline bool is_real(objectptr obj) {
+  return strcmp(real_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline real_t real_value(object_t obj) {
+inline real_t real_value(objectptr obj) {
   assert(is_real(obj));
-  return *(real_t *)obj.value;
+  return *(real_t *)obj->value;
 }
 
-object_t make_real(real_t value) {
-  real_t *real_value = (real_t *)malloc(sizeof(real_t));
+objectptr make_real(real_t value) {
+  real_t *real_value = malloc(sizeof *real_value);
   *real_value = value;
 
-  object_t obj;
-  obj.value = real_value;
-  obj.type = real_type_name;
-  obj.vtable = &real_vtable;
-  obj.temporary = false;
-  return obj;
+  return object_base_new(real_value, &real_type_id);
 }
 
-object_t clone_real(object_t self) {
+void destroy_real(objectptr self) {
   assert(is_real(self));
-  real_t *real_value = (real_t *)malloc(sizeof(real_t));
-  *real_value = *(real_t *)self.value;
-
-  object_t obj;
-  obj.value = real_value;
-  obj.type = real_type_name;
-  obj.vtable = &real_vtable;
-  obj.temporary = false;
-  return obj;
+  free(self->value);
 }
 
-void destroy_real(object_t self) {
-  assert(is_real(self));
-  free(self.value);
-}
-
-bool real_equals(object_t self, object_t other) {
+bool real_equals(objectptr self, objectptr other) {
   assert(is_real(self));
   if (is_real(other)) {
     return real_value(self) == real_value(other);
@@ -92,7 +73,7 @@ bool real_equals(object_t self, object_t other) {
   return false;
 }
 
-object_t real_less(object_t self, object_t other) {
+objectptr real_less(objectptr self, objectptr other) {
   assert(is_real(self));
   real_t self_value = real_value(self);
 
@@ -106,11 +87,11 @@ object_t real_less(object_t self, object_t other) {
   return make_error("A real number cannot be compared with a non-number.");
 }
 
-char *real_tostring(object_t obj) {
+char *real_tostring(objectptr obj) {
   return format("%f", real_value(obj));
 }
 
-object_t real_op_add(object_t self, object_t other) {
+objectptr real_op_add(objectptr self, objectptr other) {
   assert(is_real(self));
   real_t self_value = real_value(self);
 
@@ -124,7 +105,7 @@ object_t real_op_add(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-object_t real_op_mul(object_t self, object_t other) {
+objectptr real_op_mul(objectptr self, objectptr other) {
   assert(is_real(self));
   real_t self_value = real_value(self);
 
@@ -138,7 +119,7 @@ object_t real_op_mul(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-object_t real_op_sub(object_t self, object_t other) {
+objectptr real_op_sub(objectptr self, objectptr other) {
   assert(is_real(self));
   real_t self_value = real_value(self);
 
@@ -152,7 +133,7 @@ object_t real_op_sub(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-object_t real_op_div(object_t self, object_t other) {
+objectptr real_op_div(objectptr self, objectptr other) {
   assert(is_real(self));
   real_t self_value = real_value(self);
 

@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file data_expr.h
+/// @file data.h
 
 #ifndef THEORYLISP_EXPRESSIONS_DATA_H
 #define THEORYLISP_EXPRESSIONS_DATA_H
@@ -31,24 +31,21 @@
 
 
 /* data_expr "new" operation */
-exprptr new_data_expr(object_t obj);
+exprptr new_data_expr(objectptr obj);
 
 /* data_expr "delete" operation */
-void delete_data_expr(exprptr self);
-
-/* data_expr clone */
-exprptr clone_data_expr(exprptr self);
+void destroy_data_expr(exprptr self);
 
 /* data_expr tostring implementation */
 char *data_expr_tostring(exprptr self);
 
 /* returns stored value */
-object_t get_data_value(exprptr self); 
+objectptr get_data_value(exprptr self); 
 
 /* true if e is data expression */
 bool is_data_expr(exprptr e);
 
 /* evaluates data expression */
-object_t interpret_data(exprptr self, stack_frame_ptr sf);
+objectptr interpret_data(exprptr self, stack_frame_ptr sf);
 
 #endif

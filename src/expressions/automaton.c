@@ -73,8 +73,7 @@ typedef struct {
 static const char automaton_expr_name[] = "automaton_expr";
 
 static const expr_vtable automaton_expr_vtable = {
-    .clone = clone_automaton_expr,
-    .deallocate = delete_automaton_expr,
+    .destroy = destroy_automaton_expr,
     .interpret = interpret_automaton,
     .to_string = automaton_expr_tostring,
     .call = call_automaton,
@@ -85,17 +84,17 @@ bool is_automaton_expr(exprptr e) {
 }
 
 exprptr new_automaton_expr(size_t number_of_tapes) {
-  automaton_expr *ae = (automaton_expr *)malloc(sizeof(automaton_expr));
+  automaton_expr *ae = malloc(sizeof *ae);
   ae->states = new_list();
   ae->captures = new_list();
   ae->compiled = NULL;
   ae->number_of_tapes = number_of_tapes;
 
-  return base_new(ae, &automaton_expr_vtable, automaton_expr_name, 0, 0);
+  return expr_base_new(ae, &automaton_expr_vtable, automaton_expr_name, 0, 0);
 }
 
 static void delete_head_operation_list(listptr lst) {
-  for (size_t i = 0; i < list_size(lst); i++) {
+  for (size_t i = 0; i < list_size(lst); ++i) {
     head_operation_expr *head_op = list_get(lst, i);
     if (head_op->write_value) {
       delete_expr(head_op->write_value);
@@ -116,7 +115,7 @@ static void delete_transition(transition_expr *tr) {
 }
 
 static void delete_state(state_expr *st) {
-  for (size_t j = 0; j < list_size(st->transitions); j++) {
+  for (size_t j = 0; j < list_size(st->transitions); ++j) {
     transition_expr *tr = list_get(st->transitions, j);
     delete_transition(tr);
   }
@@ -134,15 +133,15 @@ static void delete_state(state_expr *st) {
   free(st);
 }
 
-void delete_automaton_expr(exprptr self) {
+void destroy_automaton_expr(exprptr self) {
   automaton_expr *ae = self->data;
 
-  for (size_t i = 0; i < list_size(ae->states); i++) {
+  for (size_t i = 0; i < list_size(ae->states); ++i) {
     state_expr *st = list_get(ae->states, i);
     delete_state(st);
   }
 
-  for (size_t i = 0; i < list_size(ae->captures); i++) {
+  for (size_t i = 0; i < list_size(ae->captures); ++i) {
     char *capture = list_get(ae->captures, i);
     free(capture);
   }
@@ -154,68 +153,6 @@ void delete_automaton_expr(exprptr self) {
   delete_list(ae->states);
   delete_list(ae->captures);
   free(ae);
-  free(self);
-}
-
-static head_operation_expr *clone_head_operation(head_operation_expr *self_op) {
-  head_operation_expr *new_head_op = malloc(sizeof(head_operation_expr));
-  new_head_op->op = self_op->op;
-  if (self_op->write_value) {
-    new_head_op->write_value = clone_expr(self_op->write_value);
-  } else {
-    new_head_op->write_value = NULL;
-  }
-
-  return new_head_op;
-}
-
-static transition_expr *clone_transition_expr(transition_expr *self_tr) {
-  transition_expr *new_tr = (transition_expr *)malloc(sizeof(transition_expr));
-  new_tr->condition = clone_expr(self_tr->condition);
-  new_tr->next_state_name = strdup(self_tr->next_state_name);
-  new_tr->output = clone_expr(self_tr->output);
-  new_tr->head_operations = new_list();
-
-  for (size_t k = 0; k < list_size(self_tr->head_operations); k++) {
-    head_operation_expr *new_head_op = 
-      clone_head_operation(list_get(self_tr->head_operations, k));
-    list_add(new_tr->head_operations, new_head_op);
-  }
-
-  return new_tr;
-}
-
-exprptr clone_automaton_expr(exprptr self) {
-  automaton_expr *self_ae = self->data;
-  automaton_expr *new_ae = (automaton_expr *)malloc(sizeof(automaton_expr));
-  new_ae->compiled = clone_automaton(self_ae->compiled);
-  new_ae->states = new_list();
-  new_ae->number_of_tapes = self_ae->number_of_tapes;
-  new_ae->captures = new_list();
-
-  for (size_t i = 0; i < list_size(self_ae->states); i++) {
-    state_expr *self_st = list_get(self_ae->states, i);
-    state_expr *new_st = (state_expr *)malloc(sizeof(state_expr));
-    new_st->transitions = new_list();
-
-    for (size_t j = 0; j < list_size(self_st->transitions); j++) {
-      transition_expr *new_tr = 
-        clone_transition_expr(list_get(self_st->transitions, j));
-      list_add(new_st->transitions, new_tr);
-    }
-
-    new_st->name = strdup(self_st->name);
-    new_st->base_machine = clone_expr(self_st->base_machine);
-    new_st->output = clone_expr(self_st->output);
-    list_add(new_ae->states, new_st);
-  }
-
-  for (size_t i = 0; i < list_size(self_ae->captures); i++) {
-    char *capture = list_get(self_ae->captures, i);
-    list_add(new_ae->captures, strdup(capture));
-  }
-
-  return base_clone(self, new_ae);
 }
 
 char *transition_tostring(transition_expr *tr) {
@@ -232,7 +169,7 @@ char *transition_tostring(transition_expr *tr) {
   char *beginning = format("(%s", cond_str);
   free(cond_str);
 
-  for (size_t i = 0; i < list_size(tr->head_operations); i++) {
+  for (size_t i = 0; i < list_size(tr->head_operations); ++i) {
     head_operation_expr *head_op = list_get(tr->head_operations, i);
     char *str = NULL;
     switch (head_op->op) {
@@ -270,7 +207,7 @@ char *state_tostring(state_expr *st) {
   char *result = format("(%s %s", st->name, output_str);
   free(output_str);
 
-  for (size_t i = 0; i < list_size(st->transitions); i++) {
+  for (size_t i = 0; i < list_size(st->transitions); ++i) {
     transition_expr *tr = list_get(st->transitions, i);
     char *tr_str = transition_tostring(tr);
     char *new_result = format("%s\n%s", result, tr_str);
@@ -290,7 +227,7 @@ char *automaton_expr_tostring(exprptr self) {
   char *result = format("(automaton\\%ld %s", ae->number_of_tapes,
       captures);
   free(captures);
-  for (size_t i = 0; i < list_size(ae->states); i++) {
+  for (size_t i = 0; i < list_size(ae->states); ++i) {
     state_expr *st = list_get(ae->states, i);
     char *st_str = state_tostring(st);
     char *new_result = format("%s\n%s", result, st_str);
@@ -317,8 +254,8 @@ static void automaton_expr_add_capture(exprptr self, char *capture) {
 static listptr head_operations_parse(size_t arity, tokenstreamptr tkns) {
   listptr head_operations = new_list();
 
-  for (size_t i = 0; i < arity; i++) {
-    head_operation_expr *head_op = malloc(sizeof(head_operation_expr));
+  for (size_t i = 0; i < arity; ++i) {
+    head_operation_expr *head_op = malloc(sizeof *head_op);
     head_op->write_value = NULL;
 
     tokenptr head_operation_tkn = current_tkn(tkns);
@@ -383,7 +320,7 @@ transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstream
     transition_output = pn_expr_parse(tkns);
   }
 
-  transition_expr *tr = (transition_expr *)malloc(sizeof(transition_expr));
+  transition_expr *tr = malloc(sizeof *tr);
   tr->condition = condition;
   tr->next_state_name = strdup(next_state_name_tkn->value.character_sequence);
   tr->output = transition_output;
@@ -416,7 +353,7 @@ state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns) {
     state_output = pn_expr_parse(tkns);
   }
 
-  state_expr *st = (state_expr *)malloc(sizeof(state_expr));
+  state_expr *st = malloc(sizeof *st);
   st->transitions = new_list();
   st->name = strdup(tkn_state_name->value.character_sequence);
   st->output = state_output;
@@ -466,7 +403,7 @@ exprptr automaton_expr_parse(tokenstreamptr tkns) {
   exprptr e = new_automaton_expr(arity);
 
   if (captures) {
-    for (size_t i = 0; i < list_size(captures); i++) {
+    for (size_t i = 0; i < list_size(captures); ++i) {
       automaton_expr_add_capture(e, list_get(captures, i));
     }
     delete_list(captures);
@@ -486,7 +423,7 @@ exprptr automaton_expr_parse(tokenstreamptr tkns) {
 }
 
 static size_t find_state_index(listptr states, char *name) {
-  for (size_t k = 0; k < list_size(states); k++) {
+  for (size_t k = 0; k < list_size(states); ++k) {
     state_expr *search_st = list_get(states, k);
     if (strcmp(search_st->name, name) == 0) {
       return k;
@@ -501,11 +438,11 @@ static size_t find_state_index(listptr states, char *name) {
  * Helper function of compile_automaton.
  * Returns the first error in the compiled automaton
  */
-static object_t find_compilation_errors(automaton_t *aut) {
-  for (size_t i = 0; i < aut->number_of_states; i++) {
+static objectptr find_compilation_errors(automaton_t *aut) {
+  for (size_t i = 0; i < aut->number_of_states; ++i) {
     state_t *st = &aut->states[i];
 
-    for (size_t j = 0; j < st->number_of_transitions; j++) {
+    for (size_t j = 0; j < st->number_of_transitions; ++j) {
       transition_t *tr = &st->transitions[j];
 
       if (tr->action == ACT_CONTINUE && tr->next_state_index == (size_t)(-1)) {
@@ -520,7 +457,7 @@ static object_t find_compilation_errors(automaton_t *aut) {
 static void compile_head_operations(size_t ntapes, transition_expr *expr_tr,
                                     transition_t *aut_tr, stack_frame_ptr sf) {
   aut_tr->head_operations = malloc(ntapes * sizeof(head_op_t));
-  for (size_t k = 0; k < ntapes; k++) {
+  for (size_t k = 0; k < ntapes; ++k) {
     head_operation_expr *expr_op = list_get(expr_tr->head_operations, k);
     head_op_t *head_op = &aut_tr->head_operations[k];
     switch (expr_op->op) {
@@ -550,9 +487,9 @@ static void compile_transitions(size_t ntapes, listptr states, state_expr *expr_
   if (aut_st->number_of_transitions == 0) {
     aut_st->transitions = NULL;
   } else { 
-    aut_st->transitions = malloc(aut_st->number_of_transitions * sizeof(transition_t));
+    aut_st->transitions = malloc(aut_st->number_of_transitions * sizeof(*aut_st->transitions));
 
-    for (size_t j = 0; j < aut_st->number_of_transitions; j++) {
+    for (size_t j = 0; j < aut_st->number_of_transitions; ++j) {
       transition_expr *expr_tr = list_get(expr_st->transitions, j);
 
       transition_t *aut_tr = &aut_st->transitions[j];
@@ -584,13 +521,13 @@ static void compile_transitions(size_t ntapes, listptr states, state_expr *expr_
   }
 }
 
-static object_t compile_automaton(automaton_expr *ae, stack_frame_ptr sf) {
-  automaton_t *aut = malloc(sizeof(automaton_t));
+static objectptr compile_automaton(automaton_expr *ae, stack_frame_ptr sf) {
+  automaton_t *aut = malloc(sizeof *aut);
   aut->number_of_states = list_size(ae->states);
-  aut->states = malloc(aut->number_of_states * sizeof(state_t));
+  aut->states = malloc(aut->number_of_states * sizeof(*aut->states));
   aut->number_of_tapes = ae->number_of_tapes;
 
-  for (size_t i = 0; i < aut->number_of_states; i++) {
+  for (size_t i = 0; i < aut->number_of_states; ++i) {
     state_expr *expr_st = list_get(ae->states, i); 
 
     state_t *aut_st = &aut->states[i];
@@ -600,7 +537,7 @@ static object_t compile_automaton(automaton_expr *ae, stack_frame_ptr sf) {
     compile_transitions(ae->number_of_tapes, ae->states, expr_st, i, aut_st, sf);
   }
 
-  object_t result = find_compilation_errors(aut);
+  objectptr result = find_compilation_errors(aut);
   if (is_error(result)) {
     delete_automaton(aut);
     return result;
@@ -613,21 +550,23 @@ static object_t compile_automaton(automaton_expr *ae, stack_frame_ptr sf) {
 /* 
  * Interprets the automaton expression.
  */
-object_t interpret_automaton(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_automaton(exprptr self, stack_frame_ptr sf) {
   automaton_expr *ae = self->data;
-  object_t error = compile_automaton(ae, sf);
-  if (is_error(error)) {
-    return error;
+  if (!ae->compiled) {
+    objectptr error = compile_automaton(ae, sf);
+    if (is_error(error)) {
+      return error;
+    }
+    delete_object(error);
   }
-  destroy_object(error);
+
   return make_procedure(self, ae->captures, sf);
 }
 
 /*
  * Calls the automaton with tape arguments
  */
-
-object_t call_automaton(exprptr self, size_t nargs, object_t *args, 
+objectptr call_automaton(exprptr self, size_t nargs, objectptr *args, 
                        stack_frame_ptr sf) {
   automaton_expr *ae = self->data;
   automaton_t *aut = ae->compiled;
@@ -635,7 +574,7 @@ object_t call_automaton(exprptr self, size_t nargs, object_t *args,
 }
 
 
-object_t call_automaton_internal(exprptr self, void *args, stack_frame_ptr sf) {
+objectptr call_automaton_internal(exprptr self, void *args, stack_frame_ptr sf) {
   automaton_expr *ae = self->data;
   automaton_t *aut = ae->compiled;
   return automaton_run_internal(aut, args, sf);

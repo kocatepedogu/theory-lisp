@@ -17,14 +17,16 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file eval.h
+
 #ifndef THEORYLISP_BUILTIN_EVAL_H
 #define THEORYLISP_BUILTIN_EVAL_H
 
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_eval(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_defined(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_defined(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

@@ -32,36 +32,33 @@ typedef bool boolean_t;
  * Any value other than true and false is undefined behavior.
  * (true and false from stdbool.h)
  */
-object_t make_boolean(boolean_t value);
-
-/** Clones a boolean object. */
-object_t clone_boolean(object_t self);
+objectptr make_boolean(boolean_t value);
 
 /** Boolean destructor */
-void destroy_boolean(object_t val);
+void destroy_boolean(objectptr val);
 
 /** Returns "#t" for true, and "#f" for false. */
-char *boolean_tostring(object_t val);
+char *boolean_tostring(objectptr val);
 
 /** Tests equality of two boolean values. */
-bool boolean_equals(object_t val, object_t other);
+bool boolean_equals(objectptr val, objectptr other);
 
 /** True if and only if given object is a boolean. */
-bool is_boolean(object_t obj);
+bool is_boolean(objectptr obj);
 
 /** Boolean && operator */
-object_t boolean_op_and(object_t obj, object_t other);
+objectptr boolean_op_and(objectptr obj, objectptr other);
 
 /** Boolean || operator */
-object_t boolean_op_or(object_t obj, object_t other);
+objectptr boolean_op_or(objectptr obj, objectptr other);
 
 /** Boolean ^ operator */
-object_t boolean_op_xor(object_t obj, object_t other);
+objectptr boolean_op_xor(objectptr obj, objectptr other);
 
 /** Boolean ! operator */
-object_t boolean_op_not(object_t obj);
+objectptr boolean_op_not(objectptr obj);
 
 /** Returns the internally stored boolean value */
-boolean_t boolean_value(object_t obj);
+boolean_t boolean_value(objectptr obj);
 
 #endif

@@ -17,16 +17,24 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file error.h
+/// @file hashtable.h
 
-#ifndef THEORYLISP_BUILTIN_ERROR_H
-#define THEORYLISP_BUILTIN_ERROR_H
+#ifndef THEORYLISP_UTILS_HASHTABLE_H
+#define THEORYLISP_UTILS_HASHTABLE_H
 
-#include "../types/object.h"
-#include "../interpreter/stack_frame.h"
+#include <stdlib.h>
 
-objectptr builtin_error(size_t n, objectptr *args, stack_frame_ptr sf);
+struct hashtable;
+typedef struct hashtable *hashtableptr;
 
-objectptr builtin_exit(size_t n, objectptr *args, stack_frame_ptr sf);
+typedef void (*dict_value_destructor)(void *value);
+
+hashtableptr new_hash_table(size_t capacity);
+
+void delete_hash_table(hashtableptr table, dict_value_destructor destr);
+
+void *hash_table_put(hashtableptr table, const char *key, void *value);
+
+void *hash_table_get(hashtableptr table, const char *key);
 
 #endif

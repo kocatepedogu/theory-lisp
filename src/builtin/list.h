@@ -25,12 +25,12 @@
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_cons(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_cons(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_car(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_car(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_cdr(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_cdr(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_list(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_list(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

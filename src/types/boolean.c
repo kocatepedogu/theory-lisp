@@ -23,66 +23,46 @@
 #include <string.h>
 
 #include "error.h"
+#include "object-base.h"
 
 #define ERR_OPERAND_NOT_BOOL "Boolean AND operands must be booleans"
 
-static const object_vtable_t boolean_vtable = {.clone = clone_boolean,
-                                               .destroy = destroy_boolean,
+static const object_type_t boolean_type_id = {{.destroy = destroy_boolean,
                                                .tostring = boolean_tostring,
                                                .equals = boolean_equals,
                                                .op_and = boolean_op_and,
                                                .op_or = boolean_op_or,
                                                .op_xor = boolean_op_xor,
-                                               .op_not = boolean_op_not};
+                                               .op_not = boolean_op_not},
+                                              "boolean"};
 
-static const char boolean_type_name[] = "boolean";
-
-inline boolean_t boolean_value(object_t obj) {
+inline boolean_t boolean_value(objectptr obj) {
   assert(is_boolean(obj));
-  return *(boolean_t *)obj.value;
+  return *(boolean_t *)obj->value;
 }
 
-inline bool is_boolean(object_t obj) {
-  return strcmp(obj.type, boolean_type_name) == 0;
+inline bool is_boolean(objectptr obj) {
+  return strcmp(obj->type_id->type_name, boolean_type_id.type_name) == 0;
 }
 
-object_t make_boolean(boolean_t value) {
-  boolean_t *bool_value = (boolean_t *)malloc(sizeof(boolean_t));
+objectptr make_boolean(boolean_t value) {
+  boolean_t *bool_value = malloc(sizeof *bool_value);
   *bool_value = value;
 
-  object_t obj;
-  obj.value = bool_value;
-  obj.type = boolean_type_name;
-  obj.vtable = &boolean_vtable;
-  obj.temporary = false;
-  return obj;
+  return object_base_new(bool_value, &boolean_type_id);
 }
 
-object_t clone_boolean(object_t self) {
-  assert(is_boolean(self));
-
-  boolean_t *bool_value = (boolean_t *)malloc(sizeof(boolean_t));
-  *bool_value = *(boolean_t *)self.value;
-  object_t obj;
-
-  obj.value = bool_value;
-  obj.type = boolean_type_name;
-  obj.vtable = &boolean_vtable;
-  obj.temporary = false;
-  return obj;
-}
-
-void destroy_boolean(object_t obj) {
+void destroy_boolean(objectptr obj) {
   assert(is_boolean(obj));
-  free(obj.value);
+  free(obj->value);
 }
 
-char *boolean_tostring(object_t obj) {
+char *boolean_tostring(objectptr obj) {
   assert(is_boolean(obj));
   return strdup(boolean_value(obj) ? "#t" : "#f");
 }
 
-bool boolean_equals(object_t obj, object_t other) {
+bool boolean_equals(objectptr obj, objectptr other) {
   assert(is_boolean(obj));
   if (!is_boolean(other)) {
     return false;
@@ -91,7 +71,7 @@ bool boolean_equals(object_t obj, object_t other) {
   return boolean_value(obj) == boolean_value(other);
 }
 
-object_t boolean_op_and(object_t obj, object_t other) {
+objectptr boolean_op_and(objectptr obj, objectptr other) {
   assert(is_boolean(obj));
   if (!is_boolean(other)) {
     return make_error(ERR_OPERAND_NOT_BOOL);
@@ -100,7 +80,7 @@ object_t boolean_op_and(object_t obj, object_t other) {
   return make_boolean(boolean_value(obj) && boolean_value(other));
 }
 
-object_t boolean_op_or(object_t obj, object_t other) {
+objectptr boolean_op_or(objectptr obj, objectptr other) {
   assert(is_boolean(obj));
   if (!is_boolean(other)) {
     return make_error(ERR_OPERAND_NOT_BOOL);
@@ -109,7 +89,7 @@ object_t boolean_op_or(object_t obj, object_t other) {
   return make_boolean(boolean_value(obj) || boolean_value(other));
 }
 
-object_t boolean_op_xor(object_t obj, object_t other) {
+objectptr boolean_op_xor(objectptr obj, objectptr other) {
   assert(is_boolean(obj));
   if (!is_boolean(other)) {
     return make_error(ERR_OPERAND_NOT_BOOL);
@@ -118,7 +98,7 @@ object_t boolean_op_xor(object_t obj, object_t other) {
   return make_boolean(boolean_value(obj) ^ boolean_value(other));
 }
 
-object_t boolean_op_not(object_t obj) {
+objectptr boolean_op_not(objectptr obj) {
   assert(is_boolean(obj));
   return make_boolean(!boolean_value(obj));
 }

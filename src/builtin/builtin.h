@@ -22,8 +22,6 @@
 #ifndef THEORYLISP_BUILTIN_BUILTIN_H
 #define THEORYLISP_BUILTIN_BUILTIN_H
 
-
-
 #include "../types/object.h"
 
 #include "include.h"
@@ -36,7 +34,7 @@
 #include "eval.h"
 #include "error.h"
 
-typedef object_t (*builtin_function_ptr)(size_t, object_t*, stack_frame_ptr);
+typedef objectptr (*builtin_function_ptr)(size_t, objectptr *, stack_frame_ptr);
 
 typedef struct {
   const char *name;

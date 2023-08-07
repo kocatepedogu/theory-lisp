@@ -30,8 +30,7 @@
 static const char expanded_expr_name[] = "expanded_expr";
 
 static const expr_vtable expanded_expr_vtable = {
-  .deallocate = delete_expanded_expr,
-  .clone = clone_expanded_expr,
+  .destroy = destroy_expanded_expr,
   .to_string = expanded_expr_tostring,
   .interpret = interpret_expanded_expr
 };
@@ -45,16 +44,11 @@ inline bool is_expanded_expression(exprptr e) {
 }
 
 exprptr new_expanded_expr(exprptr inner) {
-  return base_new(inner, &expanded_expr_vtable, expanded_expr_name, 0, 0);
+  return expr_base_new(inner, &expanded_expr_vtable, expanded_expr_name, 0, 0);
 }
 
-void delete_expanded_expr(exprptr self) {
-  delete_expr(self->data);  
-  free(self);
-}
-
-exprptr clone_expanded_expr(exprptr self) {
-  return base_clone(self, clone_expr(self->data));
+void destroy_expanded_expr(exprptr self) {
+  delete_expr(self->data);
 }
 
 char *expanded_expr_tostring(exprptr self) {
@@ -63,7 +57,7 @@ char *expanded_expr_tostring(exprptr self) {
   return result;
 }
 
-object_t interpret_expanded_expr(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_expanded_expr(exprptr self, stack_frame_ptr sf) {
   return make_error("An expanded expression can be evaluated only "
                     "as an argument in a function evaluation expression");
 }

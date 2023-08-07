@@ -30,20 +30,13 @@
  * Pair constructor.
  * Calls copy constructors of the given objects to make a deep copy.
  */
-object_t make_pair(object_t first, object_t second);
-
-/**
- * Pair clone.
- * Calls the clone functions of the objects in
- * the other pair to make a deep copy.
- */
-object_t clone_pair(object_t self);
+objectptr make_pair(objectptr first, objectptr second);
 
 /**
  * Pair destructor.
  * Calls destructors of internal objects.
  */
-void destroy_pair(object_t obj);
+void destroy_pair(objectptr obj);
 
 /**
  * Returns string representation of the pair.
@@ -52,29 +45,29 @@ void destroy_pair(object_t obj);
  * used as input to scanner and then to parser to obtain exactly the
  * same expression.
  */
-char *pair_tostring(object_t val);
+char *pair_tostring(objectptr val);
 
 /**
  * Returns true if and only if the first element of obj equals
  * the first element of other and the second element of obj equals
  * the second element of other.
  */
-bool pair_equals(object_t obj, object_t other);
+bool pair_equals(objectptr obj, objectptr other);
 
 /**
  * Returns true if and only if the given object is a cons pair.
  */
-bool is_pair(object_t obj);
+bool is_pair(objectptr obj);
 
 /**
  * Returns the first element in the pair
  */
-object_t pair_first(object_t obj);
+objectptr pair_first(objectptr obj);
 
 /**
  * Returns the second element in the pair
  */
-object_t pair_second(object_t obj);
+objectptr pair_second(objectptr obj);
 
 /**
  * Theory Lisp programs use linked chains of cons pairs to form lists,
@@ -83,7 +76,7 @@ object_t pair_second(object_t obj);
  * to an internal list. If the given object is not a proper cons list,
  * it will return false.
  */
-bool cons_list_to_internal_list(object_t list_object, listptr output_list);
+bool cons_list_to_internal_list(objectptr list_object, listptr output_list);
 
 /**
  * Theory Lisp programs use linked chains of cons pairs to form lists,
@@ -92,6 +85,6 @@ bool cons_list_to_internal_list(object_t list_object, listptr output_list);
  * to a cons list. Internal lists are always assumed to be well-formed,
  * so this function should always succeed.
  */
-object_t internal_list_to_cons_list(listptr input_list);
+objectptr internal_list_to_cons_list(listptr input_list);
 
 #endif

@@ -24,68 +24,53 @@
 #include <string.h>
 
 #include "../utils/string.h"
+#include "object-base.h"
 
-static const object_vtable_t error_vtable = {.clone = clone_error,
-                                             .destroy = destroy_error,
+static const object_type_t error_type_id = {{.destroy = destroy_error,
                                              .equals = error_equals,
-                                             .tostring = error_tostring};
+                                             .tostring = error_tostring},
+                                            "error"};
 
-static const char error_type_name[] = "error";
 static const char normal_exit_message[] = "NORMAL_EXIT";
 
-inline bool is_error(object_t obj) {
-  return strcmp(error_type_name, obj.type) == 0;
+inline bool is_error(objectptr obj) {
+  return strcmp(error_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-bool is_exit(object_t obj) {
+bool is_exit(objectptr obj) {
   if (is_error(obj)) {
-    return strcmp(obj.value, normal_exit_message) == 0;
+    return strcmp(obj->value, normal_exit_message) == 0;
   }
 
   return false;
 }
 
-object_t make_error(error_t err, ...) {
+objectptr make_error(error_t err, ...) {
   va_list args;
   va_start(args, err);
   char *formatted_string = vformat(err, args);
   va_end(args);
 
-  object_t obj;
-  obj.type = error_type_name;
-  obj.value = formatted_string;
-  obj.vtable = &error_vtable;
-  obj.temporary = false;
-  return obj;
+  return object_base_new(formatted_string, &error_type_id);
 }
 
-object_t make_exit(void) { return make_error("%s", normal_exit_message); }
+objectptr make_exit(void) { return make_error("%s", normal_exit_message); }
 
-object_t clone_error(object_t self) {
+void destroy_error(objectptr self) {
   assert(is_error(self));
-  object_t obj;
-  obj.type = error_type_name;
-  obj.value = strdup(self.value);
-  obj.vtable = &error_vtable;
-  obj.temporary = false;
-  return obj;
+  free(self->value);
 }
 
-void destroy_error(object_t self) {
-  assert(is_error(self));
-  free(self.value);
-}
-
-bool error_equals(object_t self, object_t other) {
+bool error_equals(objectptr self, objectptr other) {
   assert(is_error(self));
   if (!is_error(other)) {
     return false;
   }
 
-  return strcmp(self.value, other.value) == 0;
+  return strcmp(self->value, other->value) == 0;
 }
 
-char *error_tostring(object_t self) {
+char *error_tostring(objectptr self) {
   assert(is_error(self));
-  return strdup(self.value);
+  return strdup(self->value);
 }

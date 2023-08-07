@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file common.h
+
 #ifndef THEORYLISP_EXPRESSIONS_COMMON_H
 #define THEORYLISP_EXPRESSIONS_COMMON_H
 

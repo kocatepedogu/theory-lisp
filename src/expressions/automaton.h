@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file automaton.h
+
 #ifndef THEORYLISP_EXPRESSIONS_AUTOMATON_H
 #define THEORYLISP_EXPRESSIONS_AUTOMATON_H
 
@@ -29,9 +31,7 @@
 
 exprptr new_automaton_expr(size_t number_of_tapes);
 
-void delete_automaton_expr(exprptr self);
-
-exprptr clone_automaton_expr(exprptr self);
+void destroy_automaton_expr(exprptr self);
 
 char *automaton_expr_tostring(exprptr self);
 
@@ -39,11 +39,11 @@ exprptr automaton_expr_parse(tokenstreamptr tkns);
 
 bool is_automaton_expr(exprptr e);
 
-object_t interpret_automaton(exprptr self, stack_frame_ptr sf);
+objectptr interpret_automaton(exprptr self, stack_frame_ptr sf);
 
-object_t call_automaton(exprptr self, size_t nargs, object_t *args, 
+objectptr call_automaton(exprptr self, size_t nargs, objectptr *args, 
                         stack_frame_ptr local_frame);
 
-object_t call_automaton_internal(exprptr self, void *, stack_frame_ptr sf);
+objectptr call_automaton_internal(exprptr self, void *, stack_frame_ptr sf);
 
 #endif

@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file if_expr.h
+/// @file if.h
 
 #ifndef THEORYLISP_EXPRESSIONS_IF_H
 #define THEORYLISP_EXPRESSIONS_IF_H
@@ -34,10 +34,7 @@
 exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case);
 
 /* if_expr "delete" operation */
-void delete_if_expr(exprptr self);
-
-/* if_expr clone */
-exprptr clone_if_expr(exprptr self);
+void destroy_if_expr(exprptr self);
 
 /* if_expr tostring */
 char *if_expr_tostring(exprptr self); 
@@ -49,6 +46,6 @@ exprptr if_expr_parse(tokenstreamptr tkns);
 bool is_if_expr(exprptr e);
 
 /* evaluates if expression */
-object_t interpret_if(exprptr self, stack_frame_ptr sf);
+objectptr interpret_if(exprptr self, stack_frame_ptr sf);
 
 #endif

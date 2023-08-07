@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file definition_expr.h
+/// @file definition.h
 
 #ifndef THEORYLISP_EXPRESSIONS_DEFINITION_H
 #define THEORYLISP_EXPRESSIONS_DEFINITION_H
@@ -33,10 +33,7 @@
 exprptr new_definition_expr(const char *name, exprptr body);
 
 /* definiton_expr "delete" operation */
-void delete_definition_expr(exprptr self);
-
-/* definition_expr clone */
-exprptr clone_definition_expr(exprptr self);
+void destroy_definition_expr(exprptr self);
 
 /* definition_expr tostring implementation */
 char *definition_expr_tostring(exprptr self);
@@ -48,6 +45,6 @@ exprptr definition_expr_parse(tokenstreamptr tkns);
 bool is_definition_expr(exprptr e);
 
 /* evaluates definition expression */
-object_t interpret_definition(exprptr self, stack_frame_ptr ptr);
+objectptr interpret_definition(exprptr self, stack_frame_ptr ptr);
 
 #endif

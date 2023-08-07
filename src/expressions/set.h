@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file set_expr.h
+/// @file set.h
 
 #ifndef THEORYLISP_EXPRESSIONS_SET_H
 #define THEORYLISP_EXPRESSIONS_SET_H
@@ -33,10 +33,7 @@
 exprptr new_set_expr(const char *name, exprptr body);
 
 /* definiton_expr "delete" operation */
-void delete_set_expr(exprptr self);
-
-/* set_expr clone */
-exprptr clone_set_expr(exprptr self);
+void destroy_set_expr(exprptr self);
 
 /* set_expr tostring implementation */
 char *set_expr_tostring(exprptr self);
@@ -48,6 +45,6 @@ exprptr set_expr_parse(tokenstreamptr tkns);
 bool is_set_expr(exprptr e);
 
 /* evaluates set expression */
-object_t interpret_set(exprptr self, stack_frame_ptr ptr);
+objectptr interpret_set(exprptr self, stack_frame_ptr ptr);
 
 #endif

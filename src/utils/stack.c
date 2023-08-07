@@ -30,7 +30,7 @@ struct stack {
 };
 
 stackptr new_stack(void) {
-  stackptr st = (stackptr)malloc(sizeof(struct stack));
+  stackptr st = malloc(sizeof *st);
   st->capacity = DEFAULT_STACK_CAPACITY;
   st->data = malloc(st->capacity * sizeof(void *));
   st->number_of_elements = 0;

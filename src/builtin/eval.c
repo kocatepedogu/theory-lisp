@@ -29,7 +29,7 @@
 #include "../scanner/scanner.h"
 #include "../parser/parser.h"
 
-object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_eval(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
   if (!is_string(*args)) {
     return make_error("eval argument is not a string");
@@ -51,7 +51,7 @@ object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
   }
 
   exprptr e = list_get(expressions, 0);
-  object_t result = interpret_expr(e, sf);
+  objectptr result = interpret_expr(e, sf);
 
   delete_tokenstream(tkns);
   delete_parse_tree(expressions);
@@ -59,15 +59,15 @@ object_t builtin_eval(size_t n, object_t *args, stack_frame_ptr sf) {
   return result;
 }
 
-object_t builtin_defined(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_defined(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
   if (!is_string(*args)) {
     return make_error("Identifier name is not a string");
   }
 
   char *str = string_value(*args);
-  object_t value = stack_frame_get_variable(sf, str);
+  objectptr value = stack_frame_get_variable(sf, str);
   bool answer = !is_error(value);
-  destroy_object(value);
+  delete_object(value);
   return make_boolean(answer);
 }

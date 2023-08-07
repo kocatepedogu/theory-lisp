@@ -22,44 +22,30 @@
 #include <assert.h>
 #include <string.h>
 
-#include "error.h"
 #include "../utils/string.h"
+#include "error.h"
+#include "object-base.h"
 
-static const object_vtable_t null_vtable = {
-    .clone = clone_null,
-    .destroy = destroy_null,
-    .tostring = null_tostring,
-    .equals = null_equals,
-};
+static const object_type_t null_type_id = {
+    {.destroy = destroy_null, 
+     .tostring = null_tostring,
+     .equals = null_equals},
+    "null"};
 
-static const char null_type_name[] = "null";
-
-inline bool is_null(object_t obj) {
-  return strcmp(null_type_name, obj.type) == 0;
+inline bool is_null(objectptr obj) {
+  return strcmp(null_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-object_t make_null(void) {
-  object_t obj;
-  obj.type = null_type_name;
-  obj.value = NULL;
-  obj.vtable = &null_vtable;
-  obj.temporary = false;
-  return obj;
-}
+objectptr make_null(void) { return object_base_new(NULL, &null_type_id); }
 
-void destroy_null(object_t self) { assert(is_null(self)); }
+void destroy_null(objectptr self) { assert(is_null(self)); }
 
-object_t clone_null(object_t self) {
-  assert(is_null(self));
-  return self;
-}
-
-char *null_tostring(object_t self) {
+char *null_tostring(objectptr self) {
   assert(is_null(self));
   return strdup("null");
 }
 
-bool null_equals(object_t self, object_t other) {
+bool null_equals(objectptr self, objectptr other) {
   assert(is_null(self));
   if (!is_null(other)) {
     return false;

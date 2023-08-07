@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file automaton.h
+
 #ifndef THEORYLISP_AUTOMATON_AUTOMATON_H
 #define THEORYLISP_AUTOMATON_AUTOMATON_H
 
@@ -64,14 +66,12 @@ typedef struct automaton {
   size_t number_of_tapes;
 } automaton_t;
 
-object_t automaton_run(automaton_t *self, size_t nargs, 
-                       object_t *args, stack_frame_ptr sf);
+objectptr automaton_run(automaton_t *self, size_t nargs, 
+                       objectptr *args, stack_frame_ptr sf);
 
-object_t automaton_run_internal(automaton_t *self, listptr args,
+objectptr automaton_run_internal(automaton_t *self, listptr args,
                                 stack_frame_ptr sf);
 
 void delete_automaton(automaton_t *aut);
-
-automaton_t *clone_automaton(automaton_t *aut);
 
 #endif

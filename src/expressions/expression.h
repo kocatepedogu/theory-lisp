@@ -45,13 +45,13 @@ char *expr_tostring(exprptr self);
 exprptr expr_parse(tokenstreamptr tkns);
 
 /* Expression interpreter */
-object_t interpret_expr(exprptr self, stack_frame_ptr sf);
+objectptr interpret_expr(exprptr self, stack_frame_ptr sf);
 
 /* Expression function call operator */
-object_t expr_call(exprptr e, size_t nargs,
-                   object_t *args, stack_frame_ptr sf);
+objectptr expr_call(exprptr e, size_t nargs,
+                   objectptr *args, stack_frame_ptr sf);
 
 /* Internal expression call operator */
-object_t expr_call_internal(exprptr e, void *args, stack_frame_ptr sf);
+objectptr expr_call_internal(exprptr e, void *args, stack_frame_ptr sf);
 
 #endif

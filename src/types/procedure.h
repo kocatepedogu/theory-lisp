@@ -34,16 +34,7 @@ typedef void *lambda_t;
  * No memory allocation occurs. Created object refers to the given lambda
  * expression in the parse tree.
  */
-object_t make_procedure(lambda_t proc, listptr captures, stack_frame_ptr sf);
-
-/**
- * Procedure clone.
- * No memory allocation occurs. The new object still points to the same
- * lambda expression in the parse tree. This is not a violation of the
- * rule that all objects must do a deep copy, because the lambda is
- * never mutated or free()'d during program execution.
- */
-object_t clone_procedure(object_t self);
+objectptr make_procedure(lambda_t proc, listptr captures, stack_frame_ptr sf);
 
 /**
  * Procedure destructor.
@@ -51,7 +42,7 @@ object_t clone_procedure(object_t self);
  * are removed from the memory when the program finishes. Managing their
  * memory is not the responsibility of procedure objects.
  */
-void destroy_procedure(object_t procedure);
+void destroy_procedure(objectptr procedure);
 
 /**
  * Returns the string representation of the procedure.
@@ -60,7 +51,7 @@ void destroy_procedure(object_t procedure);
  * exactly the same as the lambda expression pointed to by the procedure
  * object. If this constraint is violated, it should be reported as a bug.
  */
-char *procedure_tostring(object_t obj);
+char *procedure_tostring(objectptr obj);
 
 /**
  * Calling procedure_equals will throw an assertion error if
@@ -72,43 +63,43 @@ char *procedure_tostring(object_t obj);
  * 2. Testing whether two objects point to the same lambda
  * expression is useless.
  */
-bool procedure_equals(object_t obj, object_t other);
+bool procedure_equals(objectptr obj, objectptr other);
 
 /**
  * Returns true if and only if the given object is a procedure object.
  */
-bool is_procedure(object_t obj);
+bool is_procedure(objectptr obj);
 
 /**
  * Returns PN arity of the lambda
  */
-size_t procedure_get_pn_arity(object_t self);
+size_t procedure_get_pn_arity(objectptr self);
 
 /**
  * Returns arity of the lambda
  */
-size_t procedure_get_arity(object_t self);
+size_t procedure_get_arity(objectptr self);
 
 /**
  * Returns whether explicit PN arity is given
  */
-bool procedure_is_pn_arity_given(object_t self);
+bool procedure_is_pn_arity_given(objectptr self);
 
 /**
  * Returns whether the lambda is variadic
  */
-bool procedure_is_variadic(object_t self);
+bool procedure_is_variadic(objectptr self);
 
 /**
  * Calls the procedure
  */
-object_t procedure_op_call(object_t self, size_t nargs, object_t *args,
+objectptr procedure_op_call(objectptr self, size_t nargs, objectptr *args,
                            void *sf);
 
 /**
  * Calls the procedure (used internally)
  */
 
-object_t procedure_op_call_internal(object_t self, void *args, void *sf);
+objectptr procedure_op_call_internal(objectptr self, void *args, void *sf);
 
 #endif

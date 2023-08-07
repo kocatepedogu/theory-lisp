@@ -12,7 +12,7 @@ START_TEST(test_stack_frame) {
   stack_frame_set_local_variable(sf, "y", move(make_integer(20)));
   stack_frame_set_local_variable(sf, "z", move(make_integer(30)));
 
-  object_t result = make_void();
+  objectptr result = make_void();
   assign_object(&result, stack_frame_get_variable(sf, "x"));
   ck_assert(is_integer(result));
   ck_assert_int_eq(int_value(result), 10);
@@ -28,7 +28,7 @@ START_TEST(test_stack_frame) {
   assign_object(&result, stack_frame_get_variable(sf, "t"));
   ck_assert(is_error(result));
 
-  destroy_object(result);
+  delete_object(result);
   delete_stack_frame(sf);
 
 } END_TEST
@@ -39,7 +39,7 @@ START_TEST(test_nested_stack_frame) {
   stack_frame_ptr sf_local = new_stack_frame(sf_global);
   stack_frame_set_local_variable(sf_local, "x", move(make_integer(20)));
 
-  object_t result = make_void();
+  objectptr result = make_void();
   assign_object(&result, stack_frame_get_variable(sf_local, "x"));
   ck_assert(is_integer(result));
   ck_assert_int_eq(int_value(result), 20);
@@ -50,7 +50,7 @@ START_TEST(test_nested_stack_frame) {
   ck_assert_int_eq(int_value(result), 10);
   delete_stack_frame(sf_global);
 
-  destroy_object(result);
+  delete_object(result);
 
 } END_TEST
 

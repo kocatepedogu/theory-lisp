@@ -30,33 +30,27 @@
  * Creates a null object
  * No memory allocation occurs.
  */
-object_t make_null(void);
+objectptr make_null(void);
 
 /**
  * Destroys a null object
  * No memory deallocation occurs.
  */
-void destroy_null(object_t obj);
-
-/**
- * Copies a null object
- * No memory allocation occurs.
- */
-object_t clone_null(object_t self);
+void destroy_null(objectptr obj);
 
 /**
  * Returns malloc'ed string representation of null ("null")
  */
-char *null_tostring(object_t obj);
+char *null_tostring(objectptr obj);
 
 /**
  * Compares two null values (always true)
  */
-bool null_equals(object_t obj, object_t other);
+bool null_equals(objectptr obj, objectptr other);
 
 /**
  * Checks whether the given object is null
  */
-bool is_null(object_t obj);
+bool is_null(objectptr obj);
 
 #endif

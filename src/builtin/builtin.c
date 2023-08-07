@@ -82,7 +82,7 @@ const size_t number_of_builtin_functions =
     sizeof builtin_functions / sizeof *builtin_functions;
 
 const builtin_function *find_builtin_function(const char *name) {
-  for (size_t i = 0; i < number_of_builtin_functions; i++) {
+  for (size_t i = 0; i < number_of_builtin_functions; ++i) {
     if (strcmp(builtin_functions[i].name, name) == 0) {
       return &builtin_functions[i];
     }
@@ -95,7 +95,7 @@ bool is_builtin_name(const char *name) {
 }
 
 void define_builtin_function_wrappers(stack_frame_ptr sf) {
-  for (size_t i = 0; i < number_of_builtin_functions; i++) {
+  for (size_t i = 0; i < number_of_builtin_functions; ++i) {
     const builtin_function *f = &builtin_functions[i];
 
     exprptr lambda_body = new_evaluation_expr(new_identifier_expr(f->name));
@@ -103,7 +103,7 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
       evaluation_expr_add_arg(lambda_body, 
           new_expanded_expr(new_identifier_expr("va_args")));
     } else {
-      for (size_t i = 0; i < f->arity; i++) {
+      for (size_t i = 0; i < f->arity; ++i) {
         char *id = format("arg%ld", i);
         evaluation_expr_add_arg(lambda_body, new_identifier_expr(id));
         free(id);
@@ -116,16 +116,16 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
     }
     else {
       lambda_expr_set_pn_arity(lambda, f->arity);
-      for (size_t i = 0; i < f->arity; i++) {
+      for (size_t i = 0; i < f->arity; ++i) {
         char *id = format("arg%ld", i);
         lambda_expr_add_param(lambda, id);
         free(id);
       }
     }
 
-    object_t procedure = make_procedure(lambda, NULL, sf);
+    objectptr procedure = make_procedure(lambda, NULL, sf);
     stack_frame_set_global_variable(sf, f->name, procedure);
-    destroy_object(procedure);
+    delete_object(procedure);
     delete_expr(lambda);
   }
 }

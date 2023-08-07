@@ -25,10 +25,10 @@
 #include "../types/void.h"
 #include "../types/string.h"
 
-object_t builtin_display(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_display(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  for (size_t i = 0; i < n; i++) {
+  for (size_t i = 0; i < n; ++i) {
     char *str = NULL;
 
     if (is_string(args[i])) {

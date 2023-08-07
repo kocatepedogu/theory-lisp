@@ -80,7 +80,7 @@ void parse_args(int argc, char **argv, program_arguments *args) {
   args->quiet = false;
   args->exit = false;
 
-  for (int i = 1; i < argc; i++) {
+  for (int i = 1; i < argc; ++i) {
     char *arg = *(++argv);
     parse_arg(arg, args, program_name);
   }

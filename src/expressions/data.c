@@ -25,14 +25,13 @@
 
 /* Data */
 typedef struct {
-  object_t obj;
+  objectptr obj;
 } data_expr;
 
 static const char data_expr_name[] = "data_expr";
 
 static const expr_vtable data_expr_vtable = {
-  .deallocate = delete_data_expr,
-  .clone = clone_data_expr,
+  .destroy = destroy_data_expr,
   .to_string = data_expr_tostring,
   .interpret = interpret_data
 };
@@ -45,26 +44,17 @@ bool is_data_expr(exprptr e) {
   return strcmp(e->expr_name, data_expr_name) == 0;
 }
 
-exprptr new_data_expr(object_t obj) {
-  data_expr *de = (data_expr *)malloc(sizeof(data_expr));
+exprptr new_data_expr(objectptr obj) {
+  data_expr *de = malloc(sizeof *de);
   de->obj = clone_object(obj);
 
-  return base_new(de, &data_expr_vtable, data_expr_name, 0, 0);
+  return expr_base_new(de, &data_expr_vtable, data_expr_name, 0, 0);
 }
 
-void delete_data_expr(exprptr self) {
+void destroy_data_expr(exprptr self) {
   data_expr *de = self->data;
-  destroy_object(de->obj);
+  delete_object(de->obj);
   free(de);
-  free(self);
-}
-
-exprptr clone_data_expr(exprptr self) {
-  data_expr *new_de = (data_expr *)malloc(sizeof(data_expr));
-  data_expr *self_de = self->data;
-  new_de->obj = clone_object(self_de->obj);
-
-  return base_clone(self, new_de);
 }
 
 char *data_expr_tostring(exprptr self) {
@@ -72,12 +62,12 @@ char *data_expr_tostring(exprptr self) {
   return object_tostring(de->obj);
 }
 
-object_t get_data_value(exprptr self) {
+objectptr get_data_value(exprptr self) {
   data_expr *de = self->data;
   return de->obj;
 }
 
-object_t interpret_data(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_data(exprptr self, stack_frame_ptr sf) {
   data_expr *de = self->data;
   return clone_object(de->obj);
 }

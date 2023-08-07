@@ -52,20 +52,21 @@
 #define ERR_UNMATCHED_PARENTHESIS "Unmatched parenthesis"
 
 /* base constructor */
-exprptr base_new(void *data, const expr_vtable *vtable, const char *expr_name,
+exprptr expr_base_new(void *data, const expr_vtable *vtable, const char *expr_name,
                  size_t line_number, size_t column_number) {
-  exprptr e = (exprptr)malloc(sizeof(expr_t));
+  exprptr e = malloc(sizeof *e);
   e->data = data;
   e->vtable = vtable;
   e->expr_name = expr_name;
   e->line_number = line_number;
   e->column_number = column_number;
+  e->ref_count = 1;
   return e;
 }
 
 /* base clone */
-exprptr base_clone(exprptr other, void *new_data) {
-  exprptr e = (exprptr)malloc(sizeof(expr_t));
+exprptr expr_base_clone(exprptr other, void *new_data) {
+  exprptr e = malloc(sizeof *e);
   *e = *other;
   e->data = new_data;
   return e;
@@ -74,14 +75,27 @@ exprptr base_clone(exprptr other, void *new_data) {
 /* destroys and deallocates an expression */
 void delete_expr(exprptr self) {
   if (self != NULL) {
-    self->vtable->deallocate(self); 
+    if (self->vtable->deallocate) {
+      self->vtable->deallocate(self); 
+    } else {
+      assert(self->vtable->destroy);
+      if (--self->ref_count == 0) {
+        self->vtable->destroy(self);
+        free(self);
+      }
+    }
   }
 }
 
 /* clones an expression */
 exprptr clone_expr(exprptr self) {
   if (self != NULL) {
-    return self->vtable->clone(self);
+    if (self->vtable->clone) {
+      return self->vtable->clone(self);
+    } else {
+      ++self->ref_count;
+      return self;
+    }
   }
   return NULL;
 }
@@ -180,40 +194,40 @@ exprptr expr_parse(tokenstreamptr tkns) {
     return new_expanded_expr(inner);
   }
 
-  object_t obj = make_error("uninitialized object");
+  objectptr obj = make_error("uninitialized object");
   exprptr result = NULL;
   switch (tkn->type) {
     case TOKEN_NULL:
       assign_object(&obj, make_null());
       result = new_data_expr(obj);
-      destroy_object(obj);
+      delete_object(obj);
       break;
     case TOKEN_BOOLEAN:
       assign_object(&obj, make_boolean(tkn->value.boolean));
       result = new_data_expr(obj);
-      destroy_object(obj);
+      delete_object(obj);
       break;
     case TOKEN_INTEGER:
       assign_object(&obj, make_integer(tkn->value.integer));
       result = new_data_expr(obj);
-      destroy_object(obj);
+      delete_object(obj);
       break;
     case TOKEN_REAL:
       assign_object(&obj, make_real(tkn->value.real));
       result = new_data_expr(obj);
-      destroy_object(obj);
+      delete_object(obj);
       break;
     case TOKEN_IDENTIFIER:
-      destroy_object(obj);
+      delete_object(obj);
       result = new_identifier_expr(tkn->value.character_sequence);
       break;
     case TOKEN_STRING:
       assign_object(&obj, make_string(tkn->value.character_sequence));
       result = new_data_expr(obj);
-      destroy_object(obj);
+      delete_object(obj);
       break;
     default:
-      destroy_object(obj);
+      delete_object(obj);
       result = parser_error(tkn, ERR_INVALID_TOKEN);
       break;
   }
@@ -227,16 +241,16 @@ exprptr expr_parse(tokenstreamptr tkns) {
 }
 
 /* interpretes an arbitrary expression */
-object_t interpret_expr(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_expr(exprptr self, stack_frame_ptr sf) {
   return self->vtable->interpret(self, sf);
 }
 
 /* calls an expression with given closure, arguments and stack frame */
-object_t expr_call(exprptr self, size_t nargs,
-                   object_t *args, stack_frame_ptr sf) {
+objectptr expr_call(exprptr self, size_t nargs,
+                   objectptr *args, stack_frame_ptr sf) {
   return self->vtable->call(self, nargs, args, sf);
 }
 
-object_t expr_call_internal(exprptr self, void *args, stack_frame_ptr sf) {
+objectptr expr_call_internal(exprptr self, void *args, stack_frame_ptr sf) {
   return self->vtable->call_internal(self, args, sf);
 }

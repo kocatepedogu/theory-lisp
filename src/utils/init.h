@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file init.h
+
 #ifndef THEORYLISP_UTILS_INIT_H
 #define THEORYLISP_UTILS_INIT_H
 

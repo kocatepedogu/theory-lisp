@@ -23,31 +23,31 @@
 
 #include "../types/boolean.h"
 
-object_t builtin_and(size_t n, object_t *args, stack_frame_ptr sf) {
-  object_t result = make_boolean(true);
-  for (size_t i = 0; i < n; i++) {
+objectptr builtin_and(size_t n, objectptr *args, stack_frame_ptr sf) {
+  objectptr result = make_boolean(true);
+  for (size_t i = 0; i < n; ++i) {
     assign_object(&result, object_op_and(result, args[i]));
   }
   return result;
 }
 
-object_t builtin_or(size_t n, object_t *args, stack_frame_ptr sf) {
-  object_t result = make_boolean(false);
-  for (size_t i = 0; i < n; i++) {
+objectptr builtin_or(size_t n, objectptr *args, stack_frame_ptr sf) {
+  objectptr result = make_boolean(false);
+  for (size_t i = 0; i < n; ++i) {
     assign_object(&result, object_op_or(result, args[i]));  
   }
   return result;
 }
 
-object_t builtin_xor(size_t n, object_t *args, stack_frame_ptr sf) {
-  object_t result = make_boolean(false);
-  for (size_t i = 0; i < n; i++) {
+objectptr builtin_xor(size_t n, objectptr *args, stack_frame_ptr sf) {
+  objectptr result = make_boolean(false);
+  for (size_t i = 0; i < n; ++i) {
     assign_object(&result, object_op_xor(result, args[i]));
   }
   return result;
 }
 
-object_t builtin_not(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_not(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
   return object_op_not(*args);
 }

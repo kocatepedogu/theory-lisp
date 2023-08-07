@@ -62,11 +62,11 @@ char *read_code(char *file_name) {
   return NULL;
 }
 
-object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
+objectptr builtin_include(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
 
   /* Obtain file name */
-  object_t file_name_obj = *args;
+  objectptr file_name_obj = *args;
   if (!is_string(file_name_obj)) {
     return make_error("File name must be a string"); 
   }
@@ -89,7 +89,7 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
 
   /* Define an include guard variable in global scope to prevent
    * multiple inclusions of the same file */
-  stack_frame_set_global_variable(sf, include_guard, make_void());
+  stack_frame_set_global_variable(sf, include_guard, move(make_void()));
   free(include_guard);
 
   /* Parse included file */
@@ -102,8 +102,8 @@ object_t builtin_include(size_t n, object_t *args, stack_frame_ptr sf) {
   }
 
   /* Execute included file in the same global scope */
-  object_t result = interpreter(parse_tree, false, true, sf);
-  destroy_object(result);
+  objectptr result = interpreter(parse_tree, false, true, sf);
+  delete_object(result);
 
   delete_tokenstream(tkns);
   delete_parse_tree(parse_tree);

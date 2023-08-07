@@ -32,7 +32,7 @@ static const size_t default_list_size = 4;
 
 /* List "new" operator. */
 listptr new_list(void) {
-  listptr lst = (listptr)malloc(sizeof(struct list));
+  listptr lst = malloc(sizeof *lst);
   lst->data = malloc(default_list_size * sizeof(void *));
   lst->capacity = default_list_size;
   lst->number_of_elements = 0;
@@ -62,7 +62,7 @@ void list_add(listptr lst, void *element) {
 
 /* adds all elements of other list to given list */
 void list_add_all(listptr lst, listptr other) {
-  for (size_t i = 0; i < list_size(other); i++) {
+  for (size_t i = 0; i < list_size(other); ++i) {
     list_add(lst, list_get(other, i));
   }
 }
@@ -74,4 +74,11 @@ size_t list_size(listptr lst) { return lst->number_of_elements; }
 void *list_get(listptr lst, size_t index) {
   assert(index < list_size(lst));
   return lst->data[index];
+}
+
+/* modifies an element, returns old value*/
+void *list_set(listptr lst, size_t index, void *new_value) {
+  void *old_value = list_get(lst, index);
+  lst->data[index] = new_value;
+  return old_value;
 }

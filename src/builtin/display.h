@@ -26,6 +26,6 @@
 
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_display(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_display(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

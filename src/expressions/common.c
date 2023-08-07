@@ -48,7 +48,7 @@ listptr get_capture_list(tokenstreamptr tkns) {
 
 char *capture_list_tostring(listptr lst) {
   char *captures = NULL;
-  for (size_t i = 0; i < list_size(lst); i++) {
+  for (size_t i = 0; i < list_size(lst); ++i) {
     char *str = list_get(lst, i);
     captures = unique_append_sep(captures, " ", strdup(str));
   }

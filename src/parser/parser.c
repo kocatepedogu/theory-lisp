@@ -51,7 +51,7 @@ listptr parser(tokenstreamptr tkns) {
 
 void delete_parse_tree(listptr parse_tree) {
   if (parse_tree) {
-    for (size_t i = 0; i < list_size(parse_tree); i++) {
+    for (size_t i = 0; i < list_size(parse_tree); ++i) {
       delete_expr(list_get(parse_tree, i));
     }
     delete_list(parse_tree);

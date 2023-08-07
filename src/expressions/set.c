@@ -51,35 +51,24 @@ bool is_set_expr(exprptr e) {
 }
 
 static const expr_vtable set_expr_vtable = {
-  .deallocate = delete_set_expr,
-  .clone = clone_set_expr,
+  .destroy = destroy_set_expr,
   .to_string = set_expr_tostring,
   .interpret = interpret_set
 };
 
 exprptr new_set_expr(const char *name, exprptr body) {
-  set_expr *se = (set_expr *)malloc(sizeof(set_expr));
+  set_expr *se = malloc(sizeof *se);
   se->name = strdup(name);
   se->value = body;
 
-  return base_new(se, &set_expr_vtable, set_expr_name, 0, 0);
+  return expr_base_new(se, &set_expr_vtable, set_expr_name, 0, 0);
 }
 
-void delete_set_expr(exprptr self) {
+void destroy_set_expr(exprptr self) {
   set_expr *se = self->data;
   free(se->name);
   delete_expr(se->value);
   free(se);
-  free(self);
-}
-
-exprptr clone_set_expr(exprptr self) {
-  set_expr *self_se = self->data;
-  set_expr *new_se = (set_expr *)malloc(sizeof(set_expr));
-  new_se->name = strdup(self_se->name);
-  new_se->value = clone_expr(self_se->value);
-
-  return base_clone(self, new_se);
 }
 
 char *set_expr_tostring(exprptr self) {
@@ -111,9 +100,9 @@ exprptr set_expr_parse(tokenstreamptr tkns) {
   return result;
 }
 
-object_t interpret_set(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_set(exprptr self, stack_frame_ptr sf) {
   set_expr *se = self->data;
-  object_t value = interpret_expr(se->value, sf);
+  objectptr value = interpret_expr(se->value, sf);
   if (is_error(value)) {
     return value;
   }

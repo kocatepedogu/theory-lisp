@@ -25,12 +25,12 @@
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_and(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_and(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_or(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_or(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_not(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_not(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_xor(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_xor(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

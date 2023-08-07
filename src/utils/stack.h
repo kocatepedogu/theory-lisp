@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file stack.h
+
 #ifndef THEORYLISP_UTILS_STACK_H
 #define THEORYLISP_UTILS_STACK_H
 

@@ -26,38 +26,32 @@
 #include "../types/error.h"
 #include "variable.h"
 #include "../builtin/builtin.h"
+#include "../utils/hashtable.h"
 
 struct stack_frame {
-  listptr local_variables;
+  hashtableptr local_variables;
   struct stack_frame *saved_frame_pointer;
 };
 
 stack_frame_ptr new_stack_frame(stack_frame_ptr previous) {
-  stack_frame_ptr sf = (stack_frame_ptr)malloc(sizeof(struct stack_frame));
-  sf->local_variables = new_list();
+  stack_frame_ptr sf = malloc(sizeof *sf);
+  sf->local_variables = new_hash_table(1);
   sf->saved_frame_pointer = previous;
   return sf;
 }
 
+static void variable_destructor(void *variable) {
+  delete_variable(variable);
+}
+
 void delete_stack_frame(stack_frame_ptr sf) {
-  for (size_t i = 0; i < list_size(sf->local_variables); i++) {
-    variableptr var = list_get(sf->local_variables, i);
-    delete_variable(var);
-  }
-  delete_list(sf->local_variables);
+  delete_hash_table(sf->local_variables, variable_destructor);
   sf->saved_frame_pointer = NULL;
   free(sf);
 }
 
 static variableptr find_variable_locally(stack_frame_ptr sf, const char *name) {
-  listptr local_vars = sf->local_variables;
-  for (size_t i = 0; i < list_size(local_vars); i++) {
-    variableptr var = list_get(local_vars, i);
-    if (strcmp(variable_get_name(var), name) == 0) {
-      return var;
-    }
-  }
-  return NULL;
+  return hash_table_get(sf->local_variables, name);
 }
 
 static variableptr find_variable(stack_frame_ptr sf, const char *name) {
@@ -73,35 +67,35 @@ static variableptr find_variable(stack_frame_ptr sf, const char *name) {
   return NULL;
 }
 
-void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, object_t value) {
+void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, objectptr value) {
   variableptr var = find_variable_locally(sf, name);
   if (var) {
     variable_set_value(var, value);
   } else {
     var = new_variable(name, value);
-    list_add(sf->local_variables, var);
+    hash_table_put(sf->local_variables, name, var);
   }
 }
 
-void stack_frame_set_variable(stack_frame_ptr sf, const char *name, object_t value) {
+void stack_frame_set_variable(stack_frame_ptr sf, const char *name, objectptr value) {
   variableptr var = find_variable(sf, name);
   if (var) {
     variable_set_value(var, value);
   } else {
     var = new_variable(name, value);
-    list_add(sf->local_variables, var);
+    hash_table_put(sf->local_variables, name, var);
   }
 }
 
 void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
-                                     object_t value) {
+                                     objectptr value) {
   while (sf->saved_frame_pointer != NULL) {
     sf = sf->saved_frame_pointer;
   }
   stack_frame_set_local_variable(sf, name, value);
 }
 
-object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name) {
+objectptr stack_frame_get_variable(stack_frame_ptr sf, const char *name) {
   variableptr var = find_variable(sf, name);
   if (var) {
     return variable_get_value(var);
@@ -110,8 +104,8 @@ object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name) {
 }
 
 bool stack_frame_defined(stack_frame_ptr sf, const char *name) {
-  object_t value = stack_frame_get_variable(sf, name);
+  objectptr value = stack_frame_get_variable(sf, name);
   bool defined = !is_error(value);
-  destroy_object(value);
+  delete_object(value);
   return defined;
 }

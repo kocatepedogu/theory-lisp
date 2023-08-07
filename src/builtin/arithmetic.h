@@ -25,9 +25,9 @@
 #include "../types/object.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_add(size_t n, object_t *args, stack_frame_ptr sf);
-object_t builtin_mul(size_t n, object_t *args, stack_frame_ptr sf);
-object_t builtin_sub(size_t n, object_t *args, stack_frame_ptr sf);
-object_t builtin_div(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_add(size_t n, objectptr *args, stack_frame_ptr sf);
+objectptr builtin_mul(size_t n, objectptr *args, stack_frame_ptr sf);
+objectptr builtin_sub(size_t n, objectptr *args, stack_frame_ptr sf);
+objectptr builtin_div(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

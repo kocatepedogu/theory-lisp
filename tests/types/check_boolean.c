@@ -7,22 +7,22 @@
 #define FALSE_STRING "#f"
 
 START_TEST(test_boolean_common) {
-  object_t true_obj1 = make_boolean(true);
+  objectptr true_obj1 = make_boolean(true);
   ck_assert(is_boolean(true_obj1));
   char *str1 = boolean_tostring(true_obj1);
   ck_assert_str_eq(str1, TRUE_STRING);
 
-  object_t false_obj1 = make_boolean(false);
+  objectptr false_obj1 = make_boolean(false);
   ck_assert(is_boolean(false_obj1));
   char *str2 = boolean_tostring(false_obj1);
   ck_assert_str_eq(str2, FALSE_STRING);
 
-  object_t true_obj2 = clone_boolean(true_obj1);
+  objectptr true_obj2 = clone_object(true_obj1);
   ck_assert(is_boolean(true_obj2));
   char *str3 = boolean_tostring(true_obj2);
   ck_assert_str_eq(str3, TRUE_STRING);
 
-  object_t false_obj2 = clone_boolean(false_obj1);
+  objectptr false_obj2 = clone_object(false_obj1);
   ck_assert(is_boolean(false_obj2));
   char *str4 = boolean_tostring(false_obj2);
   ck_assert_str_eq(boolean_tostring(false_obj2), FALSE_STRING);
@@ -36,10 +36,10 @@ START_TEST(test_boolean_common) {
   ck_assert(!boolean_equals(true_obj2, false_obj1));
   ck_assert(!boolean_equals(true_obj2, false_obj2));
 
-  destroy_boolean(true_obj1);
-  destroy_boolean(false_obj1);
-  destroy_boolean(true_obj2);
-  destroy_boolean(false_obj2);
+  delete_object(true_obj1);
+  delete_object(false_obj1);
+  delete_object(true_obj2);
+  delete_object(false_obj2);
 
   free(str1);
   free(str2);
@@ -49,84 +49,84 @@ START_TEST(test_boolean_common) {
 END_TEST
 
 START_TEST(test_and_operation) {
-  object_t true_obj = make_boolean(true);
-  object_t false_obj = make_boolean(false);
+  objectptr true_obj = make_boolean(true);
+  objectptr false_obj = make_boolean(false);
 
-  object_t and00 = boolean_op_and(false_obj, false_obj);
+  objectptr and00 = boolean_op_and(false_obj, false_obj);
   ck_assert_int_eq(boolean_value(and00), false);
-  object_t and01 = boolean_op_and(false_obj, true_obj);
+  objectptr and01 = boolean_op_and(false_obj, true_obj);
   ck_assert_int_eq(boolean_value(and01), false);
-  object_t and10 = boolean_op_and(true_obj, false_obj);
+  objectptr and10 = boolean_op_and(true_obj, false_obj);
   ck_assert_int_eq(boolean_value(and10), false);
-  object_t and11 = boolean_op_and(true_obj, true_obj);
+  objectptr and11 = boolean_op_and(true_obj, true_obj);
   ck_assert_int_eq(boolean_value(and11), true);
 
-  destroy_object(and00);
-  destroy_object(and01);
-  destroy_object(and10);
-  destroy_object(and11);
-  destroy_object(true_obj);
-  destroy_object(false_obj);
+  delete_object(and00);
+  delete_object(and01);
+  delete_object(and10);
+  delete_object(and11);
+  delete_object(true_obj);
+  delete_object(false_obj);
 }
 END_TEST
 
 START_TEST(test_or_operation) {
-  object_t true_obj = make_boolean(true);
-  object_t false_obj = make_boolean(false);
+  objectptr true_obj = make_boolean(true);
+  objectptr false_obj = make_boolean(false);
 
-  object_t or00 = boolean_op_or(false_obj, false_obj);
+  objectptr or00 = boolean_op_or(false_obj, false_obj);
   ck_assert_int_eq(boolean_value(or00), false);
-  object_t or01 = boolean_op_or(false_obj, true_obj);
+  objectptr or01 = boolean_op_or(false_obj, true_obj);
   ck_assert_int_eq(boolean_value(or01), true);
-  object_t or10 = boolean_op_or(true_obj, false_obj);
+  objectptr or10 = boolean_op_or(true_obj, false_obj);
   ck_assert_int_eq(boolean_value(or10), true);
-  object_t or11 = boolean_op_or(true_obj, true_obj);
+  objectptr or11 = boolean_op_or(true_obj, true_obj);
   ck_assert_int_eq(boolean_value(or11), true);
 
-  destroy_object(or00);
-  destroy_object(or01);
-  destroy_object(or10);
-  destroy_object(or11);
-  destroy_object(true_obj);
-  destroy_object(false_obj);
+  delete_object(or00);
+  delete_object(or01);
+  delete_object(or10);
+  delete_object(or11);
+  delete_object(true_obj);
+  delete_object(false_obj);
 }
 END_TEST
 
 START_TEST(test_xor_operation) {
-  object_t true_obj = make_boolean(true);
-  object_t false_obj = make_boolean(false);
+  objectptr true_obj = make_boolean(true);
+  objectptr false_obj = make_boolean(false);
 
-  object_t xor00 = boolean_op_xor(false_obj, false_obj);
+  objectptr xor00 = boolean_op_xor(false_obj, false_obj);
   ck_assert_int_eq(boolean_value(xor00), false);
-  object_t xor01 = boolean_op_xor(false_obj, true_obj);
+  objectptr xor01 = boolean_op_xor(false_obj, true_obj);
   ck_assert_int_eq(boolean_value(xor01), true);
-  object_t xor10 = boolean_op_xor(true_obj, false_obj);
+  objectptr xor10 = boolean_op_xor(true_obj, false_obj);
   ck_assert_int_eq(boolean_value(xor10), true);
-  object_t xor11 = boolean_op_xor(true_obj, true_obj);
+  objectptr xor11 = boolean_op_xor(true_obj, true_obj);
   ck_assert_int_eq(boolean_value(xor11), false);
 
-  destroy_object(xor00);
-  destroy_object(xor01);
-  destroy_object(xor10);
-  destroy_object(xor11);
-  destroy_object(true_obj);
-  destroy_object(false_obj);
+  delete_object(xor00);
+  delete_object(xor01);
+  delete_object(xor10);
+  delete_object(xor11);
+  delete_object(true_obj);
+  delete_object(false_obj);
 }
 END_TEST
 
 START_TEST(test_not_operation) {
-  object_t true_obj = make_boolean(true);
-  object_t false_obj = make_boolean(false);
+  objectptr true_obj = make_boolean(true);
+  objectptr false_obj = make_boolean(false);
 
-  object_t not0 = boolean_op_not(false_obj);
+  objectptr not0 = boolean_op_not(false_obj);
   ck_assert_int_eq(boolean_value(not0), true);
-  object_t not1 = boolean_op_not(true_obj);
+  objectptr not1 = boolean_op_not(true_obj);
   ck_assert_int_eq(boolean_value(not1), false);
 
-  destroy_object(not0);
-  destroy_object(not1);
-  destroy_object(true_obj);
-  destroy_object(false_obj);
+  delete_object(not0);
+  delete_object(not1);
+  delete_object(true_obj);
+  delete_object(false_obj);
 }
 END_TEST
 

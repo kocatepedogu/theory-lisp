@@ -27,106 +27,65 @@
 
 #include "../utils/string.h"
 
-/**
- * object_t contains the type and value information of objects in
- * Theory Lisp programs.
- */
-typedef struct object {
-  /// Data contained in the object.
-  void *value;
-  /// Operations that can operate on the data
-  const struct object_vtable *vtable;
-  /// Runtime type name of the object
-  const char *type;
-  /// Whether the object is a temporary value or not.
-  bool temporary;
-} object_t;
-
-/**
- * object_vtable_t contains operations that are supported by an object.
- * All objects must implement destroy, clone, tostring and equals functions.
- * The remaining are optional. If an operation is not implemented, the
- * member corresponding to it must be set to NULL. If an unsupported operation
- * is called, it will return an error object containing "unsupported operation"
- * message.
- */
-typedef struct object_vtable {
-  void (*destroy)(object_t);
-  object_t (*clone)(object_t);
-  char *(*tostring)(object_t);
-  bool (*equals)(object_t, object_t);
-  object_t (*less)(object_t, object_t);
-
-  object_t (*op_add)(object_t, object_t);
-  object_t (*op_mul)(object_t, object_t);
-  object_t (*op_sub)(object_t, object_t);
-  object_t (*op_div)(object_t, object_t);
-
-  object_t (*op_and)(object_t, object_t);
-  object_t (*op_or)(object_t, object_t);
-  object_t (*op_xor)(object_t, object_t);
-  object_t (*op_not)(object_t);
-
-  object_t (*op_call)(object_t, size_t, object_t *, void *);
-  object_t (*op_call_internal)(object_t, void *, void *);
-} object_vtable_t;
+struct object;
+typedef struct object *objectptr;
 
 /** Object destructor (Must be implemented) */
-void destroy_object(object_t obj);
+void delete_object(objectptr obj);
 
 /** Object clone (must be implemented as a deep copy) */
-object_t clone_object(object_t other);
+objectptr clone_object(objectptr other);
 
 /**
  * Object assignment operator.
  * It calls destructor of the destination object and makes a shallow copy.
  * This is not a function that can be overriden by implementations.
  */
-void assign_object(object_t *dest, object_t src);
+void assign_object(objectptr *dest, objectptr src);
 
 /**
  * Marks an object as temporary. Applying clone_object to a temporary object
  * will make a shallow copy.
  */
-object_t move(object_t obj);
+objectptr move(objectptr obj);
 
 /** Returns string representation of object (Must be implemented) */
-char *object_tostring(object_t obj);
+char *object_tostring(objectptr obj);
 
 /** Returns true if and only if given objects are equal to each other (Must be
  * implemented) */
-bool object_equals(object_t obj, object_t other);
+bool object_equals(objectptr obj, objectptr other);
 
 /** Returns true if obj is less than other (Optional operation) */
-object_t object_less(object_t obj, object_t other);
+objectptr object_less(objectptr obj, objectptr other);
 
 /** Addition operator (Optional operation) */
-object_t object_op_add(object_t obj, object_t other);
+objectptr object_op_add(objectptr obj, objectptr other);
 
 /** Multiplication operator (Optional operation) */
-object_t object_op_mul(object_t obj, object_t other);
+objectptr object_op_mul(objectptr obj, objectptr other);
 
 /** Subtraction operator (Optional operation) */
-object_t object_op_sub(object_t obj, object_t other);
+objectptr object_op_sub(objectptr obj, objectptr other);
 
 /** Division operator (Optional operation) */
-object_t object_op_div(object_t obj, object_t other);
+objectptr object_op_div(objectptr obj, objectptr other);
 
 /** Boolean AND operator (Optional operation) */
-object_t object_op_and(object_t obj, object_t other);
+objectptr object_op_and(objectptr obj, objectptr other);
 
 /** Boolean OR operator (Optional operation) */
-object_t object_op_or(object_t obj, object_t other);
+objectptr object_op_or(objectptr obj, objectptr other);
 
 /** Boolean XOR operator (Optional operation) */
-object_t object_op_xor(object_t obj, object_t other);
+objectptr object_op_xor(objectptr obj, objectptr other);
 
 /** Boolean NOT operator (Optional operation) */
-object_t object_op_not(object_t obj);
+objectptr object_op_not(objectptr obj);
 
-object_t object_op_call(object_t obj, size_t nargs, object_t *args,
+objectptr object_op_call(objectptr obj, size_t nargs, objectptr *args,
                         void *sf); 
 
-object_t object_op_call_internal(object_t obj, void *args, void *sf);
+objectptr object_op_call_internal(objectptr obj, void *args, void *sf);
 
 #endif

@@ -34,30 +34,27 @@ typedef char *error_t;
  * The format string and parameters for creating the error message
  * are exactly the same as printf
  */
-object_t make_error(error_t fmt, ...);
+objectptr make_error(error_t fmt, ...);
 
 /**
  * Creates an error object that causes the program to exit
  * normally without printing an error message.
  */
-object_t make_exit(void);
-
-/** Clones an error object. Copies the internal message */
-object_t clone_error(object_t self);
+objectptr make_exit(void);
 
 /** Error destructor */
-void destroy_error(object_t self);
+void destroy_error(objectptr self);
 
 /** Returns true if and only if both errors have the same error message */
-bool error_equals(object_t self, object_t other);
+bool error_equals(objectptr self, objectptr other);
 
 /** Returns the stored error message */
-char *error_tostring(object_t self);
+char *error_tostring(objectptr self);
 
 /** Returns true if and only if obj is an error. */
-bool is_error(object_t obj);
+bool is_error(objectptr obj);
 
 /** Returns true if and only if obj is a normal exit */
-bool is_exit(object_t obj);
+bool is_exit(objectptr obj);
 
 #endif

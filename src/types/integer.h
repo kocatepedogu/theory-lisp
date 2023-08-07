@@ -35,27 +35,21 @@ typedef long int integer_t;
  * Creates an instance of integer type
  * The resulting object contains a reference to the value.
  */
-object_t make_integer(integer_t value);
-
-/**
- * Copies an instance of integer type.
- * The resulting object contains a reference to the value.
- */
-object_t clone_integer(object_t self);
+objectptr make_integer(integer_t value);
 
 /**
  * Destroys an instance of integer type.
  * The memory used by the real number is free()'ed.
  * Given object is no longer valid after this function finishes.
  */
-void destroy_integer(object_t val);
+void destroy_integer(objectptr val);
 
 /**
  * Returns string representation of real number type.
  * The result is equivalent to the output produced by
  * printf("%ld", int_value(val);
  */
-char *integer_tostring(object_t val);
+char *integer_tostring(objectptr val);
 
 /**
  * Compares two integers for equality.
@@ -63,7 +57,7 @@ char *integer_tostring(object_t val);
  * If the other object is a real, self will be converted
  * to real before making the comparison.
  */
-bool integer_equals(object_t self, object_t other);
+bool integer_equals(objectptr self, objectptr other);
 
 /**
  * Less than operator (self < other).
@@ -72,7 +66,7 @@ bool integer_equals(object_t self, object_t other);
  * is real). In case it is a real, self will be converted to real
  * before making the comparison.
  */
-object_t integer_less(object_t self, object_t other);
+objectptr integer_less(objectptr self, objectptr other);
 
 /**
  * Addition operator (obj < other).
@@ -81,7 +75,7 @@ object_t integer_less(object_t self, object_t other);
  * is real). In case it is a real, self will be converted to real
  * before making the addition.
  */
-object_t integer_op_add(object_t self, object_t other);
+objectptr integer_op_add(objectptr self, objectptr other);
 
 /**
  * Multiplication operator (obj < other).
@@ -90,7 +84,7 @@ object_t integer_op_add(object_t self, object_t other);
  * is real). In case it is a real, self will be converted to real
  * before making the multiplication.
  */
-object_t integer_op_mul(object_t self, object_t other);
+objectptr integer_op_mul(objectptr self, objectptr other);
 
 /**
  * Subtraction operator (obj < other).
@@ -99,7 +93,7 @@ object_t integer_op_mul(object_t self, object_t other);
  * is real). In case it is a real, self will be converted to real
  * before making the subtraction.
  */
-object_t integer_op_sub(object_t self, object_t other);
+objectptr integer_op_sub(objectptr self, objectptr other);
 
 /**
  * Division operator (obj < other).
@@ -108,7 +102,7 @@ object_t integer_op_sub(object_t self, object_t other);
  * is real). In case it is a real, self will be converted to real
  * before making the division.
  */
-object_t integer_op_div(object_t self, object_t other);
+objectptr integer_op_div(objectptr self, objectptr other);
 
 /**
  * Returns true if and only if the given object is an integer.
@@ -116,11 +110,11 @@ object_t integer_op_div(object_t self, object_t other);
  * It returns false for real numbers with zero fractional part,
  * even though they are mathematically integers.
  */
-bool is_integer(object_t obj);
+bool is_integer(objectptr obj);
 
 /**
  * Returns the integer value stored in the given object (unboxing)
  */
-integer_t int_value(object_t obj);
+integer_t int_value(objectptr obj);
 
 #endif

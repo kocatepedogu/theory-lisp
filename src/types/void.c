@@ -22,44 +22,32 @@
 #include <assert.h>
 #include <string.h>
 
+#include "object-base.h"
 #include "error.h"
 #include "../utils/string.h"
 
-static const object_vtable_t void_vtable = {
-    .clone = clone_void,
+static const object_type_t void_type_id = {{
     .destroy = destroy_void,
     .tostring = void_tostring,
-    .equals = void_equals,
-};
+    .equals = void_equals},
+    "void"};
 
-static const char void_type_name[] = "void";
-
-inline bool is_void(object_t obj) {
-  return strcmp(void_type_name, obj.type) == 0;
+inline bool is_void(objectptr obj) {
+  return strcmp(void_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-object_t make_void(void) {
-  object_t obj;
-  obj.type = void_type_name;
-  obj.value = NULL;
-  obj.vtable = &void_vtable;
-  obj.temporary = false;
-  return obj;
+objectptr make_void(void) {
+  return object_base_new(NULL, &void_type_id);
 }
 
-void destroy_void(object_t self) { assert(is_void(self)); }
+void destroy_void(objectptr self) { assert(is_void(self)); }
 
-object_t clone_void(object_t self) {
-  assert(is_void(self));
-  return self;
-}
-
-char *void_tostring(object_t self) {
+char *void_tostring(objectptr self) {
   assert(is_void(self));
   return strdup("#<void>");
 }
 
-bool void_equals(object_t self, object_t other) {
+bool void_equals(objectptr self, objectptr other) {
   assert(is_void(self));
   if (!is_void(other)) {
     return false;

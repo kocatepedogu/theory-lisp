@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file lambda_expr.h
+/// @file lambda.h
 
 #ifndef THEORYLISP_EXPRESSIONS_LAMBDA_H
 #define THEORYLISP_EXPRESSIONS_LAMBDA_H
@@ -35,10 +35,7 @@
 exprptr new_lambda_expr(exprptr body, bool variadic);
 
 /* Lambda expression "delete" operation */
-void delete_lambda_expr(exprptr self);
-
-/* Lambda expression clone */
-exprptr clone_lambda_expr(exprptr self);
+void destroy_lambda_expr(exprptr self);
 
 /* Adds a formal parameter to the lambda function */
 void lambda_expr_add_param(exprptr self, const char *name);
@@ -71,10 +68,10 @@ exprptr lambda_expr_parse(tokenstreamptr tkns);
 bool is_lambda_expr(exprptr e);
 
 /* evaluates lambda expression to an object value */
-object_t lambda_interpret(exprptr self, stack_frame_ptr sf);
+objectptr lambda_interpret(exprptr self, stack_frame_ptr sf);
 
 /* evaluates a lambda with arguments */
-object_t lambda_call(exprptr lambda, size_t nargs,
-                     object_t *args, stack_frame_ptr sf);
+objectptr lambda_call(exprptr lambda, size_t nargs,
+                     objectptr *args, stack_frame_ptr sf);
 
 #endif

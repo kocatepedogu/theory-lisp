@@ -24,6 +24,7 @@
 #include <string.h>
 
 
+#include "object-base.h"
 #include "../utils/string.h"
 #include "boolean.h"
 #include "error.h"
@@ -31,137 +32,164 @@
 
 #define ERR_UNSUPPORTED_OPERATION "Unsupported operation"
 
-object_t clone_object(object_t other) {
-  assert(other.vtable->clone);
-
-  if (other.temporary) {
-    other.temporary = false;
-    return other;
-  }
-
-  if (other.vtable->clone) {
-    return other.vtable->clone(other);
-  }
-
-  return make_error(ERR_UNSUPPORTED_OPERATION);
-}
-
-void destroy_object(object_t obj) {
-  assert(obj.vtable->destroy);
-  obj.vtable->destroy(obj);
-}
-
-void assign_object(object_t *dest, object_t src) {
-  destroy_object(*dest);
-  *dest = src;
-}
-
-object_t move(object_t obj) {
-  obj.temporary = true;
+objectptr object_base_new(void *value, const object_type_t *type_id) {
+  objectptr obj = malloc(sizeof *obj);
+  obj->value = value;
+  obj->type_id = type_id;
+  obj->temporary = false;
+  obj->ref_count = 1;
   return obj;
 }
 
-char *object_tostring(object_t obj) {
-  if (obj.vtable->tostring) {
-    return obj.vtable->tostring(obj);
+objectptr clone_object(objectptr other) {
+  if (other->temporary) {
+    other->temporary = false;
+    return other;
+  }
+
+  if (other->type_id->vtable.clone) {
+    /* If object explicitly provides a clone method,
+     * call that specific clone method. */
+    return other->type_id->vtable.clone(other);
+  } else {
+    /* If object does not provide a clone method,
+     * it is assumed to be immutable, and there is no
+     * need for deep copy. Just increase the reference
+     * count, and return the same object. */
+    ++other->ref_count;
+    return other;
+  }
+}
+
+void delete_object(objectptr obj) {
+  /* If object explicitly provides a delete method,
+   * call that specific delete method */
+  if (obj->type_id->vtable.delete_obj) {
+    obj->type_id->vtable.delete_obj(obj);
+  } else {
+    /* If object does not provide a delete method,
+     * decrease the reference count and delete object
+     * if the count reaches 0. */
+    assert(obj->type_id->vtable.destroy);
+    if (--obj->ref_count == 0)
+    {
+      obj->type_id->vtable.destroy(obj);
+      free(obj);
+    }
+  }
+}
+
+void assign_object(objectptr *dest, objectptr src) {
+  delete_object(*dest);
+  *dest = src;
+}
+
+objectptr move(objectptr obj) {
+  obj->temporary = true;
+  return obj;
+}
+
+char *object_tostring(objectptr obj) {
+  if (obj->type_id->vtable.tostring) {
+    return obj->type_id->vtable.tostring(obj);
   }
   return NULL;
 }
 
-bool object_equals(object_t obj, object_t other) {
-  assert(obj.vtable->equals);
+bool object_equals(objectptr obj, objectptr other) {
+  assert(obj->type_id->vtable.equals);
 
-  if (obj.vtable->equals) {
-    return obj.vtable->equals(obj, other);
+  if (obj->type_id->vtable.equals) {
+    return obj->type_id->vtable.equals(obj, other);
   }
 
   return false;
 }
 
-object_t object_less(object_t obj, object_t other) {
-  if (obj.vtable->less) {
-    return obj.vtable->less(obj, other);
+objectptr object_less(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.less) {
+    return obj->type_id->vtable.less(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_add(object_t obj, object_t other) {
-  if (obj.vtable->op_add) {
-    return obj.vtable->op_add(obj, other);
+objectptr object_op_add(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_add) {
+    return obj->type_id->vtable.op_add(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_mul(object_t obj, object_t other) {
-  if (obj.vtable->op_mul) {
-    return obj.vtable->op_mul(obj, other);
+objectptr object_op_mul(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_mul) {
+    return obj->type_id->vtable.op_mul(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_sub(object_t obj, object_t other) {
-  if (obj.vtable->op_sub) {
-    return obj.vtable->op_sub(obj, other);
+objectptr object_op_sub(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_sub) {
+    return obj->type_id->vtable.op_sub(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_div(object_t obj, object_t other) {
-  if (obj.vtable->op_div) {
-    return obj.vtable->op_div(obj, other);
+objectptr object_op_div(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_div) {
+    return obj->type_id->vtable.op_div(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_and(object_t obj, object_t other) {
-  if (obj.vtable->op_and) {
-    return obj.vtable->op_and(obj, other);
+objectptr object_op_and(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_and) {
+    return obj->type_id->vtable.op_and(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_or(object_t obj, object_t other) {
-  if (obj.vtable->op_or) {
-    return obj.vtable->op_or(obj, other);
+objectptr object_op_or(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_or) {
+    return obj->type_id->vtable.op_or(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_xor(object_t obj, object_t other) {
-  if (obj.vtable->op_xor) {
-    return obj.vtable->op_xor(obj, other);
+objectptr object_op_xor(objectptr obj, objectptr other) {
+  if (obj->type_id->vtable.op_xor) {
+    return obj->type_id->vtable.op_xor(obj, other);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_not(object_t obj) {
-  if (obj.vtable->op_not) {
-    return obj.vtable->op_not(obj);
+objectptr object_op_not(objectptr obj) {
+  if (obj->type_id->vtable.op_not) {
+    return obj->type_id->vtable.op_not(obj);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_call(object_t obj, size_t nargs, object_t *args,
+objectptr object_op_call(objectptr obj, size_t nargs, objectptr *args,
                         void *sf) {
-  if (obj.vtable->op_call) {
-    return obj.vtable->op_call(obj, nargs, args, sf);
+  if (obj->type_id->vtable.op_call) {
+    return obj->type_id->vtable.op_call(obj, nargs, args, sf);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
 
-object_t object_op_call_internal(object_t obj, void *args, void *sf) {
-  if (obj.vtable->op_call_internal) {
-    return obj.vtable->op_call_internal(obj, args, sf);
+objectptr object_op_call_internal(objectptr obj, void *args, void *sf) {
+  if (obj->type_id->vtable.op_call_internal) {
+    return obj->type_id->vtable.op_call_internal(obj, args, sf);
   }
 
   return make_error(ERR_UNSUPPORTED_OPERATION);

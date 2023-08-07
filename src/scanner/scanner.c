@@ -84,7 +84,7 @@ static bool token_special_character(token_type_t *type, token_value_t *value,
   }
 
   for (size_t i = 0; i < sizeof special_characters / sizeof *special_characters;
-       i++) {
+       ++i) {
     if (word[0] == special_characters[i].c) {
       *type = special_characters[i].type;
       return true;
@@ -96,7 +96,7 @@ static bool token_special_character(token_type_t *type, token_value_t *value,
 
 static bool token_keyword(token_type_t *type, token_value_t *value,
                           const char *word) {
-  for (int i = 0; i < sizeof keywords / sizeof(*keywords); i++) {
+  for (int i = 0; i < sizeof keywords / sizeof(*keywords); ++i) {
     if (strcmp(keywords[i].keyword, word) == 0) {
       *type = keywords[i].type;
       return true;
@@ -147,7 +147,7 @@ static bool token_number(token_type_t *type, token_value_t *value, const char *w
 static bool token_identifier(token_type_t *type, token_value_t *value,
                              const char *word) {
   for (size_t i = 0; i < sizeof special_characters / sizeof *special_characters;
-       i++) {
+       ++i) {
     if (strchr(word, special_characters[i].c)) {
       return false;
     }
@@ -176,14 +176,14 @@ char *token_tostring(tokenptr token) {
     case TOKEN_STRING:
       return format("\"%s\"", token->value.character_sequence);
     default:
-      for (size_t i = 0; i < sizeof keywords / sizeof(keywords[0]); i++) {
+      for (size_t i = 0; i < sizeof keywords / sizeof(keywords[0]); ++i) {
         if (keywords[i].type == token->type) {
           return strdup(keywords[i].keyword);
         }
       }
 
       for (size_t i = 0;
-           i < sizeof special_characters / sizeof special_characters[0]; i++) {
+           i < sizeof special_characters / sizeof special_characters[0]; ++i) {
         if (special_characters[i].type == token->type) {
           return format("%lc", special_characters[i].c);
         }
@@ -206,7 +206,7 @@ static bool get_tokens(listptr token_list, const char *str, size_t line_number,
     token_value_t tkn_value;
 
     size_t previous_offset = offset;
-    for (size_t i = offset; i < strlen(str); i++) {
+    for (size_t i = offset; i < strlen(str); ++i) {
       chrcat(current_token, str[i]);
 
       if (token_special_character(&tkn_type, &tkn_value, current_token) ||
@@ -222,7 +222,7 @@ static bool get_tokens(listptr token_list, const char *str, size_t line_number,
       return false;
     }
 
-    token_t *token = malloc(sizeof(token_t));
+    token_t *token = malloc(sizeof *token);
     token->type = tkn_type;
     token->value = tkn_value;
     token->line = line_number;
@@ -258,7 +258,7 @@ static scanner_state scanner_state_string(char c, scanner_position_data *p,
   if (is_quote(c)) {
     p->word[p->position_in_current_word] = '\0';
 
-    token_t *tkn = (token_t *)malloc(sizeof(token_t));
+    token_t *tkn = malloc(sizeof *tkn);
     tkn->line = p->line;
     tkn->column = p->first_column_of_word;
     tkn->type = TOKEN_STRING;
@@ -316,11 +316,11 @@ tokenstreamptr scanner(const char *input) {
                                     .first_column_of_word = 1,
                                     .word = {0}};
 
-  memset(position.word, 0, sizeof(position.word));
+  memset(position.word, 0, sizeof position.word);
 
   size_t length = strlen(input);
 
-  for (; position.position_in_input < length; position.position_in_input++) {
+  for (; position.position_in_input < length; ++position.position_in_input) {
     char c = input[position.position_in_input];
 
     switch (state) {
@@ -350,7 +350,7 @@ tokenstreamptr scanner(const char *input) {
   get_tokens(token_list, position.word, position.line, position.column);
 
   /* add a final token that denotes the end of the file */
-  tokenptr token_eof = (tokenptr)malloc(sizeof(token_t));
+  tokenptr token_eof = malloc(sizeof *token_eof);
   token_eof->type = TOKEN_END_OF_FILE;
   token_eof->line = position.line;
   token_eof->column = position.column;
@@ -358,14 +358,14 @@ tokenstreamptr scanner(const char *input) {
 
   /* return a "token stream" object that stores the current token position
    * and the list of tokens */
-  tokenstreamptr tkns = (tokenstreamptr)malloc(sizeof(tokenstream_t));
+  tokenstreamptr tkns = malloc(sizeof *tkns);
   tkns->tokens = token_list;
   tkns->index = 0;
   return tkns;
 }
 
 void delete_tokenstream(tokenstreamptr tkns) {
-  for (size_t i = 0; i < list_size(tkns->tokens); i++) {
+  for (size_t i = 0; i < list_size(tkns->tokens); ++i) {
     free(list_get(tkns->tokens, i));
   }
   delete_list(tkns->tokens);
@@ -373,13 +373,13 @@ void delete_tokenstream(tokenstreamptr tkns) {
 }
 
 tokenptr next_tkn(tokenstreamptr tkns) {
-  return (tokenptr)list_get(tkns->tokens, tkns->index++);
+  return list_get(tkns->tokens, tkns->index++);
 }
 
 tokenptr current_tkn(tokenstreamptr tkns) {
-  return (tokenptr)list_get(tkns->tokens, tkns->index);
+  return list_get(tkns->tokens, tkns->index);
 }
 
 tokenptr ahead_tkn(tokenstreamptr tkns) {
-  return (tokenptr)list_get(tkns->tokens, tkns->index + 1);
+  return list_get(tkns->tokens, tkns->index + 1);
 }

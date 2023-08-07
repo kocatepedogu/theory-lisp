@@ -45,8 +45,7 @@ typedef struct {
 static const char pn_expr_name[] = "pn_expr";
 
 static const expr_vtable pn_expr_vtable = {
-  .deallocate = delete_pn_expr,
-  .clone = clone_pn_expr,
+  .destroy = destroy_pn_expr,
   .to_string = pn_expr_tostring,
   .interpret = interpret_pn_expr,
   .call = pn_expr_call
@@ -57,23 +56,23 @@ inline bool is_pn_expr(exprptr e) {
 }
 
 exprptr new_pn_expr(void) {
-  pn_expr *pe = malloc(sizeof(pn_expr));
+  pn_expr *pe = malloc(sizeof *pe);
   pe->body = new_list();
   pe->captured = new_list();
   pe->evaluated = false;
 
-  return base_new(pe, &pn_expr_vtable, pn_expr_name, 0, 0);
+  return expr_base_new(pe, &pn_expr_vtable, pn_expr_name, 0, 0);
 }
 
-void delete_pn_expr(exprptr self) {
+void destroy_pn_expr(exprptr self) {
   pn_expr *pe = self->data;
 
-  for (size_t i = 0; i < list_size(pe->body); i++) {
+  for (size_t i = 0; i < list_size(pe->body); ++i) {
     exprptr arg = list_get(pe->body, i);
     delete_expr(arg);
   }
 
-  for (size_t i = 0; i < list_size(pe->captured); i++) {
+  for (size_t i = 0; i < list_size(pe->captured); ++i) {
     char *name = list_get(pe->captured, i);
     free(name);
   }
@@ -81,27 +80,6 @@ void delete_pn_expr(exprptr self) {
   delete_list(pe->body);
   delete_list(pe->captured);
   free(pe);
-  free(self);
-}
-
-exprptr clone_pn_expr(exprptr self) {
-  pn_expr *new_pn = (pn_expr *)malloc(sizeof(pn_expr));
-  pn_expr *self_pn = self->data;
-  new_pn->body = new_list();
-  new_pn->captured = new_list();
-  new_pn->evaluated = self_pn->evaluated;
-
-  for (size_t i = 0; i < list_size(self_pn->body); i++) {
-    exprptr self_arg = list_get(self_pn->body, i);
-    list_add(new_pn->body, clone_expr(self_arg));
-  }
-
-  for (size_t i = 0; i < list_size(self_pn->captured); i++) {
-    char *name = list_get(self_pn->captured, i);
-    list_add(new_pn->captured, strdup(name));
-  }
-
-  return base_clone(self, new_pn);
 }
 
 /**
@@ -111,7 +89,7 @@ char *pn_expr_tostring(exprptr self) {
   pn_expr *pe = self->data;
 
   char *body_str = NULL;
-  for (size_t i = 0; i < list_size(pe->body); i++) {
+  for (size_t i = 0; i < list_size(pe->body); ++i) {
     exprptr arg = list_get(pe->body, i);
     char *str = expr_tostring(arg);
     if (body_str == NULL) {
@@ -125,7 +103,7 @@ char *pn_expr_tostring(exprptr self) {
   }
 
   char *captures_str = NULL;
-  for (size_t i = 0; i < list_size(pe->captured); i++) {
+  for (size_t i = 0; i < list_size(pe->captured); ++i) {
     char *capture  = list_get(pe->captured, i);
     if (captures_str == NULL) {
       captures_str = strdup(capture);
@@ -172,7 +150,7 @@ void pn_expr_add_captured_var(exprptr self, char *name) {
  * A PN expression can be one of the following
  *  1. a single value,
  *      Example: {1}
- *  2. a list of function evaluations that yield a single value,
+ *  2. a list of function evaluations that yields a single value,
  *      Example {+ $1 - $3 $2}
  *  3. or one of these with a captured variable list.
  *      Examples: {[x y] 1}, {[x y] + x y}
@@ -190,7 +168,7 @@ exprptr pn_expr_parse(tokenstreamptr tkns) {
 
   exprptr expr = new_pn_expr();
 
-  for (size_t i = 0; i < list_size(captures); i++) {
+  for (size_t i = 0; i < list_size(captures); ++i) {
     pn_expr_add_captured_var(expr, list_get(captures, i));
   }
   delete_list(captures);
@@ -215,10 +193,10 @@ exprptr pn_expr_parse(tokenstreamptr tkns) {
  * Saves variadic arguments in local variables named $1, $2, $3, ...
  */
 static void obtain_arguments(stack_frame_ptr local_frame,
-                             size_t nargs, object_t *args) {
-  for (size_t i = 0; i < nargs; i++) {
+                             size_t nargs, objectptr *args) {
+  for (size_t i = 0; i < nargs; ++i) {
     char *name = format("$%ld", i + 1);
-    object_t value = args[i];
+    objectptr value = args[i];
     stack_frame_set_local_variable(local_frame, name, value);
     free(name);
   }
@@ -229,27 +207,24 @@ static void obtain_arguments(stack_frame_ptr local_frame,
  * the new local stack frame. The first error in the expressions
  * is returned. Returns void object if no error occurs.
  */
-static object_t interpret_body_expressions(listptr body,
+static objectptr interpret_body_expressions(listptr body,
                                            stack_frame_ptr local_frame, 
                                            stackptr *waiting) {
   *waiting = new_stack();
 
-  for (size_t i = 0; i < list_size(body); i++) {
+  for (size_t i = 0; i < list_size(body); ++i) {
     exprptr body_expr = list_get(body, i);
-    object_t *evaluated_arg = (object_t *)malloc(sizeof(object_t));
-    *evaluated_arg = interpret_expr(body_expr, local_frame);
+    objectptr evaluated_arg = interpret_expr(body_expr, local_frame);
 
-    if (is_error(*evaluated_arg)) {
-      for (size_t j = i; j != 0; j--) {
-        object_t *obj = stack_get(*waiting, j - 1);
-        destroy_object(*obj);
+    if (is_error(evaluated_arg)) {
+      for (size_t j = i; j != 0; --j) {
+        objectptr obj = stack_get(*waiting, j - 1);
+        delete_object(obj);
         free(obj);
       }
       
       delete_stack(*waiting);
-      object_t error = *evaluated_arg;
-      free(evaluated_arg);
-      return error;
+      return evaluated_arg;
     }
 
     stack_push(*waiting, evaluated_arg);
@@ -261,59 +236,53 @@ static object_t interpret_body_expressions(listptr body,
 /**
  * Interprets entire body.
  */
-static object_t interpret_body(stackptr waiting, stack_frame_ptr sf,
+static objectptr interpret_body(stackptr waiting, stack_frame_ptr sf,
                                stackptr *computed) {
   *computed = new_stack();
 
   while (!stack_is_empty(waiting)) {
-    object_t *body_obj = stack_pop(waiting);
-    if (is_procedure(*body_obj)) {
-      size_t pn_arity = procedure_get_pn_arity(*body_obj);
-      object_t *arguments = (object_t *)malloc(pn_arity * sizeof(object_t));
+    objectptr body_obj = stack_pop(waiting);
+    if (is_procedure(body_obj)) {
+      size_t pn_arity = procedure_get_pn_arity(body_obj);
+      objectptr *arguments = malloc(pn_arity * sizeof(objectptr));
       /* 
        * Obtain arguments that are not available in the "computed" stack from $ variables 
        * so that simplified syntax such as {!= "a"} can be used in place of {!= $1 "a"}.
        * This use is valid only for the last procedure in the body.
        * */
       size_t i = 0;
-      for (; i + stack_size(*computed) < pn_arity; i++) {
+      for (; i + stack_size(*computed) < pn_arity; ++i) {
         char *name = format("$%d", i + 1);
         arguments[i] = stack_frame_get_variable(sf, name);
         free(name);
       }
 
       /* Obtain lambda arguments from "computed" stack */
-      for (; i < pn_arity; i++) {
-        object_t *arg = stack_pop(*computed);
-        arguments[i] = *arg;
-        free(arg);
+      for (; i < pn_arity; ++i) {
+        arguments[i] = stack_pop(*computed);
       }
 
       /* Call the lambda with its closure and arguments */
-      object_t *new_result_object = (object_t *)malloc(sizeof(object_t));
-      *new_result_object = object_op_call(*body_obj, pn_arity, arguments, sf);
+      objectptr new_result_object = object_op_call(body_obj, pn_arity, arguments, sf);
 
       /* Push the resulting value to the "computed" stack */
-      bool err = is_error(*new_result_object); 
+      bool err = is_error(new_result_object); 
       if (!err) {
         stack_push(*computed, new_result_object);
       }
 
       /* Deallocate arguments */
-      for (size_t i = 0; i < pn_arity; i++) {
-        destroy_object(arguments[i]);
+      for (size_t i = 0; i < pn_arity; ++i) {
+        delete_object(arguments[i]);
       }
       free(arguments);
 
       /* Deallocate procedure itself */
-      destroy_object(*body_obj);
-      free(body_obj);
+      delete_object(body_obj);
 
       /* If there was an error, return it immediately */
       if (err) {
-        object_t result = *new_result_object;
-        free(new_result_object);
-        return result;
+        return new_result_object;
       }
       
     } else {
@@ -322,13 +291,11 @@ static object_t interpret_body(stackptr waiting, stack_frame_ptr sf,
     }
   }
 
-  object_t *obj = stack_pop(*computed);
-  object_t result = *obj;
-  free(obj);
+  objectptr result = stack_pop(*computed);
 
   /* Do not allow multiple results. */
   if (!is_error(result) && !stack_is_empty(*computed)) {
-    destroy_object(result);
+    delete_object(result);
     return make_error("Polish notation expression yields multiple values.");
   }
 
@@ -338,7 +305,7 @@ static object_t interpret_body(stackptr waiting, stack_frame_ptr sf,
 /**
  * Converts the PN expression to a procedure object.
  */
-object_t interpret_pn_expr(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_pn_expr(exprptr self, stack_frame_ptr sf) {
   pn_expr *pe = self->data;
   return make_procedure(self, pe->captured, sf);
 }
@@ -347,8 +314,8 @@ object_t interpret_pn_expr(exprptr self, stack_frame_ptr sf) {
  * Calls PN expression
  */
 
-object_t pn_expr_call(exprptr self, size_t nargs,
-                      object_t *args, stack_frame_ptr local_frame) {
+objectptr pn_expr_call(exprptr self, size_t nargs,
+                      objectptr *args, stack_frame_ptr local_frame) {
   pn_expr *pe = self->data;
 
   /* Define local variables in local stack frame using argument values*/
@@ -356,25 +323,25 @@ object_t pn_expr_call(exprptr self, size_t nargs,
 
   /* Interpret body expressions inside new stack frame */
   stackptr waiting = NULL;
-  object_t error = interpret_body_expressions(pe->body, local_frame, &waiting);
+  objectptr error = interpret_body_expressions(pe->body, local_frame, &waiting);
   if (is_error(error)) {
     return error;
   }
-  destroy_object(error);
+  delete_object(error);
   
   /* Interpret entire body to obtain a single value */
   stackptr computed = NULL;
-  object_t result = interpret_body(waiting, local_frame, &computed);
+  objectptr result = interpret_body(waiting, local_frame, &computed);
 
   /* If an error occurs, it is possible that things remain on stacks. Deallocate them. */
   while(!stack_is_empty(waiting)) {
-    object_t *ptr = stack_pop(waiting);
-    destroy_object(*ptr);
+    objectptr ptr = stack_pop(waiting);
+    delete_object(ptr);
     free(ptr);
   }
   while(!stack_is_empty(computed)) {
-    object_t *ptr = stack_pop(computed);
-    destroy_object(*ptr);
+    objectptr ptr = stack_pop(computed);
+    delete_object(ptr);
     free(ptr);
   }
 

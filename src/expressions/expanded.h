@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file expanded_expr.h
+/// @file expanded.h
 
 #ifndef THEORYLISP_EXPRESSIONS_EXPANDED_H
 #define THEORYLISP_EXPRESSIONS_EXPANDED_H
@@ -34,10 +34,7 @@
 exprptr new_expanded_expr(exprptr proc);
 
 /* expanded expression "delete" operation */
-void delete_expanded_expr(exprptr self);
-
-/* expanded expression clone */
-exprptr clone_expanded_expr(exprptr self);
+void destroy_expanded_expr(exprptr self);
 
 /* expanded expression tostring implementation */
 char *expanded_expr_tostring(exprptr self);
@@ -46,6 +43,6 @@ char *expanded_expr_tostring(exprptr self);
 bool is_expanded_expression(exprptr e);
 
 /* expanded expression interpreter */
-object_t interpret_expanded_expr(exprptr self, stack_frame_ptr sf);
+objectptr interpret_expanded_expr(exprptr self, stack_frame_ptr sf);
 
 #endif

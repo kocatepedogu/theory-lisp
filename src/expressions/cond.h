@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file cond_expr.h
+/// @file cond.h
 
 #ifndef THEORYLISP_EXPRESSIONS_COND_H
 #define THEORYLISP_EXPRESSIONS_COND_H
@@ -33,10 +33,7 @@
 exprptr new_cond_expr(void);
 
 /* "delete" operation for cond_expr */
-void delete_cond_expr(exprptr self);
-
-/* clone for cond_expr */
-exprptr clone_cond_expr(exprptr self);
+void destroy_cond_expr(exprptr self);
 
 /* adds a new case to cond_expr */
 void cond_expr_add_case(exprptr self, exprptr condition,
@@ -52,6 +49,6 @@ exprptr cond_expr_parse(tokenstreamptr tkns);
 bool is_cond_expr(exprptr e);
 
 /* evaluates cond expression */
-object_t interpret_cond(exprptr self, stack_frame_ptr sf);
+objectptr interpret_cond(exprptr self, stack_frame_ptr sf);
 
 #endif

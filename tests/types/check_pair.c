@@ -7,23 +7,23 @@
 #include "../../src/types/real.h"
 
 START_TEST(test_pair_common) {
-  object_t integer_obj = make_integer(1);
-  object_t real_obj = make_real(2.0);
+  objectptr integer_obj = make_integer(1);
+  objectptr real_obj = make_real(2.0);
 
-  object_t pair_obj = make_pair(integer_obj, real_obj);
+  objectptr pair_obj = make_pair(integer_obj, real_obj);
   ck_assert(is_pair(pair_obj));
   ck_assert(pair_equals(pair_obj, pair_obj));
 
-  object_t copy_obj = clone_pair(pair_obj);
+  objectptr copy_obj = clone_object(pair_obj);
   ck_assert(is_pair(copy_obj));
   ck_assert(pair_equals(copy_obj, copy_obj));
 
   ck_assert(pair_equals(pair_obj, copy_obj));
 
-  destroy_integer(integer_obj);
-  destroy_real(real_obj);
-  destroy_pair(pair_obj);
-  destroy_pair(copy_obj);
+  delete_object(integer_obj);
+  delete_object(real_obj);
+  delete_object(pair_obj);
+  delete_object(copy_obj);
 
 } END_TEST
 
@@ -32,19 +32,16 @@ START_TEST(test_pair_common) {
 START_TEST(test_list_conversions) {
   listptr internal_list = new_list();
   for (int i = 0; i < CONVERSION_TEST_SIZE; i++) {
-    object_t *obj = (object_t *)malloc(sizeof(object_t));
-    *obj = make_integer(i);
-    list_add(internal_list, obj);
+    list_add(internal_list, make_integer(i));
   } 
 
-  object_t cons_list = internal_list_to_cons_list(internal_list);
+  objectptr cons_list = internal_list_to_cons_list(internal_list);
   listptr new_internal_list = new_list();
   ck_assert(cons_list_to_internal_list(cons_list, new_internal_list));
   for (int i = 0; i < CONVERSION_TEST_SIZE; i++) {
-    object_t *obj = list_get(new_internal_list, i);
-    ck_assert_int_eq(int_value(*obj), i);
-    destroy_object(*obj);
-    free(obj);
+    objectptr obj = list_get(new_internal_list, i);
+    ck_assert_int_eq(int_value(obj), i);
+    delete_object(obj);
   }
 } END_TEST
 

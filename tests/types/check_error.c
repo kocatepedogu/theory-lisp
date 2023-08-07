@@ -16,14 +16,14 @@ START_TEST(test_error) {
   static const char *expected_result = 
     TEST_STRING " " TEST_INT_STR " " TEST_REAL_STR;
 
-  object_t err_obj = make_error("%s %d %3.3f",
+  objectptr err_obj = make_error("%s %d %3.3f",
       TEST_STRING, TEST_INT, TEST_REAL);
   ck_assert(is_error(err_obj));
   ck_assert(error_equals(err_obj, err_obj));
   char *err_str = error_tostring(err_obj);
   ck_assert_str_eq(err_str, expected_result);
 
-  object_t copy_obj = clone_error(err_obj);
+  objectptr copy_obj = clone_object(err_obj);
   ck_assert(is_error(copy_obj));
   ck_assert(error_equals(copy_obj, copy_obj));
   char *copy_str = error_tostring(copy_obj);
@@ -31,8 +31,8 @@ START_TEST(test_error) {
 
   ck_assert(error_equals(err_obj, copy_obj));
 
-  destroy_error(err_obj);
-  destroy_error(copy_obj);
+  delete_object(err_obj);
+  delete_object(copy_obj);
   free(err_str);
   free(copy_str);
 }

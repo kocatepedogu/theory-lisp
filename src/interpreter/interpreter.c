@@ -45,8 +45,8 @@ static exprptr get_expression(listptr parse_tree, size_t i, bool verbose) {
   return expr;
 }
 
-static object_t evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet) {
-  object_t result = interpret_expr(e, sf);
+static objectptr evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet) {
+  objectptr result = interpret_expr(e, sf);
   char *result_str = object_tostring(result);
 
   if (verbose) {
@@ -62,10 +62,10 @@ static object_t evaluate(exprptr e, stack_frame_ptr sf, bool verbose, bool quiet
   return result;
 }
 
-object_t interpreter(listptr parse_tree, bool verbose, bool quiet, stack_frame_ptr sf) {
-  object_t result = make_void();
+objectptr interpreter(listptr parse_tree, bool verbose, bool quiet, stack_frame_ptr sf) {
+  objectptr result = make_void();
 
-  for (size_t i = 0; !is_error(result) && i < list_size(parse_tree); i++) {
+  for (size_t i = 0; !is_error(result) && i < list_size(parse_tree); ++i) {
     exprptr e = get_expression(parse_tree, i, verbose);
     assign_object(&result, evaluate(e, sf, verbose, quiet));
   }
@@ -93,11 +93,11 @@ void repl(stack_frame_ptr sf) {
     delete_tokenstream(tkns);
     
     if (parse_tree) {
-      object_t result = interpreter(parse_tree, false, false, sf);
+      objectptr result = interpreter(parse_tree, false, false, sf);
       delete_parse_tree(parse_tree);
 
       bool exit = is_exit(result);
-      destroy_object(result);
+      delete_object(result);
       if (exit) {
         return;
       }

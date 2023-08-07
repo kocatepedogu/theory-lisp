@@ -18,14 +18,14 @@
  * so that no undefined behaviour or crash occurs
  */
 
-typedef object_t (*operator_t)(object_t, object_t);
+typedef objectptr (*operator_t)(objectptr, objectptr);
 operator_t const operators[] = {
   object_less, object_op_add, object_op_mul,
   object_op_sub, object_op_div, object_op_and,
   object_op_or, object_op_xor
 };
 
-typedef bool (*is_operator_t)(object_t);
+typedef bool (*is_operator_t)(objectptr);
 is_operator_t const is_operators[] = {
   is_void, is_error, is_integer, is_real,
   is_string, is_boolean, is_procedure, is_pair
@@ -35,24 +35,24 @@ const int len_operators = sizeof operators / sizeof(operator_t);
 const int len_is_operators = sizeof is_operators / sizeof(is_operator_t);
 
 START_TEST(test_operations) {
-  object_t bool_obj = make_boolean(true);
-  object_t int_obj = make_integer(1);
-  object_t pair_obj = make_pair(bool_obj, int_obj);
-  object_t proc_obj = make_procedure(NULL, NULL, NULL);
-  object_t real_obj = make_real(1.0);
-  object_t sym_obj = make_string("string word");
-  object_t void_obj = make_void(); 
-  object_t objects[] = {
+  objectptr bool_obj = make_boolean(true);
+  objectptr int_obj = make_integer(1);
+  objectptr pair_obj = make_pair(bool_obj, int_obj);
+  objectptr proc_obj = make_procedure(NULL, NULL, NULL);
+  objectptr real_obj = make_real(1.0);
+  objectptr sym_obj = make_string("string word");
+  objectptr void_obj = make_void(); 
+  objectptr objects[] = {
     bool_obj, int_obj, pair_obj,
     proc_obj, real_obj, sym_obj,
     void_obj
   };
 
-  const int len_objects = sizeof objects / sizeof(object_t);
+  const int len_objects = sizeof objects / sizeof(objectptr);
   for (int i = 0; i < len_objects; i++) {
     for (int j = 0; j < len_objects; j++) {
       for (int k = 0; k < len_operators; k++) {
-        object_t result = make_void();
+        objectptr result = make_void();
         assign_object(&result, operators[k](objects[i], objects[j]));
 
 	bool found = false;
@@ -65,8 +65,8 @@ START_TEST(test_operations) {
     }
   }
 
-  for (int i = 0; i < sizeof objects / sizeof(object_t); i++) {
-    destroy_object(objects[i]);
+  for (int i = 0; i < sizeof objects / sizeof(objectptr); i++) {
+    delete_object(objects[i]);
   }
 
 } END_TEST

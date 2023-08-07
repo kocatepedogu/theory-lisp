@@ -30,6 +30,8 @@ libtlisp_la_SOURCES =\
     utils/stack.h\
     utils/file.c\
     utils/file.h\
+    utils/hashtable.c\
+    utils/hashtable.h\
     scanner/scanner.c\
     scanner/scanner.h\
     expressions/expression.c\

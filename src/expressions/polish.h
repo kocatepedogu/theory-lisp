@@ -17,6 +17,8 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file polish.h
+
 #ifndef THEORYLISP_EXPRESSIONS_POLISH_H
 #define THEORYLISP_EXPRESSIONS_POLISH_H
 
@@ -28,10 +30,7 @@
 exprptr new_pn_expr(void);
 
 /* PN expression "delete" operation */
-void delete_pn_expr(exprptr self);
-
-/* PN expression clone */
-exprptr clone_pn_expr(exprptr self);
+void destroy_pn_expr(exprptr self);
 
 /* PN expression tostring implementation */
 char *pn_expr_tostring(exprptr self);
@@ -46,10 +45,10 @@ exprptr pn_expr_parse(tokenstreamptr tkns);
 bool is_pn_expr(exprptr e);
 
 /* PN expression interpreter */
-object_t interpret_pn_expr(exprptr self, stack_frame_ptr sf);
+objectptr interpret_pn_expr(exprptr self, stack_frame_ptr sf);
 
 /* Calls PN expression */
-object_t pn_expr_call(exprptr self, size_t nargs,
-                      object_t *args, stack_frame_ptr sf); 
+objectptr pn_expr_call(exprptr self, size_t nargs,
+                      objectptr *args, stack_frame_ptr sf); 
 
 #endif

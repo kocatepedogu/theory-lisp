@@ -51,35 +51,24 @@ bool is_definition_expr(exprptr e) {
 }
 
 static const expr_vtable definition_expr_vtable = {
-  .deallocate = delete_definition_expr,
-  .clone = clone_definition_expr,
+  .destroy = destroy_definition_expr,
   .to_string = definition_expr_tostring,
   .interpret = interpret_definition
 };
 
 exprptr new_definition_expr(const char *name, exprptr body) {
-  definition_expr *de = (definition_expr *)malloc(sizeof(definition_expr));
+  definition_expr *de = malloc(sizeof *de);
   de->name = strdup(name);
   de->value = body;
 
-  return base_new(de, &definition_expr_vtable, definition_expr_name, 0, 0);
+  return expr_base_new(de, &definition_expr_vtable, definition_expr_name, 0, 0);
 }
 
-void delete_definition_expr(exprptr self) {
+void destroy_definition_expr(exprptr self) {
   definition_expr *de = self->data;
   free(de->name);
   delete_expr(de->value);
   free(de);
-  free(self);
-}
-
-exprptr clone_definition_expr(exprptr self) {
-  definition_expr *self_de = self->data;
-  definition_expr *new_de = (definition_expr *)malloc(sizeof(definition_expr));
-  new_de->name = strdup(self_de->name);
-  new_de->value = clone_expr(self_de->value);
-
-  return base_clone(self, new_de);
 }
 
 char *definition_expr_tostring(exprptr self) {
@@ -111,14 +100,14 @@ exprptr definition_expr_parse(tokenstreamptr tkns) {
   return result;
 }
 
-object_t interpret_definition(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_definition(exprptr self, stack_frame_ptr sf) {
   definition_expr *de = self->data;
-  object_t value = interpret_expr(de->value, sf);
+  objectptr value = interpret_expr(de->value, sf);
   if (is_error(value)) {
     return value;
   }
 
   stack_frame_set_global_variable(sf, de->name, value);
-  destroy_object(value);
+  delete_object(value);
   return make_void();
 }

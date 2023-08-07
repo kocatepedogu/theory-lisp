@@ -59,8 +59,7 @@ typedef struct {
 static const char evaluation_expr_name[] = "evaluation_expr";
 
 static const expr_vtable evaluation_expr_vtable = {
-    .deallocate = delete_evaluation_expr,
-    .clone = clone_evaluation_expr,
+    .destroy = destroy_evaluation_expr,
     .to_string = evaluation_expr_tostring,
     .interpret = interpret_evaluation};
 
@@ -73,14 +72,14 @@ inline bool is_evaluation_expr(exprptr e) {
 }
 
 exprptr new_evaluation_expr(exprptr proc) {
-  evaluation_expr *ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
+  evaluation_expr *ee = malloc(sizeof *ee);
   ee->procexpr = proc;
   ee->arguments = new_list();
   
-  return base_new(ee, &evaluation_expr_vtable, evaluation_expr_name, 0, 0);
+  return expr_base_new(ee, &evaluation_expr_vtable, evaluation_expr_name, 0, 0);
 }
 
-void delete_evaluation_expr(exprptr self) {
+void destroy_evaluation_expr(exprptr self) {
   evaluation_expr *expr = self->data;
   delete_expr(expr->procexpr);
   for (size_t i = 0; i < list_size(expr->arguments); i++) {
@@ -88,20 +87,6 @@ void delete_evaluation_expr(exprptr self) {
   }
   delete_list(expr->arguments);
   free(expr);
-  free(self);
-}
-
-exprptr clone_evaluation_expr(exprptr self) {
-  evaluation_expr *self_ee = self->data;
-  evaluation_expr *new_ee = (evaluation_expr *)malloc(sizeof(evaluation_expr));
-  new_ee->procexpr = clone_expr(self_ee->procexpr);
-  new_ee->arguments = new_list();
-  for (size_t i = 0; i < list_size(self_ee->arguments); i++) {
-    exprptr arg = list_get(self_ee->arguments, i);
-    list_add(new_ee->arguments, clone_expr(arg));
-  }
-
-  return base_clone(self, new_ee);
 }
 
 void evaluation_expr_add_arg(exprptr self, exprptr argument) {
@@ -112,8 +97,8 @@ void evaluation_expr_add_arg(exprptr self, exprptr argument) {
 char *evaluation_expr_tostring(exprptr self) {
   evaluation_expr *expr = self->data;
   char *args = NULL;
-  for (size_t i = 0; i < list_size(expr->arguments); i++) {
-    char *str = expr_tostring((exprptr)list_get(expr->arguments, i));
+  for (size_t i = 0; i < list_size(expr->arguments); ++i) {
+    char *str = expr_tostring(list_get(expr->arguments, i));
     args = unique_append_sep(args, " ", str);
   }
 
@@ -157,16 +142,16 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns) {
   return eval_expr;
 }
 
-static object_t interpret_args(listptr arglist, size_t *argsize,
-                               stack_frame_ptr sf, object_t **args) {
-  object_t error = make_null();
+static objectptr interpret_args(listptr arglist, size_t *argsize,
+                               stack_frame_ptr sf, objectptr **args) {
+  objectptr error = make_null();
 
   listptr evaluated_arglist = new_list();
-  for (size_t i = 0; i < list_size(arglist); i++) {
+  for (size_t i = 0; i < list_size(arglist); ++i) {
     exprptr expr = list_get(arglist, i);
 
     if (is_expanded_expression(expr)) {
-      object_t list_object = interpret_expr(expr->data, sf);
+      objectptr list_object = interpret_expr(expr->data, sf);
       if (!is_error(error) && is_error(list_object)) {
         assign_object(&error, clone_object(list_object));
       }
@@ -177,12 +162,11 @@ static object_t interpret_args(listptr arglist, size_t *argsize,
         }
       }
 
-      destroy_object(list_object);
+      delete_object(list_object);
     } else {
-      object_t *value = (object_t *)malloc(sizeof(object_t));
-      *value = interpret_expr(expr, sf);
-      if (!is_error(error) && is_error(*value)) {
-        assign_object(&error, clone_object(*value));
+      objectptr value = interpret_expr(expr, sf);
+      if (!is_error(error) && is_error(value)) {
+        assign_object(&error, clone_object(value));
       }
 
       list_add(evaluated_arglist, value);
@@ -190,12 +174,10 @@ static object_t interpret_args(listptr arglist, size_t *argsize,
   }
 
   *argsize = list_size(evaluated_arglist);
-  *args = (object_t *)malloc(*argsize * sizeof(object_t));
+  *args = malloc(*argsize * sizeof(objectptr));
 
-  for (size_t i = 0; i < *argsize; i++) {
-    object_t *ptr = list_get(evaluated_arglist, i);
-    (*args)[i] = *ptr;
-    free(ptr);
+  for (size_t i = 0; i < *argsize; ++i) {
+    (*args)[i] = list_get(evaluated_arglist, i);
   }
 
   delete_list(evaluated_arglist);
@@ -203,8 +185,8 @@ static object_t interpret_args(listptr arglist, size_t *argsize,
 }
 
 static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
-                                   size_t argsize, object_t *evaluated_args,
-                                   object_t *result) {
+                                   size_t argsize, objectptr *evaluated_args,
+                                   objectptr *result) {
   bool is_builtin_call = false;
 
   if (is_identifier_expr(procexpr)) {
@@ -214,10 +196,10 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
       is_builtin_call = true;
 
       if (func->variadic && func->arity > argsize) {
-        object_t error = make_error(ERR_ARITY_AT_LEAST, name, func->arity, argsize);
+        objectptr error = make_error(ERR_ARITY_AT_LEAST, name, func->arity, argsize);
         assign_object(result, error);
       } else if (!func->variadic && func->arity != argsize) {
-        object_t error = make_error(ERR_ARITY, name, func->arity, argsize);
+        objectptr error = make_error(ERR_ARITY, name, func->arity, argsize);
         assign_object(result, error);
       } else {
         assign_object(result, func->func(argsize, evaluated_args, sf));
@@ -228,36 +210,38 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
   return is_builtin_call;
 }
 
-static object_t interpret_proc_call(exprptr procexpr, stack_frame_ptr sf,
-                                      size_t args_size, object_t *args) {
-  object_t proc = interpret_expr(procexpr, sf);
+static objectptr interpret_proc_call(exprptr procexpr, stack_frame_ptr sf,
+                                      size_t args_size, objectptr *args) {
+  objectptr proc = interpret_expr(procexpr, sf);
   if (is_error(proc)) {
     return proc;
   }
 
-  object_t result = object_op_call(proc, args_size, args, sf);
-  destroy_object(proc);
+  objectptr result = object_op_call(proc, args_size, args, sf);
+  delete_object(proc);
   return result;
 }
 
-object_t interpret_evaluation(exprptr self, stack_frame_ptr sf) {
-  object_t result = make_null();
+objectptr interpret_evaluation(exprptr self, stack_frame_ptr sf) {
+  objectptr result = NULL;
 
   evaluation_expr *evaluation_expr = self->data;
   exprptr proc = evaluation_expr->procexpr;
   listptr arglist = evaluation_expr->arguments;
   size_t argsize = 0;
 
-  object_t *args = NULL;
+  objectptr *args = NULL;
   if (!is_error(result = interpret_args(arglist, &argsize, sf, &args))) {
     if (!interpret_builtin_call(proc, sf, argsize, args, &result)) {
       assign_object(&result, interpret_proc_call(proc, sf, argsize, args));
     }
   }
 
-  for (size_t i = 0; i < argsize; i++) {
-    destroy_object(args[i]);
+  for (size_t i = 0; i < argsize; ++i) {
+    delete_object(args[i]);
   }
   free(args);
   return result;
+
+  return NULL;
 }

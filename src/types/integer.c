@@ -22,69 +22,49 @@
 #include <assert.h>
 #include <string.h>
 
-
 #include "../types/boolean.h"
 #include "../types/error.h"
 #include "../utils/string.h"
+#include "object-base.h"
 #include "real.h"
 
-static const object_vtable_t integer_vtable = {.clone = clone_integer,
-                                               .destroy = destroy_integer,
+static const object_type_t integer_type_id = {{.destroy = destroy_integer,
                                                .equals = integer_equals,
                                                .tostring = integer_tostring,
                                                .op_add = integer_op_add,
                                                .op_mul = integer_op_mul,
                                                .op_sub = integer_op_sub,
                                                .op_div = integer_op_div,
-                                               .less = integer_less};
+                                               .less = integer_less},
+                                               "integer"};
 
-static const char integer_type_name[] = "integer";
-
-inline bool is_integer(object_t obj) {
-  return strcmp(integer_type_name, obj.type) == 0;
+inline bool is_integer(objectptr obj) {
+  return strcmp(integer_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline integer_t int_value(object_t obj) {
+inline integer_t int_value(objectptr obj) {
   assert(is_integer(obj));
-  return *(integer_t *)obj.value;
+  return *(integer_t *)obj->value;
 }
 
-object_t make_integer(integer_t value) {
-  integer_t *int_value = (integer_t *)malloc(sizeof(integer_t));
+objectptr make_integer(integer_t value) {
+  integer_t *int_value = malloc(sizeof *int_value);
   *int_value = value;
 
-  object_t obj;
-  obj.value = int_value;
-  obj.type = integer_type_name;
-  obj.vtable = &integer_vtable;
-  obj.temporary = false;
-  return obj;
+  return object_base_new(int_value, &integer_type_id);
 }
 
-object_t clone_integer(object_t self) {
+void destroy_integer(objectptr self) {
   assert(is_integer(self));
-  integer_t *int_value = (integer_t *)malloc(sizeof(integer_t));
-  *int_value = *(integer_t *)self.value;
-
-  object_t obj;
-  obj.value = int_value;
-  obj.type = integer_type_name;
-  obj.vtable = &integer_vtable;
-  obj.temporary = false;
-  return obj;
+  free(self->value);
 }
 
-void destroy_integer(object_t self) {
-  assert(is_integer(self));
-  free(self.value);
-}
-
-char *integer_tostring(object_t self) {
+char *integer_tostring(objectptr self) {
   assert(is_integer(self));
   return format("%ld", int_value(self));
 }
 
-bool integer_equals(object_t self, object_t other) {
+bool integer_equals(objectptr self, objectptr other) {
   assert(is_integer(self));
   if (is_integer(other)) {
     return int_value(self) == int_value(other);
@@ -97,7 +77,7 @@ bool integer_equals(object_t self, object_t other) {
   return false;
 }
 
-object_t integer_op_add(object_t self, object_t other) {
+objectptr integer_op_add(objectptr self, objectptr other) {
   assert(is_integer(self));
   integer_t self_value = int_value(self);
 
@@ -112,7 +92,7 @@ object_t integer_op_add(object_t self, object_t other) {
   return make_error("+ operand is not a number.");
 }
 
-object_t integer_op_mul(object_t self, object_t other) {
+objectptr integer_op_mul(objectptr self, objectptr other) {
   assert(is_integer(self));
   integer_t self_value = int_value(self);
 
@@ -126,7 +106,7 @@ object_t integer_op_mul(object_t self, object_t other) {
   return make_error("* operand is not a number.");
 }
 
-object_t integer_op_sub(object_t self, object_t other) {
+objectptr integer_op_sub(objectptr self, objectptr other) {
   assert(is_integer(self));
   integer_t self_value = int_value(self);
 
@@ -140,7 +120,7 @@ object_t integer_op_sub(object_t self, object_t other) {
   return make_error("- operand is not a number.");
 }
 
-object_t integer_op_div(object_t self, object_t other) {
+objectptr integer_op_div(objectptr self, objectptr other) {
   assert(is_integer(self));
   integer_t self_value = int_value(self);
 
@@ -154,7 +134,7 @@ object_t integer_op_div(object_t self, object_t other) {
   return make_error("/ operand is not a number.");
 }
 
-object_t integer_less(object_t self, object_t other) {
+objectptr integer_less(objectptr self, objectptr other) {
   assert(is_integer(self));
   integer_t self_value = int_value(self);
 

@@ -9,14 +9,14 @@
 #define STRING_STR "\"" STRING "\""
 
 START_TEST(test_symbol_common) {
-  object_t str_obj = make_string(STRING);
+  objectptr str_obj = make_string(STRING);
   ck_assert(is_string(str_obj));
   ck_assert(string_equals(str_obj, str_obj));
   char *str = string_tostring(str_obj);
   ck_assert_str_eq(str, STRING_STR);
   ck_assert_str_eq(string_value(str_obj), STRING);
 
-  object_t copy_obj = clone_string(str_obj);
+  objectptr copy_obj = clone_object(str_obj);
   ck_assert(is_string(copy_obj));
   ck_assert(string_equals(copy_obj, copy_obj));
   char *str2 = string_tostring(copy_obj);
@@ -25,8 +25,8 @@ START_TEST(test_symbol_common) {
 
   ck_assert(string_equals(str_obj, copy_obj));
 
-  destroy_string(str_obj);
-  destroy_string(copy_obj);
+  delete_object(str_obj);
+  delete_object(copy_obj);
   free(str);
   free(str2);
 } END_TEST

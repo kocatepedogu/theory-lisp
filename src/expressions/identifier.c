@@ -34,8 +34,7 @@ typedef struct {
 static const char identifier_expr_name[] = "identifier_expr";
 
 static const expr_vtable identifier_expr_vtable = {
-  .deallocate = delete_identifier_expr,
-  .clone = clone_identifier_expr,
+  .destroy = destroy_identifier_expr,
   .to_string = identifier_expr_tostring,
   .interpret = interpret_identifier
 };
@@ -49,25 +48,16 @@ inline bool is_identifier_expr(exprptr e) {
 }
 
 exprptr new_identifier_expr(const char *name) {
-  identifier_expr *ie = malloc(sizeof(identifier_expr));
+  identifier_expr *ie = malloc(sizeof *ie);
   ie->name = strdup(name);
   
-  return base_new(ie, &identifier_expr_vtable, identifier_expr_name, 0, 0);
+  return expr_base_new(ie, &identifier_expr_vtable, identifier_expr_name, 0, 0);
 }
 
-void delete_identifier_expr(exprptr self) {
+void destroy_identifier_expr(exprptr self) {
   identifier_expr *ie = self->data;
   free(ie->name);
   free(ie);
-  free(self);
-}
-
-exprptr clone_identifier_expr(exprptr self) {
-  identifier_expr *new_ie = (identifier_expr *)malloc(sizeof(identifier_expr));
-  identifier_expr *self_ie = self->data;
-  new_ie->name = strdup(self_ie->name);
-
-  return base_clone(self, new_ie);
 }
 
 char *identifier_expr_tostring(exprptr self) {
@@ -80,8 +70,8 @@ const char *identifier_expr_get_name(exprptr self) {
   return ie->name;
 }
 
-object_t interpret_identifier(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_identifier(exprptr self, stack_frame_ptr sf) {
   identifier_expr *ie = self->data;
-  object_t result = stack_frame_get_variable(sf, ie->name);
+  objectptr result = stack_frame_get_variable(sf, ie->name);
   return result;
 }

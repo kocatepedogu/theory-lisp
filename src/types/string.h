@@ -35,46 +35,40 @@ typedef char *string_t;
  * String constructor.
  * Stores a copy of the given string in an internal malloc'ed char array.
  */
-object_t make_string(string_t value);
-
-/**
- * String clone.
- * Duplicates the given string object.
- */
-object_t clone_string(object_t self);
+objectptr make_string(string_t value);
 
 /**
  * String destructor.
  * Deallocates the internal storage allocated for the string value.
  */
-void destroy_string(object_t val);
+void destroy_string(objectptr val);
 
 /** Returns the quoted version of the stored string */
-char *string_tostring(object_t val);
+char *string_tostring(objectptr val);
 
 /**
  * Returns true if and only if given objects are both strings, they both
  * have the same length, and they have the same characters in the same
  * order.
  */
-bool string_equals(object_t val, object_t other);
+bool string_equals(objectptr val, objectptr other);
 
 /** Returns true if and only if the given object is a string */
-bool is_string(object_t obj);
+bool is_string(objectptr obj);
 
 /** Returns stored string (unquoted) */
-string_t string_value(object_t obj);
+string_t string_value(objectptr obj);
 
 /** Returns string length */
-object_t string_length(object_t obj);
+objectptr string_length(objectptr obj);
 
 /** Concatenates two strings */
-object_t string_concat(object_t first, object_t second);
+objectptr string_concat(objectptr first, objectptr second);
 
 /** Returns character at given index */
-object_t string_charat(object_t obj, size_t index);
+objectptr string_charat(objectptr obj, size_t index);
 
 /** Returns substring */
-object_t string_substring(object_t obj, size_t begin, size_t end);
+objectptr string_substring(objectptr obj, size_t begin, size_t end);
 
 #endif

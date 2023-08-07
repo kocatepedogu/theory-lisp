@@ -68,4 +68,10 @@ size_t list_size(listptr lst);
  */
 void *list_get(listptr lst, size_t index);
 
+/*
+ * Modifies the element at the given index
+ * Returns old value
+ */
+void *list_set(listptr lst, size_t index, void *new_value);
+
 #endif

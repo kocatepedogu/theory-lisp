@@ -40,8 +40,7 @@
 #define ERR_NO_RIGHT_PARENTHESIS \
   "In cond expression, there is no right parenthesis at the end of case"
 
-static const expr_vtable cond_expr_vtable = {.deallocate = delete_cond_expr,
-                                             .clone = clone_cond_expr,
+static const expr_vtable cond_expr_vtable = {.destroy = destroy_cond_expr,
                                              .to_string = cond_expr_tostring,
                                              .interpret = interpret_cond};
 
@@ -67,15 +66,15 @@ bool is_cond_expr(exprptr e) {
 }
 
 exprptr new_cond_expr(void) {
-  cond_expr *ce = (cond_expr *)malloc(sizeof(cond_expr));
+  cond_expr *ce = malloc(sizeof *ce);
   ce->cases = new_list();
 
-  return base_new(ce, &cond_expr_vtable, cond_expr_name, 0, 0);
+  return expr_base_new(ce, &cond_expr_vtable, cond_expr_name, 0, 0);
 }
 
-void delete_cond_expr(exprptr self) {
+void destroy_cond_expr(exprptr self) {
   cond_expr *ce = self->data;
-  for (size_t i = 0; i < list_size(ce->cases); i++) {
+  for (size_t i = 0; i < list_size(ce->cases); ++i) {
     cond_case *c = (cond_case *)list_get(ce->cases, i);
     delete_expr(c->condition);
     delete_expr(c->true_case);
@@ -83,28 +82,11 @@ void delete_cond_expr(exprptr self) {
   }
   delete_list(ce->cases);
   free(ce);
-  free(self);
-}
-
-exprptr clone_cond_expr(exprptr self) {
-  cond_expr *new_ce = (cond_expr *)malloc(sizeof(cond_expr));
-  new_ce->cases = new_list();
-
-  cond_expr *self_ce = self->data;
-  for (size_t i = 0; i < list_size(self_ce->cases); i++) {
-    cond_case *self_case = list_get(self_ce->cases, i);
-    cond_case *new_case = (cond_case *)malloc(sizeof(cond_case));
-    new_case->condition = clone_expr(self_case->condition);
-    new_case->true_case = clone_expr(self_case->true_case);
-    list_add(new_ce->cases, new_case);
-  }
-
-  return base_clone(self, new_ce);
 }
 
 void cond_expr_add_case(exprptr self, exprptr cond, exprptr true_case) {
   cond_expr *ce = self->data;
-  cond_case *new_case = malloc(sizeof(cond_case));
+  cond_case *new_case = malloc(sizeof *new_case);
   new_case->condition = cond;
   new_case->true_case = true_case;
   list_add(ce->cases, new_case);
@@ -113,8 +95,8 @@ void cond_expr_add_case(exprptr self, exprptr cond, exprptr true_case) {
 char *cond_expr_tostring(exprptr self) {
   cond_expr *ce = self->data;
   char *cases = NULL;
-  for (size_t i = 0; i < list_size(ce->cases); i++) {
-    cond_case *c = (cond_case *)list_get(ce->cases, i);
+  for (size_t i = 0; i < list_size(ce->cases); ++i) {
+    cond_case *c = list_get(ce->cases, i);
     char *cond = expr_tostring(c->condition);
     char *true_case = expr_tostring(c->true_case);
     char *newcase = unique_format("(%s %s)", cond, true_case);
@@ -162,28 +144,28 @@ exprptr cond_expr_parse(tokenstreamptr tkns) {
   return cond_expr;
 }
 
-object_t interpret_cond(exprptr self, stack_frame_ptr sf) {
+objectptr interpret_cond(exprptr self, stack_frame_ptr sf) {
   cond_expr *ce = self->data;
-  for (size_t i = 0; i < list_size(ce->cases); i++) {
+  for (size_t i = 0; i < list_size(ce->cases); ++i) {
     cond_case *cc = list_get(ce->cases, i);
 
-    object_t condition_result = interpret_expr(cc->condition, sf);
+    objectptr condition_result = interpret_expr(cc->condition, sf);
     if (is_error(condition_result)) {
       return condition_result;
     }
 
     if (!is_boolean(condition_result)) {
-      destroy_object(condition_result);
+      delete_object(condition_result);
       return make_error(
           "Condition in cond expression does not yield a boolean.");
     }
 
     if (boolean_value(condition_result)) {
-      destroy_object(condition_result);
+      delete_object(condition_result);
       return interpret_expr(cc->true_case, sf);
     }
 
-    destroy_object(condition_result);
+    delete_object(condition_result);
   }
 
   return make_void();

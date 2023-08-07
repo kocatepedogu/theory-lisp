@@ -56,7 +56,7 @@ void delete_stack_frame(stack_frame_ptr sf);
  *
  * Variables with the same name in outer scopes/stack frames are not affected.
  */
-void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, object_t value);
+void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, objectptr value);
 
 /**
  * Sets the value of a global variable.
@@ -67,7 +67,7 @@ void stack_frame_set_local_variable(stack_frame_ptr sf, const char *name, object
  *
  */
 void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
-                                     object_t value);
+                                     objectptr value);
 
 /**
  * Sets the value of a variable.
@@ -77,7 +77,7 @@ void stack_frame_set_global_variable(stack_frame_ptr sf, const char *name,
  */
 
 void stack_frame_set_variable(stack_frame_ptr sf, const char *name,
-                              object_t value);
+                              objectptr value);
 
 /**
  * Returns the value of the variable with the given name.
@@ -89,7 +89,7 @@ void stack_frame_set_variable(stack_frame_ptr sf, const char *name,
  * the function returns an error object.
  *
  */
-object_t stack_frame_get_variable(stack_frame_ptr sf, const char *name);
+objectptr stack_frame_get_variable(stack_frame_ptr sf, const char *name);
 
 /**
  * Returns true if the given variable was previously defined

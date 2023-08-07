@@ -29,36 +29,36 @@
  * Creates an instance of void type.
  * No memory allocation occurs.
  */
-object_t make_void(void);
+objectptr make_void(void);
 
 /**
  * Destroys an instance of void type.
  * No memory deallocation occurs.
  */
-void destroy_void(object_t obj);
+void destroy_void(objectptr obj);
 
 /**
  * Copies an instance of void object.
  * No memory allocation occurs.
  */
-object_t clone_void(object_t self);
+objectptr clone_void(objectptr self);
 
 /**
  * Returns malloc'ed string representation of void object.
  * All void objects are represented with "null" string.
  */
-char *void_tostring(object_t obj);
+char *void_tostring(objectptr obj);
 
 /**
  * Compares two instances of void type.
  * All instances of void type are equal.
  * The value space of the void type is the singleton set {null}.
  */
-bool void_equals(object_t obj, object_t other);
+bool void_equals(objectptr obj, objectptr other);
 
 /**
  * Checks whether the given object is of void type.
  */
-bool is_void(object_t obj);
+bool is_void(objectptr obj);
 
 #endif

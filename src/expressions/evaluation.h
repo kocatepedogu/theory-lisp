@@ -17,7 +17,7 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file evaluation_expr.h
+/// @file evaluation.h
 
 #ifndef THEORYLISP_EXPRESSIONS_EVALUATION_H
 #define THEORYLISP_EXPRESSIONS_EVALUATION_H
@@ -34,10 +34,7 @@
 exprptr new_evaluation_expr(exprptr proc);
 
 /* evaluation_expr "delete" operation */
-void delete_evaluation_expr(exprptr self);
-
-/* evaluation_expr clone */
-exprptr clone_evaluation_expr(exprptr self);
+void destroy_evaluation_expr(exprptr self);
 
 /* Adds an argument to an evulation expression */
 void evaluation_expr_add_arg(exprptr self, exprptr argument);
@@ -52,6 +49,6 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns);
 bool is_evaluation_expr(exprptr e);
 
 /* evaluates evaluation expression */
-object_t interpret_evaluation(exprptr self, stack_frame_ptr sf);
+objectptr interpret_evaluation(exprptr self, stack_frame_ptr sf);
 
 #endif

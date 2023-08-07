@@ -25,11 +25,11 @@
 
 struct variable {
   char *name;
-  object_t value;
+  objectptr value;
 };
 
-variableptr new_variable(const char *name, object_t value) {
-  variableptr var = (variableptr)malloc(sizeof(struct variable));
+variableptr new_variable(const char *name, objectptr value) {
+  variableptr var = malloc(sizeof *var);
   var->name = strdup(name);
   var->value = clone_object(value);
   return var;
@@ -41,13 +41,13 @@ variableptr clone_variable(variableptr var) {
 
 void delete_variable(variableptr var) {
   free(var->name);
-  destroy_object(var->value);
+  delete_object(var->value);
   free(var);
 }
 
-object_t variable_get_value(variableptr var) { return clone_object(var->value); }
+objectptr variable_get_value(variableptr var) { return clone_object(var->value); }
 
-void variable_set_value(variableptr var, object_t value) { 
+void variable_set_value(variableptr var, objectptr value) { 
   assign_object(&var->value, clone_object(value));
 }
 

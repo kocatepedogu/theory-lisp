@@ -17,32 +17,34 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// @file string.h
+
 #ifndef THEORYLISP_BUILTIN_STRING_H
 #define THEORYLISP_BUILTIN_STRING_H
 
 #include "../types/string.h"
 #include "../interpreter/stack_frame.h"
 
-object_t builtin_strlen(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_strlen(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_strcat(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_strcat(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_charat(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_charat(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_substr(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_substr(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_strcar(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_strcar(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_strcdr(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_strcdr(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_newline(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_newline(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_tab(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_tab(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_backspace(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_backspace(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_i2s(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_i2s(size_t n, objectptr *args, stack_frame_ptr sf);
 
-object_t builtin_s2i(size_t n, object_t *args, stack_frame_ptr sf);
+objectptr builtin_s2i(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif
