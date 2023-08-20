@@ -30,7 +30,7 @@
 
 
 /* "new" operation for cond_expr */
-exprptr new_cond_expr(void);
+exprptr new_cond_expr(tokenptr tkn);
 
 /* "delete" operation for cond_expr */
 void destroy_cond_expr(exprptr self);

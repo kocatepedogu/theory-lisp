@@ -29,7 +29,7 @@
 
 #include <stdbool.h>
 
-exprptr new_automaton_expr(size_t number_of_tapes);
+exprptr new_automaton_expr(size_t number_of_tapes, tokenptr tkn);
 
 void destroy_automaton_expr(exprptr self);
 

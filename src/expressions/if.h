@@ -31,7 +31,7 @@
 #include "../scanner/scanner.h"
 
 /* if_expr "new" operation */
-exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case);
+exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case, tokenptr tkn);
 
 /* if_expr "delete" operation */
 void destroy_if_expr(exprptr self);

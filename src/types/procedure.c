@@ -114,11 +114,11 @@ char *procedure_tostring(objectptr self) {
    * lambda expression, so that evaluating the string representation
    * gives a procedure object with captured values.
    */
-  exprptr le = new_let_expr(clone_expr(p->lambda));
+  exprptr le = new_let_expr(clone_expr(p->lambda), NULL);
   for (size_t i = 0; i < list_size(p->closure); ++i) {
     variableptr var = list_get(p->closure, i);
     objectptr value = variable_get_value(var);
-    exprptr de = new_data_expr(value);
+    exprptr de = new_data_expr(value, NULL);
     let_expr_add_declaration(le, variable_get_name(var), de);
     delete_object(value);
   }

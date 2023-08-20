@@ -31,7 +31,7 @@
 #include "../interpreter/interpreter.h"
 
 /* expanded expression "new" operation */
-exprptr new_expanded_expr(exprptr proc);
+exprptr new_expanded_expr(exprptr proc, tokenptr tkn);
 
 /* expanded expression "delete" operation */
 void destroy_expanded_expr(exprptr self);

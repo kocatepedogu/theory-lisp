@@ -30,7 +30,7 @@
 #include "../scanner/scanner.h"
 
 /* set_expr "new" operation */
-exprptr new_set_expr(const char *name, exprptr body);
+exprptr new_set_expr(const char *name, exprptr body, tokenptr tkn);
 
 /* definiton_expr "delete" operation */
 void destroy_set_expr(exprptr self);

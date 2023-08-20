@@ -27,19 +27,16 @@
 
 /**
  * Creates an instance of void type.
- * No memory allocation occurs.
  */
 objectptr make_void(void);
 
 /**
  * Destroys an instance of void type.
- * No memory deallocation occurs.
  */
 void destroy_void(objectptr obj);
 
 /**
  * Copies an instance of void object.
- * No memory allocation occurs.
  */
 objectptr clone_void(objectptr self);
 

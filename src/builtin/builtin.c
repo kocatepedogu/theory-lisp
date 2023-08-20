@@ -98,19 +98,19 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
   for (size_t i = 0; i < number_of_builtin_functions; ++i) {
     const builtin_function *f = &builtin_functions[i];
 
-    exprptr lambda_body = new_evaluation_expr(new_identifier_expr(f->name));
+    exprptr lambda_body = new_evaluation_expr(new_identifier_expr(f->name, NULL), NULL);
     if (f->variadic) {
       evaluation_expr_add_arg(lambda_body, 
-          new_expanded_expr(new_identifier_expr("va_args")));
+          new_expanded_expr(new_identifier_expr("va_args", NULL), NULL));
     } else {
       for (size_t i = 0; i < f->arity; ++i) {
         char *id = format("arg%ld", i);
-        evaluation_expr_add_arg(lambda_body, new_identifier_expr(id));
+        evaluation_expr_add_arg(lambda_body, new_identifier_expr(id, NULL));
         free(id);
       }
     }
 
-    exprptr lambda = new_lambda_expr(lambda_body, f->variadic);
+    exprptr lambda = new_lambda_expr(lambda_body, f->variadic, NULL);
     if (f->variadic) {
       lambda_expr_set_pn_arity(lambda, f->pn_arity);
     }

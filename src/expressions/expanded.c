@@ -43,8 +43,8 @@ inline bool is_expanded_expression(exprptr e) {
   return strcmp(e->expr_name, expanded_expr_name) == 0;
 }
 
-exprptr new_expanded_expr(exprptr inner) {
-  return expr_base_new(inner, &expanded_expr_vtable, expanded_expr_name, 0, 0);
+exprptr new_expanded_expr(exprptr inner, tokenptr tkn) {
+  return expr_base_new(inner, &expanded_expr_vtable, expanded_expr_name, tkn);
 }
 
 void destroy_expanded_expr(exprptr self) {

@@ -82,7 +82,7 @@ inline bool is_lambda_expr(exprptr e) {
   return strcmp(e->expr_name, lambda_expr_name) == 0;
 }
 
-exprptr new_lambda_expr(exprptr body, bool variadic) {
+exprptr new_lambda_expr(exprptr body, bool variadic, tokenptr tkn) {
   lambda_expr *le = malloc(sizeof *le);
   le->params = new_list();
   le->captured_vars = new_list();
@@ -91,7 +91,7 @@ exprptr new_lambda_expr(exprptr body, bool variadic) {
   le->pn_arity = 0;
   le->pn_given = false;
 
-  return expr_base_new(le, &lambda_expr_vtable, lambda_expr_name, 0, 0);
+  return expr_base_new(le, &lambda_expr_vtable, lambda_expr_name, tkn);
 }
 
 void destroy_lambda_expr(exprptr self) {
@@ -296,10 +296,7 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
   }
 
   /* Construct lambda expression */
-  exprptr lambda_expr = new_lambda_expr(body, variadic);
-
-  lambda_expr->line_number = lambda_token->line;
-  lambda_expr->column_number = lambda_token->column;
+  exprptr lambda_expr = new_lambda_expr(body, variadic, lambda_token);
 
   if (pn_given) {
     lambda_expr_set_pn_arity(lambda_expr, pn_arity);

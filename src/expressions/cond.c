@@ -65,11 +65,11 @@ bool is_cond_expr(exprptr e) {
   return strcmp(e->expr_name, cond_expr_name) == 0;
 }
 
-exprptr new_cond_expr(void) {
+exprptr new_cond_expr(tokenptr tkn) {
   cond_expr *ce = malloc(sizeof *ce);
   ce->cases = new_list();
 
-  return expr_base_new(ce, &cond_expr_vtable, cond_expr_name, 0, 0);
+  return expr_base_new(ce, &cond_expr_vtable, cond_expr_name, tkn);
 }
 
 void destroy_cond_expr(exprptr self) {
@@ -110,7 +110,7 @@ exprptr cond_expr_parse(tokenstreamptr tkns) {
   tokenptr cond_token = next_tkn(tkns);
   assert(cond_token->type == TOKEN_COND);
 
-  exprptr cond_expr = new_cond_expr();
+  exprptr cond_expr = new_cond_expr(cond_token);
   while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
     tokenptr left_p = next_tkn(tkns);
     if (left_p->type != TOKEN_LEFT_PARENTHESIS) {
@@ -139,8 +139,6 @@ exprptr cond_expr_parse(tokenstreamptr tkns) {
     cond_expr_add_case(cond_expr, cond, true_case);
   }
 
-  cond_expr->line_number = cond_token->line;
-  cond_expr->column_number = cond_token->column;
   return cond_expr;
 }
 

@@ -27,7 +27,7 @@
 #include "../scanner/scanner.h"
 
 /* PN expression "new" operation */
-exprptr new_pn_expr(void);
+exprptr new_pn_expr(tokenptr tkn);
 
 /* PN expression "delete" operation */
 void destroy_pn_expr(exprptr self);

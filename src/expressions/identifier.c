@@ -47,11 +47,11 @@ inline bool is_identifier_expr(exprptr e) {
   return strcmp(e->expr_name, identifier_expr_name) == 0;
 }
 
-exprptr new_identifier_expr(const char *name) {
+exprptr new_identifier_expr(const char *name, tokenptr tkn) {
   identifier_expr *ie = malloc(sizeof *ie);
   ie->name = strdup(name);
   
-  return expr_base_new(ie, &identifier_expr_vtable, identifier_expr_name, 0, 0);
+  return expr_base_new(ie, &identifier_expr_vtable, identifier_expr_name, tkn);
 }
 
 void destroy_identifier_expr(exprptr self) {

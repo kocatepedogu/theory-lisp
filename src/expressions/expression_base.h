@@ -57,7 +57,7 @@ typedef expr_t *exprptr;
 
 /* Expression base constructor */
 exprptr expr_base_new(void *data, const expr_vtable *vtable, const char *expr_name,
-                 size_t line_number, size_t column_number);
+                 tokenptr tkn);
 
 /* Expression base copy constructor */
 exprptr expr_base_clone(exprptr other, void *new_data);

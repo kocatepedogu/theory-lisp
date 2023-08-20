@@ -56,12 +56,12 @@ static const expr_vtable definition_expr_vtable = {
   .interpret = interpret_definition
 };
 
-exprptr new_definition_expr(const char *name, exprptr body) {
+exprptr new_definition_expr(const char *name, exprptr body, tokenptr tkn) {
   definition_expr *de = malloc(sizeof *de);
   de->name = strdup(name);
   de->value = body;
 
-  return expr_base_new(de, &definition_expr_vtable, definition_expr_name, 0, 0);
+  return expr_base_new(de, &definition_expr_vtable, definition_expr_name, tkn);
 }
 
 void destroy_definition_expr(exprptr self) {
@@ -94,10 +94,7 @@ exprptr definition_expr_parse(tokenstreamptr tkns) {
   }
 
   char *name = name_token->value.character_sequence;
-  exprptr result =  new_definition_expr(name, value_expression);
-  result->line_number = define_token->line;
-  result->column_number = define_token->column;
-  return result;
+  return new_definition_expr(name, value_expression, define_token);
 }
 
 objectptr interpret_definition(exprptr self, stack_frame_ptr sf) {

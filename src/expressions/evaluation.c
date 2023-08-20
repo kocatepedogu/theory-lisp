@@ -71,12 +71,12 @@ inline bool is_evaluation_expr(exprptr e) {
   return strcmp(e->expr_name, evaluation_expr_name) == 0;
 }
 
-exprptr new_evaluation_expr(exprptr proc) {
+exprptr new_evaluation_expr(exprptr proc, tokenptr tkn) {
   evaluation_expr *ee = malloc(sizeof *ee);
   ee->procexpr = proc;
   ee->arguments = new_list();
   
-  return expr_base_new(ee, &evaluation_expr_vtable, evaluation_expr_name, 0, 0);
+  return expr_base_new(ee, &evaluation_expr_vtable, evaluation_expr_name, tkn);
 }
 
 void destroy_evaluation_expr(exprptr self) {
@@ -127,7 +127,7 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns) {
     return NULL;
   }
 
-  exprptr eval_expr = new_evaluation_expr(proc_expr);
+  exprptr eval_expr = new_evaluation_expr(proc_expr, tkn);
   while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
     exprptr arg = expr_parse(tkns);
     if (arg == NULL) {
@@ -137,8 +137,6 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns) {
     evaluation_expr_add_arg(eval_expr, arg);
   }
 
-  eval_expr->line_number = tkn->line;
-  eval_expr->column_number = tkn->column;
   return eval_expr;
 }
 

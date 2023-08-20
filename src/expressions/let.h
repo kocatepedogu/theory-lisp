@@ -29,7 +29,7 @@
 #include "../scanner/scanner.h"
 
 /* let_expr "new" operation */
-exprptr new_let_expr(exprptr body);
+exprptr new_let_expr(exprptr body, tokenptr tkn);
 
 /* let_expr "delete" operation */
 void destroy_let_expr(exprptr self);

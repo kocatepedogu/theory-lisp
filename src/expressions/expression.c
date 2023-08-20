@@ -53,13 +53,13 @@
 
 /* base constructor */
 exprptr expr_base_new(void *data, const expr_vtable *vtable, const char *expr_name,
-                 size_t line_number, size_t column_number) {
+                 tokenptr tkn) {
   exprptr e = malloc(sizeof *e);
   e->data = data;
   e->vtable = vtable;
   e->expr_name = expr_name;
-  e->line_number = line_number;
-  e->column_number = column_number;
+  e->line_number = tkn ? tkn->line : 0;
+  e->column_number = tkn ? tkn->column : 0;
   e->ref_count = 1;
   return e;
 }
@@ -107,20 +107,13 @@ char *expr_tostring(exprptr self) { return self->vtable->to_string(self); }
 static exprptr parenthesized_expr_parse(tokenstreamptr tkns) {
   tokenptr tkn = current_tkn(tkns);
 
-  size_t line = tkn->line;
-  size_t column = tkn->column;
-
   if (tkn->type == TOKEN_END_OF_FILE) {
     return parser_error(tkn, ERR_UNEXPECTED_EOF);
   }
 
   if (tkn->type == TOKEN_RIGHT_PARENTHESIS) {
     (void)next_tkn(tkns);
-
-    exprptr result = new_data_expr(make_null());
-    result->line_number = line;
-    result->column_number = column;
-    return result;
+    return new_data_expr(make_null(), tkn);
   }
 
   exprptr subexpr = NULL;
@@ -191,7 +184,7 @@ exprptr expr_parse(tokenstreamptr tkns) {
       return NULL;
     }
 
-    return new_expanded_expr(inner);
+    return new_expanded_expr(inner, tkn);
   }
 
   objectptr obj = make_error("uninitialized object");
@@ -199,31 +192,31 @@ exprptr expr_parse(tokenstreamptr tkns) {
   switch (tkn->type) {
     case TOKEN_NULL:
       assign_object(&obj, make_null());
-      result = new_data_expr(obj);
+      result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
     case TOKEN_BOOLEAN:
       assign_object(&obj, make_boolean(tkn->value.boolean));
-      result = new_data_expr(obj);
+      result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
     case TOKEN_INTEGER:
       assign_object(&obj, make_integer(tkn->value.integer));
-      result = new_data_expr(obj);
+      result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
     case TOKEN_REAL:
       assign_object(&obj, make_real(tkn->value.real));
-      result = new_data_expr(obj);
+      result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
     case TOKEN_IDENTIFIER:
       delete_object(obj);
-      result = new_identifier_expr(tkn->value.character_sequence);
+      result = new_identifier_expr(tkn->value.character_sequence, tkn);
       break;
     case TOKEN_STRING:
       assign_object(&obj, make_string(tkn->value.character_sequence));
-      result = new_data_expr(obj);
+      result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
     default:

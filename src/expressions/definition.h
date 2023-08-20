@@ -30,7 +30,7 @@
 #include "../scanner/scanner.h"
 
 /* definition_expr "new" operation */
-exprptr new_definition_expr(const char *name, exprptr body);
+exprptr new_definition_expr(const char *name, exprptr body, tokenptr tkn);
 
 /* definiton_expr "delete" operation */
 void destroy_definition_expr(exprptr self);

@@ -52,13 +52,13 @@ inline bool is_if_expr(exprptr e) {
   return strcmp(e->expr_name, if_expr_name) == 0;
 }
 
-exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case) {
+exprptr new_if_expr(exprptr condition, exprptr true_case, exprptr false_case, tokenptr tkn) {
   if_expr *ie = malloc(sizeof *ie);
   ie->condition = condition;
   ie->true_case = true_case;
   ie->false_case = false_case;
 
-  return expr_base_new(ie, &if_expr_vtable, if_expr_name, 0, 0);
+  return expr_base_new(ie, &if_expr_vtable, if_expr_name, tkn);
 }
 
 void destroy_if_expr(exprptr self) {
@@ -98,10 +98,7 @@ exprptr if_expr_parse(tokenstreamptr tkns) {
     return NULL;
   }
 
-  exprptr result = new_if_expr(condition, true_case, false_case);
-  result->line_number = if_token->line;
-  result->column_number = if_token->column;
-  return result;
+  return new_if_expr(condition, true_case, false_case, if_token);
 }
 
 objectptr interpret_if(exprptr self, stack_frame_ptr sf) {

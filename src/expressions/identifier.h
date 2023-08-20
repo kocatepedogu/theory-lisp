@@ -29,7 +29,7 @@
 #include "../interpreter/interpreter.h"
 
 /* identifier_expr "new" operation */
-exprptr new_identifier_expr(const char *name);
+exprptr new_identifier_expr(const char *name, tokenptr tkn);
 
 /* identifier_expr "delete" operation */
 void destroy_identifier_expr(exprptr self);

@@ -56,12 +56,12 @@ static const expr_vtable set_expr_vtable = {
   .interpret = interpret_set
 };
 
-exprptr new_set_expr(const char *name, exprptr body) {
+exprptr new_set_expr(const char *name, exprptr body, tokenptr tkn) {
   set_expr *se = malloc(sizeof *se);
   se->name = strdup(name);
   se->value = body;
 
-  return expr_base_new(se, &set_expr_vtable, set_expr_name, 0, 0);
+  return expr_base_new(se, &set_expr_vtable, set_expr_name, tkn);
 }
 
 void destroy_set_expr(exprptr self) {
@@ -94,10 +94,7 @@ exprptr set_expr_parse(tokenstreamptr tkns) {
   }
 
   char *name = name_token->value.character_sequence;
-  exprptr result =  new_set_expr(name, value_expression);
-  result->line_number = set_token->line;
-  result->column_number = set_token->column;
-  return result;
+  return new_set_expr(name, value_expression, set_token);
 }
 
 objectptr interpret_set(exprptr self, stack_frame_ptr sf) {

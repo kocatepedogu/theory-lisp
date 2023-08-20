@@ -55,13 +55,13 @@ inline bool is_pn_expr(exprptr e) {
   return strcmp(e->expr_name, pn_expr_name) == 0;
 }
 
-exprptr new_pn_expr(void) {
+exprptr new_pn_expr(tokenptr tkn) {
   pn_expr *pe = malloc(sizeof *pe);
   pe->body = new_list();
   pe->captured = new_list();
   pe->evaluated = false;
 
-  return expr_base_new(pe, &pn_expr_vtable, pn_expr_name, 0, 0);
+  return expr_base_new(pe, &pn_expr_vtable, pn_expr_name, tkn);
 }
 
 void destroy_pn_expr(exprptr self) {
@@ -166,7 +166,7 @@ exprptr pn_expr_parse(tokenstreamptr tkns) {
     return NULL;
   }
 
-  exprptr expr = new_pn_expr();
+  exprptr expr = new_pn_expr(first_token);
 
   for (size_t i = 0; i < list_size(captures); ++i) {
     pn_expr_add_captured_var(expr, list_get(captures, i));

@@ -83,14 +83,14 @@ bool is_automaton_expr(exprptr e) {
   return strcmp(e->expr_name, automaton_expr_name) == 0;
 }
 
-exprptr new_automaton_expr(size_t number_of_tapes) {
+exprptr new_automaton_expr(size_t number_of_tapes, tokenptr tkn) {
   automaton_expr *ae = malloc(sizeof *ae);
   ae->states = new_list();
   ae->captures = new_list();
   ae->compiled = NULL;
   ae->number_of_tapes = number_of_tapes;
 
-  return expr_base_new(ae, &automaton_expr_vtable, automaton_expr_name, 0, 0);
+  return expr_base_new(ae, &automaton_expr_vtable, automaton_expr_name, tkn);
 }
 
 static void delete_head_operation_list(listptr lst) {
@@ -400,7 +400,7 @@ exprptr automaton_expr_parse(tokenstreamptr tkns) {
   }
 
   size_t arity = arity_token->value.integer;
-  exprptr e = new_automaton_expr(arity);
+  exprptr e = new_automaton_expr(arity, automaton_token);
 
   if (captures) {
     for (size_t i = 0; i < list_size(captures); ++i) {

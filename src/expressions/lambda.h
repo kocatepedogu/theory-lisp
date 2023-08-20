@@ -32,7 +32,7 @@
 #include <stdbool.h>
 
 /* lambda_expr "new" operation */
-exprptr new_lambda_expr(exprptr body, bool variadic);
+exprptr new_lambda_expr(exprptr body, bool variadic, tokenptr tkn);
 
 /* Lambda expression "delete" operation */
 void destroy_lambda_expr(exprptr self);

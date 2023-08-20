@@ -73,12 +73,12 @@ inline bool is_let_expr(exprptr e) {
   return strcmp(e->expr_name, let_expr_name) == 0;
 }
 
-exprptr new_let_expr(exprptr body) {
+exprptr new_let_expr(exprptr body, tokenptr tkn) {
   let_expr *le = malloc(sizeof *le);
   le->body = body;
   le->declarations = new_list();
 
-  return expr_base_new(le, &let_expr_vtable, let_expr_name, 0, 0);
+  return expr_base_new(le, &let_expr_vtable, let_expr_name, tkn);
 }
 
 void destroy_let_expr(exprptr self) {
@@ -182,7 +182,7 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
     return let_expr_parse_error(var_names, var_values);
   }
 
-  exprptr le = new_let_expr(body);
+  exprptr le = new_let_expr(body, let_token);
   for (size_t i = 0; i < list_size(var_names); ++i) {
     tokenptr var_name = list_get(var_names, i);
     exprptr var_value = list_get(var_values, i);
@@ -192,8 +192,6 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
   delete_list(var_names);
   delete_list(var_values);
 
-  le->line_number = let_token->line;
-  le->column_number = let_token->column;
   return le;
 }
 

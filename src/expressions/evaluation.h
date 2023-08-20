@@ -31,7 +31,7 @@
 
 
 /* evaluation_expr "new" operation */
-exprptr new_evaluation_expr(exprptr proc);
+exprptr new_evaluation_expr(exprptr proc, tokenptr tkn);
 
 /* evaluation_expr "delete" operation */
 void destroy_evaluation_expr(exprptr self);

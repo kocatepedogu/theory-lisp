@@ -31,7 +31,7 @@
 
 
 /* data_expr "new" operation */
-exprptr new_data_expr(objectptr obj);
+exprptr new_data_expr(objectptr obj, tokenptr tkn);
 
 /* data_expr "delete" operation */
 void destroy_data_expr(exprptr self);

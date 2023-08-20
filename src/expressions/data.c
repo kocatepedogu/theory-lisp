@@ -44,11 +44,11 @@ bool is_data_expr(exprptr e) {
   return strcmp(e->expr_name, data_expr_name) == 0;
 }
 
-exprptr new_data_expr(objectptr obj) {
+exprptr new_data_expr(objectptr obj, tokenptr tkn) {
   data_expr *de = malloc(sizeof *de);
   de->obj = clone_object(obj);
 
-  return expr_base_new(de, &data_expr_vtable, data_expr_name, 0, 0);
+  return expr_base_new(de, &data_expr_vtable, data_expr_name, tkn);
 }
 
 void destroy_data_expr(exprptr self) {
