@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libtlisp.la
 libtlisp_la_SOURCES =\
     types/object.c\
     types/object.h\
+    types/object-base.h\
     types/boolean.c\
     types/boolean.h\
     types/integer.c\
@@ -95,7 +96,7 @@ libtlisp_la_SOURCES =\
     automaton/automaton.h
 
 tlispdir = $(libdir)/tlisp
-tlisp_DATA =\
+dist_tlisp_DATA =\
     lib/list.tl\
     lib/util.tl\
     lib/primitives.tl\
