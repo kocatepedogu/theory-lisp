@@ -43,19 +43,39 @@ objectptr builtin_mul(size_t n, objectptr *args, stack_frame_ptr sf) {
 objectptr builtin_sub(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  objectptr result = clone_object(*args);
-  for (size_t i = 1; i < n; ++i) {
-    assign_object(&result, object_op_sub(result, args[i]));
+  if (n == 1) {
+    objectptr result = make_integer(0);
+    assign_object(&result, object_op_sub(result, *args));
+    return result;
   }
-  return result;
+
+  if (n >= 2) {
+    objectptr result = clone_object(*args);
+    for (size_t i = 1; i < n; ++i) {
+      assign_object(&result, object_op_sub(result, args[i]));
+    }
+    return result;
+  }
+
+  abort();
 }
 
 objectptr builtin_div(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n >= 1);
 
-  objectptr result = clone_object(*args);
-  for (size_t i = 1; i < n; ++i) {
-    assign_object(&result, object_op_div(result, args[i]));
+  if (n == 1) {
+    objectptr result = make_integer(1);
+    assign_object(&result, object_op_div(result, *args));
+    return result;
   }
-  return result;
+
+  if (n >= 2) {
+    objectptr result = clone_object(*args);
+    for (size_t i = 1; i < n; ++i) {
+      assign_object(&result, object_op_div(result, args[i]));
+    }
+    return result;
+  }
+
+  abort();
 }

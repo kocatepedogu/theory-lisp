@@ -125,6 +125,8 @@ static bool token_boolean(token_type_t *type, token_value_t *value,
 static bool token_number(token_type_t *type, token_value_t *value, const char *word) {
   char *endptr = NULL;
 
+  /* Integers */
+
   errno = 0;
   long longval = strtol(word, &endptr, 0);
   if (errno == 0 && endptr == word + strlen(word) && endptr != word) {
@@ -133,12 +135,32 @@ static bool token_number(token_type_t *type, token_value_t *value, const char *w
     return true;
   }
 
+  /* Real numbers */
+
   errno = 0;
   double doubleval = strtod(word, &endptr);
   if (errno == 0 && endptr == word + strlen(word) && endptr != word) {
     *type = TOKEN_REAL;
     value->real = doubleval;
     return true;
+  }
+
+  /* Rational numbers */
+
+  char *ptr = strchr(word, '/');
+  if (ptr) {
+    errno = 0;
+    long x = strtol(word, &endptr, 0);
+    if (errno == 0 && endptr == ptr && endptr != word) {
+      errno = 0;
+      long y = strtol(ptr + 1, &endptr, 0);
+      if (errno == 0 && endptr == word + strlen(word) && endptr != ptr + 1) {
+        *type = TOKEN_RATIONAL;
+        value->rational[0] = x;
+        value->rational[1] = y;
+        return true;
+      }
+    }
   }
 
   return false;
@@ -169,6 +191,8 @@ char *token_tostring(tokenptr token) {
       return strdup("$");
     case TOKEN_IDENTIFIER:
       return format("%s", token->value.character_sequence);
+    case TOKEN_BOOLEAN:
+      return format(token->value.boolean ? "#t" : "#f");
     case TOKEN_INTEGER:
       return format("%ld", token->value.integer);
     case TOKEN_REAL:
@@ -189,8 +213,8 @@ char *token_tostring(tokenptr token) {
         }
       }
 
-      fprintf(stderr, "Invalid token type %d", token->type);
-      return NULL;
+      fprintf(stderr, "Invalid token type %d\n", token->type);
+      abort();
   }
 }
 
@@ -277,7 +301,7 @@ static scanner_state scanner_state_string(char c, scanner_position_data *p,
 
 static scanner_state scanner_state_token(char c, scanner_position_data *p,
                                          listptr tokens) {
-  if (is_semicolon(c) || is_space(c)) {
+  if (is_semicolon(c) || is_space(c) || is_quote(c)) {
     p->word[p->position_in_current_word] = '\0';
     get_tokens(tokens, p->word, p->line, p->first_column_of_word);
     memset(p->word, 0, sizeof p->word);
@@ -286,6 +310,11 @@ static scanner_state scanner_state_token(char c, scanner_position_data *p,
 
   if (is_semicolon(c)) {
     return ST_SINGLE_LINE_COMMENT;
+  }
+
+  if (is_quote(c)) {
+    p->first_column_of_word = p->column;
+    return ST_STRING;
   }
 
   if (is_space(c)) {

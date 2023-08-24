@@ -47,6 +47,8 @@ objectptr builtin_is_integer(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_is_real(size_t n, objectptr *args, stack_frame_ptr sf);
 
+objectptr builtin_is_rational(size_t n, objectptr *args, stack_frame_ptr sf);
+
 objectptr builtin_is_number(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_is_string(size_t n, objectptr *args, stack_frame_ptr sf);

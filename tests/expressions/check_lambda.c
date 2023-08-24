@@ -9,7 +9,6 @@
 typedef struct {
   bool variadic;
   size_t pn_arity;
-  bool pn_given;
   listptr captured_vars;
   listptr params;
   exprptr body;

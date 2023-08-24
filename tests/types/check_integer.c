@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include "../../src/types/integer.h"
 #include "../../src/types/real.h"
+#include "../../src/types/rational.h"
 #include "../../src/types/boolean.h"
 
 #define INT_TEST_VALUE 1234
@@ -94,23 +95,25 @@ START_TEST(test_integer_op_sub) {
 } END_TEST
 
 START_TEST(test_integer_op_div) {
-  objectptr self = make_integer(7);
-  objectptr int4 = make_integer(4);
+  objectptr self = make_integer(14);
+  objectptr int4 = make_integer(8);
   objectptr real4 = make_real(4.0);
 
-  objectptr quotient1 = integer_op_div(self, int4);
-  ck_assert(is_integer(quotient1));
-  ck_assert_int_eq(int_value(quotient1), 1);
+  objectptr r1 = integer_op_div(self, int4);
+  ck_assert(is_rational(r1));
+  rational_t val1 = rational_value(r1);
+  ck_assert_int_eq(val1.x, 7);
+  ck_assert_int_eq(val1.y, 4);
 
-  objectptr quotient2 = integer_op_div(self, real4);
-  ck_assert(is_real(quotient2));
-  ck_assert_double_eq(real_value(quotient2), 1.75);
+  objectptr r2 = integer_op_div(self, real4);
+  ck_assert(is_real(r2));
+  ck_assert_double_eq(real_value(r2), 3.5);
 
   delete_object(self);
   delete_object(int4);
   delete_object(real4);
-  delete_object(quotient1);
-  delete_object(quotient2);
+  delete_object(r1);
+  delete_object(r2);
 } END_TEST
 
 START_TEST(test_integer_less) {

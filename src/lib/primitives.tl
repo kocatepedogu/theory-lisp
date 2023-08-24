@@ -1,3 +1,21 @@
+;
+; Copyright 2023 Dogu Kocatepe
+; This file is part of Theory Lisp Library.
+
+; Theory Lisp Library is free software: you can redistribute it
+; and/or modify it under the terms of the GNU Lesser General Public License
+; as published by the Free Software Foundation, either version 3 of
+; the License, or (at your option) any later version.
+
+; Theory Lisp Library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+; See the GNU Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public License
+; along with Theory Lisp Library. If not, see <https://www.gnu.org/licenses/>.
+;
+
 (include "util.tl")
 
 ; Left end symbol
@@ -10,6 +28,11 @@
 (define make-tape
   (lambda (...)
     (cons 1 (list left-end blank &va_args))))
+
+; Creates a tape that does not have blank after left-end
+(define make-tape-noblank
+  (lambda (...)
+    (cons 1 (list left-end &va_args))))
 
 ; Returns string representation of a tape
 (define tape-tostring
@@ -45,6 +68,21 @@
 (define L
   (automaton\1
     (q1 ({#t} <- halt))))
+
+; Uniform random number generating machine
+(define P
+  (automaton\0
+    (q1 {(define _rand_ (random))}
+      ({#t} halt))))
+
+; Used as a probabilistic transition condition
+(define p
+  (lambda (probability)
+    (if (< _rand_ probability)
+      #t
+      (begin
+        (define _rand_ (- _rand_ probability))
+        #f))))
 
 ; Stops on the first blank on right
 (define blankOnR

@@ -18,33 +18,32 @@
  */
 
 #include "expression.h"
-#include "expression_base.h"
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 
-
+#include "../parser/parser.h"
 #include "../scanner/scanner.h"
+#include "../types/boolean.h"
+#include "../types/error.h"
+#include "../types/integer.h"
+#include "../types/null.h"
+#include "../types/real.h"
+#include "../types/rational.h"
+#include "../types/string.h"
 #include "../utils/list.h"
+#include "automaton.h"
 #include "data.h"
 #include "definition.h"
-#include "set.h"
 #include "evaluation.h"
 #include "expanded.h"
+#include "expression_base.h"
 #include "identifier.h"
 #include "if.h"
 #include "lambda.h"
 #include "let.h"
 #include "polish.h"
-#include "automaton.h"
-#include "../parser/parser.h"
-
-#include "../types/null.h"
-#include "../types/boolean.h"
-#include "../types/integer.h"
-#include "../types/real.h"
-#include "../types/string.h"
-#include "../types/error.h"
+#include "set.h"
 
 /* Parser error messages */
 #define ERR_UNEXPECTED_EOF "Unexpected end of file"
@@ -52,8 +51,8 @@
 #define ERR_UNMATCHED_PARENTHESIS "Unmatched parenthesis"
 
 /* base constructor */
-exprptr expr_base_new(void *data, const expr_vtable *vtable, const char *expr_name,
-                 tokenptr tkn) {
+exprptr expr_base_new(void *data, const expr_vtable *vtable,
+                      const char *expr_name, tokenptr tkn) {
   exprptr e = malloc(sizeof *e);
   e->data = data;
   e->vtable = vtable;
@@ -76,7 +75,7 @@ exprptr expr_base_clone(exprptr other, void *new_data) {
 void delete_expr(exprptr self) {
   if (self != NULL) {
     if (self->vtable->deallocate) {
-      self->vtable->deallocate(self); 
+      self->vtable->deallocate(self);
     } else {
       assert(self->vtable->destroy);
       if (--self->ref_count == 0) {
@@ -138,13 +137,14 @@ static exprptr parenthesized_expr_parse(tokenstreamptr tkns) {
       break;
     case TOKEN_AUTOMATON:
       subexpr = automaton_expr_parse(tkns);
-      break; 
+      break;
     case TOKEN_LEFT_PARENTHESIS:
     case TOKEN_LEFT_CURLY_BRACKET:
     case TOKEN_IDENTIFIER:
     case TOKEN_STRING:
     case TOKEN_INTEGER:
     case TOKEN_REAL:
+    case TOKEN_RATIONAL:
       subexpr = evaluation_expr_parse(tkns);
       break;
     default:
@@ -210,6 +210,12 @@ exprptr expr_parse(tokenstreamptr tkns) {
       result = new_data_expr(obj, tkn);
       delete_object(obj);
       break;
+    case TOKEN_RATIONAL:
+      assign_object(
+          &obj, make_rational(tkn->value.rational[0], tkn->value.rational[1]));
+      result = new_data_expr(obj, tkn);
+      delete_object(obj);
+      break;
     case TOKEN_IDENTIFIER:
       delete_object(obj);
       result = new_identifier_expr(tkn->value.character_sequence, tkn);
@@ -239,11 +245,17 @@ objectptr interpret_expr(exprptr self, stack_frame_ptr sf) {
 }
 
 /* calls an expression with given closure, arguments and stack frame */
-objectptr expr_call(exprptr self, size_t nargs,
-                   objectptr *args, stack_frame_ptr sf) {
+objectptr expr_call(exprptr self, size_t nargs, objectptr *args,
+                    stack_frame_ptr sf) {
   return self->vtable->call(self, nargs, args, sf);
 }
 
 objectptr expr_call_internal(exprptr self, void *args, stack_frame_ptr sf) {
   return self->vtable->call_internal(self, args, sf);
+}
+
+size_t expr_get_arity(exprptr self) { return self->vtable->get_arity(self); }
+
+size_t expr_get_pn_arity(exprptr self) {
+  return self->vtable->get_pn_arity(self);
 }

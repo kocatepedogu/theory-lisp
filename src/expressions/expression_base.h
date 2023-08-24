@@ -41,6 +41,8 @@ typedef struct {
   objectptr (*interpret)(exprptr e, stack_frame_ptr sf);
   objectptr (*call)(exprptr e, size_t nargs, objectptr *args, stack_frame_ptr sf);
   objectptr (*call_internal)(exprptr e, void *args, stack_frame_ptr sf);
+  size_t (*get_arity)(exprptr e);
+  size_t (*get_pn_arity)(exprptr e);
 } expr_vtable;
 
 /* Expression */

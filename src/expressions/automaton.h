@@ -46,4 +46,8 @@ objectptr call_automaton(exprptr self, size_t nargs, objectptr *args,
 
 objectptr call_automaton_internal(exprptr self, void *, stack_frame_ptr sf);
 
+size_t automaton_expr_get_arity(exprptr self);
+
+size_t automaton_expr_get_pn_arity(exprptr self);
+
 #endif

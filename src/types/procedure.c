@@ -129,28 +129,17 @@ char *procedure_tostring(objectptr self) {
 }
 
 bool procedure_equals(objectptr self, objectptr other) {
-  assert(false);
   return false;
 }
 
 size_t procedure_get_pn_arity(objectptr self) {
   proc_t *p = self->value;
-  return lambda_expr_get_pn_arity(p->lambda);
+  return expr_get_pn_arity(p->lambda);
 }
 
 size_t procedure_get_arity(objectptr self) {
   proc_t *p = self->value;
-  return lambda_expr_get_arity(p->lambda);
-}
-
-bool procedure_is_pn_arity_given(objectptr self) {
-  proc_t *p = self->value;
-  return lambda_expr_is_pn_arity_given(p->lambda);
-}
-
-bool procedure_is_variadic(objectptr self) {
-  proc_t *p = self->value;
-  return lambda_expr_is_variadic(p->lambda);
+  return expr_get_arity(p->lambda);
 }
 
 static stack_frame_ptr construct_stack_frame(listptr closure, stack_frame_ptr sf) {

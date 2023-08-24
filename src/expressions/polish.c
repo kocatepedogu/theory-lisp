@@ -31,6 +31,7 @@
 #include "../types/error.h"
 #include "../types/pair.h"
 #include "../types/void.h"
+#include "../types/integer.h"
 #include "expression.h"
 #include "expression_base.h"
 #include "lambda.h"
@@ -40,6 +41,7 @@ typedef struct {
   listptr body;
   listptr captured;
   bool evaluated;
+  size_t pn_arity;
 } pn_expr;
 
 static const char pn_expr_name[] = "pn_expr";
@@ -48,7 +50,9 @@ static const expr_vtable pn_expr_vtable = {
   .destroy = destroy_pn_expr,
   .to_string = pn_expr_tostring,
   .interpret = interpret_pn_expr,
-  .call = pn_expr_call
+  .call = pn_expr_call,
+  .get_arity = pn_expr_get_arity,
+  .get_pn_arity = pn_expr_get_pn_arity,
 };
 
 inline bool is_pn_expr(exprptr e) {
@@ -129,6 +133,13 @@ char *pn_expr_tostring(exprptr self) {
 }
 
 /**
+ * Sets PN arity of the PN expression
+ */
+void pn_expr_set_pn_arity(exprptr self, size_t pn_arity) {
+  ((pn_expr *)self->data)->pn_arity = pn_arity;
+}
+
+/**
  * Adds an expression to the PN expression body 
  */
 
@@ -161,12 +172,24 @@ exprptr pn_expr_parse(tokenstreamptr tkns) {
     return parser_error(first_token, "Polish notation expression cannot be empty.");
   }
 
+  size_t pn_arity = 0;
+  if (first_token->type == TOKEN_BACKSLASH) {
+    (void)next_tkn(tkns);
+    tokenptr arity_token = next_tkn(tkns);
+    if (arity_token->type != TOKEN_INTEGER) {
+      return parser_error(arity_token, "PN arity must be an integer");
+    }
+
+    pn_arity = arity_token->value.integer;
+  }
+
   listptr captures = get_capture_list(tkns);
   if (!captures) {
     return NULL;
   }
 
   exprptr expr = new_pn_expr(first_token);
+  pn_expr_set_pn_arity(expr, pn_arity);
 
   for (size_t i = 0; i < list_size(captures); ++i) {
     pn_expr_add_captured_var(expr, list_get(captures, i));
@@ -200,6 +223,10 @@ static void obtain_arguments(stack_frame_ptr local_frame,
     stack_frame_set_local_variable(local_frame, name, value);
     free(name);
   }
+
+  objectptr nargs_obj = make_integer((long)nargs);
+  stack_frame_set_local_variable(local_frame, "nargs", nargs_obj);
+  delete_object(nargs_obj);
 }
 
 /** 
@@ -220,7 +247,6 @@ static objectptr interpret_body_expressions(listptr body,
       for (size_t j = i; j != 0; --j) {
         objectptr obj = stack_get(*waiting, j - 1);
         delete_object(obj);
-        free(obj);
       }
       
       delete_stack(*waiting);
@@ -237,19 +263,23 @@ static objectptr interpret_body_expressions(listptr body,
  * Interprets entire body.
  */
 static objectptr interpret_body(stackptr waiting, stack_frame_ptr sf,
-                               stackptr *computed) {
+                               stackptr *computed, size_t nargs) {
   *computed = new_stack();
 
   while (!stack_is_empty(waiting)) {
     objectptr body_obj = stack_pop(waiting);
     if (is_procedure(body_obj)) {
       size_t pn_arity = procedure_get_pn_arity(body_obj);
+
+      /* Ensure that enough arguments are available for calling the function */
+      if (nargs + stack_size(*computed) < pn_arity) {
+        delete_object(body_obj);
+        return make_error("Given arguments are not sufficient for implicit insertion.");
+      }
+
       objectptr *arguments = malloc(pn_arity * sizeof(objectptr));
-      /* 
-       * Obtain arguments that are not available in the "computed" stack from $ variables 
-       * so that simplified syntax such as {!= "a"} can be used in place of {!= $1 "a"}.
-       * This use is valid only for the last procedure in the body.
-       * */
+
+      /* Implicit insertion of arguments */
       size_t i = 0;
       for (; i + stack_size(*computed) < pn_arity; ++i) {
         char *name = format("$%d", i + 1);
@@ -331,18 +361,16 @@ objectptr pn_expr_call(exprptr self, size_t nargs,
   
   /* Interpret entire body to obtain a single value */
   stackptr computed = NULL;
-  objectptr result = interpret_body(waiting, local_frame, &computed);
+  objectptr result = interpret_body(waiting, local_frame, &computed, nargs);
 
   /* If an error occurs, it is possible that things remain on stacks. Deallocate them. */
   while(!stack_is_empty(waiting)) {
     objectptr ptr = stack_pop(waiting);
     delete_object(ptr);
-    free(ptr);
   }
   while(!stack_is_empty(computed)) {
     objectptr ptr = stack_pop(computed);
     delete_object(ptr);
-    free(ptr);
   }
 
   /* Clean */
@@ -350,4 +378,12 @@ objectptr pn_expr_call(exprptr self, size_t nargs,
   delete_stack(waiting);
 
   return result;
+}
+
+size_t pn_expr_get_arity(exprptr self) {
+  return 0;
+}
+
+size_t pn_expr_get_pn_arity(exprptr self) {
+  return ((pn_expr *)self->data)->pn_arity;
 }

@@ -48,6 +48,8 @@ typedef enum {
   TOKEN_INTEGER,
   /// C doubles
   TOKEN_REAL,
+  /// Rational numbers
+  TOKEN_RATIONAL,
   /// (
   TOKEN_LEFT_PARENTHESIS,
   /// )
@@ -93,6 +95,7 @@ typedef union {
   bool boolean;
   long integer;
   double real;
+  long rational[2];
 } token_value_t;
 
 typedef struct {

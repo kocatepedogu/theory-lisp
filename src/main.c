@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <locale.h>
+#include <time.h>
 
 #include "builtin/builtin.h"
 #include "expressions/expression.h"
@@ -34,6 +35,7 @@
 
 int main(int argc, char **argv) {
   setlocale(LC_ALL, "");
+  srand (time (0));
 
   program_arguments args;
   parse_args(argc, argv, &args);

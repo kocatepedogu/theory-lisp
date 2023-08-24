@@ -27,6 +27,7 @@
 #include "../utils/string.h"
 #include "object-base.h"
 #include "real.h"
+#include "rational.h"
 
 static const object_type_t integer_type_id = {{.destroy = destroy_integer,
                                                .equals = integer_equals,
@@ -66,12 +67,19 @@ char *integer_tostring(objectptr self) {
 
 bool integer_equals(objectptr self, objectptr other) {
   assert(is_integer(self));
+  integer_t self_value = int_value(self);
+
   if (is_integer(other)) {
-    return int_value(self) == int_value(other);
+    return self_value == int_value(other);
   }
 
   if (is_real(other)) {
-    return (real_t)int_value(self) == real_value(other);
+    return (real_t)self_value == real_value(other);
+  }
+
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return other_value.y == 1 && other_value.x == self_value;
   }
 
   return false;
@@ -89,6 +97,11 @@ objectptr integer_op_add(objectptr self, objectptr other) {
     return make_real((real_t)self_value + real_value(other));
   }
 
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return make_rational(self_value * other_value.y + other_value.x, other_value.y); 
+  }
+
   return make_error("+ operand is not a number.");
 }
 
@@ -99,8 +112,14 @@ objectptr integer_op_mul(objectptr self, objectptr other) {
   if (is_integer(other)) {
     return make_integer(self_value * int_value(other));
   }
+
   if (is_real(other)) {
     return make_real((real_t)self_value * real_value(other));
+  }
+
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return make_rational(self_value * other_value.x, other_value.y);
   }
 
   return make_error("* operand is not a number.");
@@ -113,8 +132,14 @@ objectptr integer_op_sub(objectptr self, objectptr other) {
   if (is_integer(other)) {
     return make_integer(self_value - int_value(other));
   }
+
   if (is_real(other)) {
     return make_real((real_t)self_value - real_value(other));
+  }
+
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return make_rational(self_value * other_value.y - other_value.x, other_value.y);
   }
 
   return make_error("- operand is not a number.");
@@ -125,10 +150,20 @@ objectptr integer_op_div(objectptr self, objectptr other) {
   integer_t self_value = int_value(self);
 
   if (is_integer(other)) {
-    return make_integer(self_value / int_value(other));
+    if (int_value(other) == 0) {
+      return make_error("Division by zero");
+    }
+
+    return make_rational(self_value, int_value(other));
   }
+
   if (is_real(other)) {
     return make_real((real_t)self_value / real_value(other));
+  }
+
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return make_rational(self_value * other_value.y, other_value.x);
   }
 
   return make_error("/ operand is not a number.");
@@ -141,8 +176,14 @@ objectptr integer_less(objectptr self, objectptr other) {
   if (is_integer(other)) {
     return make_boolean(self_value < int_value(other));
   }
+
   if (is_real(other)) {
     return make_boolean((real_t)self_value < real_value(other));
+  }
+
+  if (is_rational(other)) {
+    rational_t other_value = rational_value(other);
+    return make_boolean(self_value * other_value.y - other_value.x < 0);
   }
 
   return make_error("An integer cannot be compared with a non-number value.");

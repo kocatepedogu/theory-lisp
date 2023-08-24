@@ -23,6 +23,7 @@
 #include "../types/void.h"
 #include "../types/integer.h"
 #include "../types/real.h"
+#include "../types/rational.h"
 #include "../types/string.h"
 #include "../types/pair.h"
 #include "../types/boolean.h"
@@ -101,6 +102,11 @@ objectptr builtin_is_integer(size_t n, objectptr *args, stack_frame_ptr sf) {
 objectptr builtin_is_real(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
   return make_boolean(is_real(*args));
+}
+
+objectptr builtin_is_rational(size_t n, objectptr *args, stack_frame_ptr sf) {
+  assert(n == 1);
+  return make_boolean(is_rational(*args));
 }
 
 objectptr builtin_is_number(size_t n, objectptr *args, stack_frame_ptr sf) {

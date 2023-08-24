@@ -1,4 +1,23 @@
+;
+; Copyright 2023 Dogu Kocatepe
+; This file is part of Theory Lisp Library.
+
+; Theory Lisp Library is free software: you can redistribute it
+; and/or modify it under the terms of the GNU Lesser General Public License
+; as published by the Free Software Foundation, either version 3 of
+; the License, or (at your option) any later version.
+
+; Theory Lisp Library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+; See the GNU Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public License
+; along with Theory Lisp Library. If not, see <https://www.gnu.org/licenses/>.
+;
+
 (include "list.tl")
+(include "string.tl")
 
 ; An instance of void
 (define voidobj (define voidobj null))
@@ -41,6 +60,11 @@
   )
 )
 
+; Wraps function inside another function.
+(define wrap
+  (lambda (f)
+    (lambda [f] () f)))
+
 ; Finds minimum in a list
 (define min
   (lambda (lst)
@@ -57,3 +81,8 @@
     (if (zero? n)
       value
       (rep (- n 1) func (func value)))))
+
+; Prints string with a newline at the end
+(define println
+  (lambda\1 (...)
+    (display &va_args nl)))

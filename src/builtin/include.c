@@ -38,7 +38,7 @@
  * on the actual installation prefix
  */
 #ifndef LIBRARY_DIR
-#define LIBRARY_DIR "/usr/local/lib"
+#define LIBRARY_DIR "/usr/local/lib/tlisp"
 #endif
 
 char *read_code(char *file_name) {

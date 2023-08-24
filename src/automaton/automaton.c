@@ -186,6 +186,20 @@ static objectptr run_base_machine(state_t *st, listptr tapes, stack_frame_ptr sf
     return base_machine;
   }
 
+  if (!is_procedure(base_machine)) {
+    char *base_machine_str = object_tostring(base_machine);
+    objectptr err = make_error("Given base machine %s is not a procedure", base_machine_str);
+    delete_object(base_machine);
+    free(base_machine_str);
+    return err;
+  }
+
+  if (procedure_get_arity(base_machine) != list_size(tapes)) {
+    delete_object(base_machine);
+    return make_error("Number of tapes is %d, but the base machine requires %d tapes",
+                      list_size(tapes), procedure_get_arity(base_machine));
+  }
+
   objectptr result = object_op_call_internal(base_machine, tapes, sf);
   delete_object(base_machine);
   return result;
@@ -216,9 +230,11 @@ static objectptr run_transition_condition(transition_t *tr, objectptr *args_arra
   if (is_boolean(result)) {
     return result;
   }
-  delete_object(result);
 
-  return make_error("Transition condition does not yield a boolean value.");
+  char *objstr = object_tostring(result);
+  assign_object(&result, make_error("Transition condition does not yield a boolean value. %s", objstr));
+  free(objstr);
+  return result;
 }
 
 static void run_transition_output(transition_t *tr, objectptr *args_array,

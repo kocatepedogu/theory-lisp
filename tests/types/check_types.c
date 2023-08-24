@@ -10,6 +10,7 @@
 #include "../../src/types/pair.h"
 #include "../../src/types/procedure.h"
 #include "../../src/types/real.h"
+#include "../../src/types/rational.h"
 #include "../../src/types/string.h"
 #include "../../src/types/void.h"
 
@@ -27,7 +28,7 @@ operator_t const operators[] = {
 
 typedef bool (*is_operator_t)(objectptr);
 is_operator_t const is_operators[] = {
-  is_void, is_error, is_integer, is_real,
+  is_void, is_error, is_integer, is_real, is_rational,
   is_string, is_boolean, is_procedure, is_pair
 };
 

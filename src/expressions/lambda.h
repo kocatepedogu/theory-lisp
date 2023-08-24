@@ -52,9 +52,6 @@ size_t lambda_expr_get_pn_arity(exprptr self);
 /* Returns arity of the lambda function */
 size_t lambda_expr_get_arity(exprptr self);
 
-/* Returns whether PN arity is given */
-bool lambda_expr_is_pn_arity_given(exprptr self);
-
 /* Returns whether lambda is variadic */
 bool lambda_expr_is_variadic(exprptr self);
 

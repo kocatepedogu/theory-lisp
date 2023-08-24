@@ -77,7 +77,9 @@ static const expr_vtable automaton_expr_vtable = {
     .interpret = interpret_automaton,
     .to_string = automaton_expr_tostring,
     .call = call_automaton,
-    .call_internal = call_automaton_internal};
+    .call_internal = call_automaton_internal,
+    .get_arity = automaton_expr_get_arity,
+    .get_pn_arity = automaton_expr_get_pn_arity};
 
 bool is_automaton_expr(exprptr e) {
   return strcmp(e->expr_name, automaton_expr_name) == 0;
@@ -304,12 +306,14 @@ transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstream
   tokenptr next_state_name_tkn = next_tkn(tkns);
   if (next_state_name_tkn->type != TOKEN_IDENTIFIER) {
     delete_expr(condition);
+    delete_head_operation_list(head_operations);
     return parser_error(next_state_name_tkn, "Expected next state name");
   }
 
   tokenptr right_p = next_tkn(tkns);
   if (right_p->type != TOKEN_RIGHT_PARENTHESIS) {
     delete_expr(condition);
+    delete_head_operation_list(head_operations);
     return parser_error(right_p, "Expected right parenthesis");
   }
 
@@ -578,4 +582,14 @@ objectptr call_automaton_internal(exprptr self, void *args, stack_frame_ptr sf) 
   automaton_expr *ae = self->data;
   automaton_t *aut = ae->compiled;
   return automaton_run_internal(aut, args, sf);
+}
+
+size_t automaton_expr_get_arity(exprptr self) {
+  automaton_expr *ae = self->data;
+  return ae->number_of_tapes;
+}
+
+size_t automaton_expr_get_pn_arity(exprptr self) {
+  automaton_expr *ae = self->data;
+  return ae->number_of_tapes;
 }

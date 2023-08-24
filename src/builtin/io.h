@@ -17,15 +17,23 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file display.h
+/// @file io.h
 
-#ifndef THEORYLISP_BUILTIN_DISPLAY_H
-#define THEORYLISP_BUILTIN_DISPLAY_H
+#ifndef THEORYLISP_BUILTIN_IO_H
+#define THEORYLISP_BUILTIN_IO_H
 
 #include "../types/object.h"
 
 #include "../interpreter/stack_frame.h"
 
+objectptr builtin_system(size_t n, objectptr *args, stack_frame_ptr sf);
+
 objectptr builtin_display(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_getchar(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_putchar(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_current_seconds(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

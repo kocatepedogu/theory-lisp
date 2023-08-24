@@ -26,13 +26,14 @@
 
 #include "include.h"
 #include "arithmetic.h"
-#include "display.h"
+#include "io.h"
 #include "object.h"
 #include "boolean.h"
 #include "list.h"
 #include "string.h"
 #include "eval.h"
 #include "error.h"
+#include "math.h"
 
 typedef objectptr (*builtin_function_ptr)(size_t, objectptr *, stack_frame_ptr);
 

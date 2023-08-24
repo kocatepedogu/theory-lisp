@@ -51,4 +51,10 @@ objectptr interpret_pn_expr(exprptr self, stack_frame_ptr sf);
 objectptr pn_expr_call(exprptr self, size_t nargs,
                       objectptr *args, stack_frame_ptr sf); 
 
+/* Returns arity of the PN expression */
+size_t pn_expr_get_arity(exprptr self);
+
+/* Returns PN arity of the PN expression */
+size_t pn_expr_get_pn_arity(exprptr self);
+
 #endif

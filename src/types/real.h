@@ -120,8 +120,18 @@ objectptr real_op_div(objectptr self, objectptr other);
 bool is_real(objectptr obj);
 
 /**
+ * Casts any number type to a real number value
+ */
+real_t cast_real(objectptr obj);
+
+/**
  * Returns the real number value stored in the given object (unboxing).
  */
 real_t real_value(objectptr obj);
+
+/**
+ * Returns true if the object is an integer or a real number
+ */
+bool is_number(objectptr obj);
 
 #endif

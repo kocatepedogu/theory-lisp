@@ -54,4 +54,10 @@ objectptr expr_call(exprptr e, size_t nargs,
 /* Internal expression call operator */
 objectptr expr_call_internal(exprptr e, void *args, stack_frame_ptr sf);
 
+/* If the expression is callable, returns arity. */
+size_t expr_get_arity(exprptr e);
+
+/* If the expression is callable, returns PN arity */
+size_t expr_get_pn_arity(exprptr e);
+
 #endif

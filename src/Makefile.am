@@ -9,6 +9,8 @@ libtlisp_la_SOURCES =\
     types/integer.h\
     types/real.c\
     types/real.h\
+    types/rational.c\
+    types/rational.h\
     types/string.c\
     types/string.h\
     types/pair.c\
@@ -78,8 +80,8 @@ libtlisp_la_SOURCES =\
     builtin/include.h\
     builtin/object.c\
     builtin/object.h\
-    builtin/display.c\
-    builtin/display.h\
+    builtin/io.c\
+    builtin/io.h\
     builtin/boolean.c\
     builtin/boolean.h\
     builtin/arithmetic.c\
@@ -92,6 +94,8 @@ libtlisp_la_SOURCES =\
     builtin/eval.h \
     builtin/error.c \
     builtin/error.h \
+    builtin/math.c \
+    builtin/math.h \
     automaton/automaton.c \
     automaton/automaton.h
 

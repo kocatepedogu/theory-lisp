@@ -62,7 +62,6 @@ static const char lambda_expr_name[] = "lambda_expr";
 typedef struct {
   bool variadic;
   size_t pn_arity;
-  bool pn_given;
   listptr captured_vars; /* list of char*'s */
   listptr params; /* list of char*'s */
   exprptr body;
@@ -72,7 +71,10 @@ static const expr_vtable lambda_expr_vtable = {
     .destroy = destroy_lambda_expr,
     .to_string = lambda_expr_tostring,
     .interpret = lambda_interpret,
-    .call = lambda_call};
+    .call = lambda_call,
+    .get_arity = lambda_expr_get_arity,
+    .get_pn_arity = lambda_expr_get_pn_arity
+};
 
 inline bool is_lambda_expr(exprptr e) {
   if (e == NULL) {
@@ -89,7 +91,6 @@ exprptr new_lambda_expr(exprptr body, bool variadic, tokenptr tkn) {
   le->body = body;
   le->variadic = variadic;
   le->pn_arity = 0;
-  le->pn_given = false;
 
   return expr_base_new(le, &lambda_expr_vtable, lambda_expr_name, tkn);
 }
@@ -126,7 +127,6 @@ void lambda_expr_add_captured_var(exprptr self, const char *name) {
 void lambda_expr_set_pn_arity(exprptr self, size_t value) {
   lambda_expr *le = self->data;
   le->pn_arity = value;
-  le->pn_given = true;
 }
 
 size_t lambda_expr_get_pn_arity(exprptr self) {
@@ -137,11 +137,6 @@ size_t lambda_expr_get_pn_arity(exprptr self) {
 size_t lambda_expr_get_arity(exprptr self) {
   lambda_expr *le = self->data;
   return list_size(le->params);
-}
-
-bool lambda_expr_is_pn_arity_given(exprptr self) {
-  lambda_expr *le = self->data;
-  return le->pn_given;
 }
 
 bool lambda_expr_is_variadic(exprptr self) {
@@ -181,7 +176,7 @@ char *lambda_expr_tostring(exprptr self) {
 
   char *body = expr_tostring(expr->body);
   char *result = NULL;
-  if (expr->variadic && expr->pn_given) {
+  if (expr->variadic) {
     result = unique_format("(lambda\\%ld %s%s%s", expr->pn_arity, captures, params, body);
   } else {
     result = unique_format("(lambda %s%s%s)", captures, params, body);
@@ -275,16 +270,23 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
   }
 
   /* Check and correct PN arity according to the number of formal parameters*/
-  if (!variadic) {
-    if (pn_given) {
+  if (pn_given) {
+    if (variadic) {
+      if (pn_arity < list_size(formal_parameters)) {
+        delete_list(captured_variables);
+        delete_list(formal_parameters);
+        return parser_error(lambda_token, "PN arity must be greater than or equal to "
+                                          "the number of fixed parameters");
+      }
+    } else {
       if (pn_arity != list_size(formal_parameters)) {
         delete_list(captured_variables);
         delete_list(formal_parameters);
         return parser_error(lambda_token, ERR_PN_MISMATCH);
       }
-    } else {
-      pn_arity = list_size(formal_parameters);
     }
+  } else {
+    pn_arity = list_size(formal_parameters);
   }
 
   /* Read body */
@@ -297,10 +299,7 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
 
   /* Construct lambda expression */
   exprptr lambda_expr = new_lambda_expr(body, variadic, lambda_token);
-
-  if (pn_given) {
-    lambda_expr_set_pn_arity(lambda_expr, pn_arity);
-  }
+  lambda_expr_set_pn_arity(lambda_expr, pn_arity);
 
   for (size_t i = 0; i < list_size(formal_parameters); ++i) {
     lambda_expr_add_param(lambda_expr, list_get(formal_parameters, i));

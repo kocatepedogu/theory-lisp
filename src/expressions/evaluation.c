@@ -25,7 +25,6 @@
 
 #include "../builtin/arithmetic.h"
 #include "../builtin/builtin.h"
-#include "../builtin/display.h"
 #include "../parser/parser.h"
 #include "../scanner/scanner.h"
 #include "../types/error.h"
