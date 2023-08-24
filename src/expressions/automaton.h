@@ -35,7 +35,7 @@ void destroy_automaton_expr(exprptr self);
 
 char *automaton_expr_tostring(exprptr self);
 
-exprptr automaton_expr_parse(tokenstreamptr tkns);
+exprptr automaton_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 bool is_automaton_expr(exprptr e);
 

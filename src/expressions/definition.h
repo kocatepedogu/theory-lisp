@@ -39,7 +39,7 @@ void destroy_definition_expr(exprptr self);
 char *definition_expr_tostring(exprptr self);
 
 /* definition_expr parser */
-exprptr definition_expr_parse(tokenstreamptr tkns);
+exprptr definition_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is definition expression */
 bool is_definition_expr(exprptr e);

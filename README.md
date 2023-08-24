@@ -1,12 +1,14 @@
 # Theory Lisp
 
-Theory Lisp is a Lisp-like language designed for experimenting with theoretical models of computation.
+Theory Lisp is a language for simulating theoretical models of computation. Its syntax and features are similar to Lisp, but it is not a Lisp dialect. 
 
-The language is dynamically typed, dynamically scoped, and fully interpreted. Code can be represented as data, and it is possible to dynamically generate and execute code at runtime. The interpreter uses a recursive descent parser.
+The language is dynamically typed, dynamically scoped, and fully interpreted. Code can be represented as data, and it is possible to dynamically generate and execute code at runtime. The interpreter uses a recursive descent parser. The parser can be extended using macros during the parsing process.
 
-In addition to commonly used Lisp forms, Theory Lisp provides special syntax for designing automatons. The syntax can be used for designing finite state machines, single-tape or multi-tape Turing machines and (very simple) Markov chains. Composite machines are constructed from simpler machines by using the smaller machines as base machines.
+In addition to commonly used Lisp forms, Theory Lisp provides special syntax for designing automatons. The syntax can be used for designing finite state machines, single-tape or multi-tape Turing machines and (very simple) Markov chains. Composite machines can be constructed from simpler machines by using the smaller machines as base machines. 
 
-Theory Lisp is aimed to be used for educational purposes. The language is still incomplete, and the implementation is not stable enough.
+The main goal of the project is to provide a self-contained language for simulating machines, so the further development is probably going to be on automatons. There are many automaton simulators that use their own simple languages, but it is usually not possible to do things like using arbitrary types as tape symbols, placing output functions on transitions and states, constructing larger machines from smaller machines, etc.
+
+Theory Lisp is aimed to be used for educational purposes. The language is incomplete, and the implementation is still not stable. 
 
 ## Dependencies
 

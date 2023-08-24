@@ -118,7 +118,7 @@ START_TEST(test_mixed_alphanumeric) {
 START_TEST(test_mixed_with_parenthesis) {
   static const char words[] = 
     "(lambda (x y z ...)"
-    " (if (= x y) z (display &va_args)))";
+    " (if (= x y) z (display %va_args)))";
 
   static const token_type_t expected_token_types[] = 
   {TOKEN_LEFT_PARENTHESIS, TOKEN_LAMBDA, TOKEN_LEFT_PARENTHESIS,
@@ -126,7 +126,7 @@ START_TEST(test_mixed_with_parenthesis) {
     TOKEN_RIGHT_PARENTHESIS, TOKEN_LEFT_PARENTHESIS, TOKEN_IF,
     TOKEN_LEFT_PARENTHESIS, TOKEN_IDENTIFIER, TOKEN_IDENTIFIER, TOKEN_IDENTIFIER,
     TOKEN_RIGHT_PARENTHESIS, TOKEN_IDENTIFIER, TOKEN_LEFT_PARENTHESIS,
-    TOKEN_IDENTIFIER, TOKEN_AMPERSAND, TOKEN_IDENTIFIER,
+    TOKEN_IDENTIFIER, TOKEN_PERCENT, TOKEN_IDENTIFIER,
     TOKEN_RIGHT_PARENTHESIS, TOKEN_RIGHT_PARENTHESIS, TOKEN_RIGHT_PARENTHESIS,
     TOKEN_END_OF_FILE
   };

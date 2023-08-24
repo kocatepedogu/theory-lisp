@@ -1,6 +1,5 @@
 (include "util.tl")
-(include "primitives.tl")
-(include "string.tl")
+(include "automata.tl")
 
 (define mod3sum
   (automaton\1

@@ -33,10 +33,12 @@
 #define CHARSEQ_SIZE 128
 
 typedef enum {
+  /// include
+  TOKEN_INCLUDE,
   /// null
   TOKEN_NULL,
-  /// &
-  TOKEN_AMPERSAND,
+  /// %
+  TOKEN_PERCENT,
   /** Unquoted sequence of characters that does not begin
    * with a special character or digit. */
   TOKEN_IDENTIFIER,
@@ -68,6 +70,8 @@ typedef enum {
   TOKEN_COND,
   /// define
   TOKEN_DEFINE,
+  /// define-syntax
+  TOKEN_DEFINE_SYNTAX,
   /// set!
   TOKEN_SET,
   /// if

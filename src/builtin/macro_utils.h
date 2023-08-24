@@ -17,15 +17,19 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file include.h
+/// @file macro_utils.h
 
-#ifndef THEORYLISP_BUILTIN_INCLUDE_H
-#define THEORYLISP_BUILTIN_INCLUDE_H
+#ifndef THEORYLISP_BUILTIN_MACRO_UTILS_H
+#define THEORYLISP_BUILTIN_MACRO_UTILS_H
 
 #include "../types/object.h"
+
 #include "../interpreter/stack_frame.h"
 
-objectptr builtin_include(size_t n, objectptr *args, stack_frame_ptr sf);
+objectptr builtin_peek_tkn(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_pop_tkn(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_parse(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif
-

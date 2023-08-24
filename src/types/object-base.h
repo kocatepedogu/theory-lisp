@@ -55,6 +55,8 @@ typedef struct object_vtable {
 
   objectptr (*op_call)(objectptr, size_t, objectptr *, void *);
   objectptr (*op_call_internal)(objectptr, void *, void *);
+
+  void *(*get_raw_data)(objectptr);
 } object_vtable_t;
 
 /**

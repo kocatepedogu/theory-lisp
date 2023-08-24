@@ -25,22 +25,18 @@
 (define blank null)
 
 ; Creates a tape
-(define make-tape
-  (lambda (...)
-    (cons 1 (list left-end blank &va_args))))
+(defun (make-tape ...)
+  (cons 1 (list left-end blank %va_args)))
 
 ; Creates a tape that does not have blank after left-end
-(define make-tape-noblank
-  (lambda (...)
-    (cons 1 (list left-end &va_args))))
+(defun (make-tape-noblank ...)
+  (cons 1 (list left-end %va_args)))
 
 ; Returns string representation of a tape
-(define tape-tostring
-  (lambda (tape)
-    (if (null? tape)
-      ""
-      (strcat (car tape) " " (tape-tostring (cdr tape)))
-    )
+(defun (tape-tostring tape)
+  (if (null? tape)
+    ""
+    (strcat (car tape) " " (tape-tostring (cdr tape)))
   )
 )
 
@@ -54,10 +50,9 @@
 (define get-contents cdr)
 
 ; Writing machine
-(define W
-  (lambda (value)
-    (automaton\1 [value]
-      (q0 ({#t} value halt)))))
+(defun (W value)
+  (automaton\1 [value]
+    (q0 ({#t} value halt))))
 
 ; Right moving machine
 (define R
@@ -76,13 +71,12 @@
       ({#t} halt))))
 
 ; Used as a probabilistic transition condition
-(define p
-  (lambda (probability)
-    (if (< _rand_ probability)
-      #t
-      (begin
-        (define _rand_ (- _rand_ probability))
-        #f))))
+(defun (p probability)
+  (if (< _rand_ probability)
+    #t
+    (begin
+      (define _rand_ (- _rand_ probability))
+      #f)))
 
 ; Stops on the first blank on right
 (define blankOnR
@@ -109,29 +103,25 @@
           ({!= blank} . halt))))
 
 ; Stops on the first x on right
-(define onR
-  (lambda (x)
+(defun (onR x)
     (automaton\1 [x]
       (q1:R ({= x} . halt)
-            ({!= x} . self)))))
+            ({!= x} . self))))
 
 ; Stops on the first non-x on right
-(define nonR
-  (lambda (x)
-    (automaton\1 [x]
-      (q1:R ({!= x} . halt)
-            ({= x} . self)))))
+(defun (nonR x)
+  (automaton\1 [x]
+    (q1:R ({!= x} . halt)
+          ({= x} . self))))
 
 ; Stops on the first x on left
-(define onL
-  (lambda (x)
-    (automaton\1 [x]
-      (q1:L ({= x} . halt)
-            ({!= x} . self)))))
+(defun (onL x)
+  (automaton\1 [x]
+    (q1:L ({= x} . halt)
+          ({!= x} . self))))
 
 ; Stops on the first non-x on left
-(define nonL
-  (lambda (x)
-    (automaton\1 [x]
-      (q1:L ({!= x} . halt)
-            ({= x} . self)))))
+(defun (nonL x)
+  (automaton\1 [x]
+    (q1:L ({!= x} . halt)
+          ({= x} . self))))

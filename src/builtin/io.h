@@ -26,6 +26,8 @@
 
 #include "../interpreter/stack_frame.h"
 
+objectptr builtin_load(size_t n, objectptr *args, stack_frame_ptr sf);
+
 objectptr builtin_system(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_display(size_t n, objectptr *args, stack_frame_ptr sf);

@@ -1,5 +1,4 @@
-(include "primitives.tl")
-(include "string.tl")
+(include "automata.tl")
 
 (define sep "#")
 

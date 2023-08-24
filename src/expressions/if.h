@@ -40,7 +40,7 @@ void destroy_if_expr(exprptr self);
 char *if_expr_tostring(exprptr self); 
 
 /* if_expr parser */
-exprptr if_expr_parse(tokenstreamptr tkns);
+exprptr if_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is if_expr */
 bool is_if_expr(exprptr e);

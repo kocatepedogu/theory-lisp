@@ -206,8 +206,22 @@ char *state_tostring(state_expr *st) {
     output_str = strdup("");
   }
 
-  char *result = format("(%s %s", st->name, output_str);
+  char *base_machine_str = NULL;
+  if (st->base_machine) {
+    base_machine_str = expr_tostring(st->base_machine);
+  } else {
+    base_machine_str = strdup("");
+  }
+
+  char *result = NULL;
+  if (st->base_machine == NULL) {
+    result = format("(%s %s", st->name, output_str);
+  } else {
+    result = format("(%s:%s %s", st->name, base_machine_str, output_str);
+  }
+
   free(output_str);
+  free(base_machine_str);
 
   for (size_t i = 0; i < list_size(st->transitions); ++i) {
     transition_expr *tr = list_get(st->transitions, i);
@@ -253,7 +267,7 @@ static void automaton_expr_add_capture(exprptr self, char *capture) {
   list_add(ae->captures, strdup(capture));
 }
 
-static listptr head_operations_parse(size_t arity, tokenstreamptr tkns) {
+static listptr head_operations_parse(size_t arity, tokenstreamptr tkns, stack_frame_ptr sf) {
   listptr head_operations = new_list();
 
   for (size_t i = 0; i < arity; ++i) {
@@ -276,7 +290,7 @@ static listptr head_operations_parse(size_t arity, tokenstreamptr tkns) {
         break;
       default:
         head_op->op = HEAD_OP_WRITE_EXPR;
-        if (!(head_op->write_value = expr_parse(tkns))) {
+        if (!(head_op->write_value = expr_parse(tkns, sf))) {
           delete_head_operation_list(head_operations);
           free(head_op);
           return NULL;
@@ -291,13 +305,14 @@ static listptr head_operations_parse(size_t arity, tokenstreamptr tkns) {
 }
 
 
-transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstreamptr tkns) {
-  exprptr condition = expr_parse(tkns);
+transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstreamptr tkns,
+                                                       stack_frame_ptr sf) {
+  exprptr condition = expr_parse(tkns, sf);
   if (condition == NULL) {
     return NULL;
   }
 
-  listptr head_operations = head_operations_parse(arity, tkns);
+  listptr head_operations = head_operations_parse(arity, tkns, sf);
   if (head_operations == NULL) {
     delete_expr(condition);
     return NULL;
@@ -321,7 +336,7 @@ transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstream
   token_t *tkn = current_tkn(tkns);
   if (tkn->type == TOKEN_LEFT_CURLY_BRACKET) {
     (void)next_tkn(tkns);
-    transition_output = pn_expr_parse(tkns);
+    transition_output = pn_expr_parse(tkns, sf);
   }
 
   transition_expr *tr = malloc(sizeof *tr);
@@ -332,7 +347,7 @@ transition_expr *automaton_expr_parse_transition_parse(size_t arity, tokenstream
   return tr;
 }
 
-state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns) {
+state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr left_p = next_tkn(tkns);
   if (left_p->type != TOKEN_LEFT_PARENTHESIS) {
     return parser_error(left_p, "Expected left parenthesis");
@@ -347,14 +362,14 @@ state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns) {
   exprptr base_machine = NULL;
   if (tkn_colon->type == TOKEN_COLON) {
     (void)next_tkn(tkns);
-    base_machine = expr_parse(tkns);
+    base_machine = expr_parse(tkns, sf);
   }
 
   tokenptr tkn = current_tkn(tkns);
   exprptr state_output = NULL;
   if (tkn->type == TOKEN_LEFT_CURLY_BRACKET) {
     (void)next_tkn(tkns);
-    state_output = pn_expr_parse(tkns);
+    state_output = pn_expr_parse(tkns, sf);
   }
 
   state_expr *st = malloc(sizeof *st);
@@ -369,7 +384,7 @@ state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns) {
       return parser_error(tkn, "Expected left parenthesis");
     }
 
-    transition_expr *tr = automaton_expr_parse_transition_parse(arity, tkns);
+    transition_expr *tr = automaton_expr_parse_transition_parse(arity, tkns, sf);
     if (tr == NULL) {
       delete_state(st);
       return NULL;
@@ -380,7 +395,7 @@ state_expr *automaton_expr_state_parse(size_t arity, tokenstreamptr tkns) {
   return st;
 }
 
-exprptr automaton_expr_parse(tokenstreamptr tkns) {
+exprptr automaton_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr automaton_token = next_tkn(tkns);
   assert(automaton_token->type == TOKEN_AUTOMATON);
 
@@ -414,7 +429,7 @@ exprptr automaton_expr_parse(tokenstreamptr tkns) {
   }
 
   while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
-    state_expr *st = automaton_expr_state_parse(arity, tkns);
+    state_expr *st = automaton_expr_state_parse(arity, tkns, sf);
     if (!st) {
       delete_expr(e);
       return NULL;

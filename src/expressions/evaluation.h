@@ -43,7 +43,7 @@ void evaluation_expr_add_arg(exprptr self, exprptr argument);
 char *evaluation_expr_tostring(exprptr self);
 
 /* evaluation_expr parser */
-exprptr evaluation_expr_parse(tokenstreamptr tkns);
+exprptr evaluation_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is evaluation expression */
 bool is_evaluation_expr(exprptr e);

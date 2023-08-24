@@ -37,7 +37,7 @@ objectptr builtin_eval(size_t n, objectptr *args, stack_frame_ptr sf) {
 
   char *str = string_value(*args);
   tokenstreamptr tkns = scanner(str);
-  listptr expressions = parser(tkns);
+  listptr expressions = parser(tkns, sf);
 
   if (expressions == NULL) {
     delete_tokenstream(tkns);

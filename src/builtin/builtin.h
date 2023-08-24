@@ -24,7 +24,6 @@
 
 #include "../types/object.h"
 
-#include "include.h"
 #include "arithmetic.h"
 #include "io.h"
 #include "object.h"
@@ -34,6 +33,7 @@
 #include "eval.h"
 #include "error.h"
 #include "math.h"
+#include "macro_utils.h"
 
 typedef objectptr (*builtin_function_ptr)(size_t, objectptr *, stack_frame_ptr);
 
@@ -50,5 +50,11 @@ const builtin_function *find_builtin_function(const char *name);
 bool is_builtin_name(const char *name);
 
 void define_builtin_function_wrappers(stack_frame_ptr sf);
+
+objectptr builtin_begin(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_begin0(size_t n, objectptr *args, stack_frame_ptr sf);
+
+objectptr builtin_void(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

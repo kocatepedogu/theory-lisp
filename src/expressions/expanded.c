@@ -53,7 +53,7 @@ void destroy_expanded_expr(exprptr self) {
 
 char *expanded_expr_tostring(exprptr self) {
   char *inner = expr_tostring(self->data);
-  char *result = unique_format("&%s", inner);
+  char *result = unique_format("%s%s", strdup("%"), inner);
   return result;
 }
 

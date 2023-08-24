@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
     char *code = read_file(args.filename);
     if (!code) {
       delete_stack_frame(global_frame);
+      delete_object(result);
       print_error_and_exit(2, "Cannot read file %s\n", args.filename);
     }
 
@@ -55,13 +56,15 @@ int main(int argc, char **argv) {
     free(code);
     if (!tokens) {
       delete_stack_frame(global_frame);
+      delete_object(result);
       print_error_and_exit(3, "A scanner error has occured.\n");
     }
 
-    listptr parse_tree = parser(tokens);
+    listptr parse_tree = parser(tokens, global_frame);
     delete_tokenstream(tokens);
     if (!parse_tree) {
       delete_stack_frame(global_frame);
+      delete_object(result);
       print_error_and_exit(4, "A parser error has occured.\n");
     }
 

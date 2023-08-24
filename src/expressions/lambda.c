@@ -243,7 +243,7 @@ static listptr lambda_expr_parse_get_params(tokenstreamptr tkns, bool *variadic)
 /**
  * Parses lambda expression.
  */
-exprptr lambda_expr_parse(tokenstreamptr tkns) {
+exprptr lambda_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   /* Read lambda token */
   tokenptr lambda_token = next_tkn(tkns);
   assert(lambda_token->type == TOKEN_LAMBDA);
@@ -290,7 +290,7 @@ exprptr lambda_expr_parse(tokenstreamptr tkns) {
   }
 
   /* Read body */
-  exprptr body = expr_parse(tkns);
+  exprptr body = expr_parse(tkns, sf);
   if (body == NULL) {
     delete_list(formal_parameters);
     delete_list(captured_variables);

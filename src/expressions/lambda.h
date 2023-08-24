@@ -59,7 +59,7 @@ bool lambda_expr_is_variadic(exprptr self);
 char *lambda_expr_tostring(exprptr self);
 
 /* lambda_expr parser */
-exprptr lambda_expr_parse(tokenstreamptr tkns);
+exprptr lambda_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is lambda expression */
 bool is_lambda_expr(exprptr e);

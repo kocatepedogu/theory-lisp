@@ -27,6 +27,7 @@
 #include "../expressions/expanded.h"
 #include "../expressions/expression.h"
 #include "../utils/string.h"
+#include "../types/void.h"
 #include "eval.h"
 #include "io.h"
 #include "object.h"
@@ -34,8 +35,18 @@
 #define MAX_PN_ARITY 2048
 
 const builtin_function builtin_functions[] = {
+    /* Sequencing functions */
+    {"begin", builtin_begin, 0, 2, true},
+    {"begin0", builtin_begin0, 0, 2, true},
+    {"void", builtin_void, 0, 1, true},
+
+    /* Utility functions for macros */
+    {"peek-tkn", builtin_peek_tkn, 1},
+    {"pop-tkn", builtin_pop_tkn, 1},
+    {"parse", builtin_parse, 1},
+
     /* IO functions */
-    {"include", builtin_include, 1},
+    {"load", builtin_load, 1},
     {"display", builtin_display, 1, 1, true},
     {"getchar", builtin_getchar, 0},
     {"putchar", builtin_putchar, 0, 1, true},
@@ -69,8 +80,8 @@ const builtin_function builtin_functions[] = {
     {"/", builtin_div, 1, 2, true},
 
     /* Boolean operators */
-    {"and", builtin_and, 0, 2, true},
-    {"or", builtin_or, 0, 2, true},
+    {"&", builtin_and, 0, 2, true},
+    {"|", builtin_or, 0, 2, true},
     {"xor", builtin_xor, 0, 2, true},
     {"not", builtin_not, 1},
 
@@ -187,4 +198,24 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
     delete_object(procedure);
     delete_expr(lambda);
   }
+}
+
+objectptr builtin_begin(size_t n, objectptr *args, stack_frame_ptr sf) {
+  if (n == 0) {
+    return make_void();
+  }
+
+  return clone_object(args[n - 1]);
+}
+
+objectptr builtin_begin0(size_t n, objectptr *args, stack_frame_ptr sf) {
+  if (n == 0) {
+    return make_void();
+  }
+  
+  return clone_object(args[0]);
+}
+
+objectptr builtin_void(size_t n, objectptr *args, stack_frame_ptr sf) {
+  return make_void();
 }

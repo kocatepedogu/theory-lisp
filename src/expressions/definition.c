@@ -79,7 +79,7 @@ char *definition_expr_tostring(exprptr self) {
   return result;
 }
 
-exprptr definition_expr_parse(tokenstreamptr tkns) {
+exprptr definition_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr define_token = next_tkn(tkns);
   assert(define_token->type == TOKEN_DEFINE);
 
@@ -88,7 +88,7 @@ exprptr definition_expr_parse(tokenstreamptr tkns) {
     return parser_error(name_token, ERR_DEF_NAME_IS_NOT_ID);
   }
 
-  exprptr value_expression = expr_parse(tkns);
+  exprptr value_expression = expr_parse(tkns, sf);
   if (value_expression == NULL) {
     return NULL;
   }

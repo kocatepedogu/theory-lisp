@@ -35,7 +35,8 @@ static const struct {
                 {"cond", TOKEN_COND},    {"null", TOKEN_NULL},
                 {"set!", TOKEN_SET},     {"automaton", TOKEN_AUTOMATON},
                 {"<-", TOKEN_MOVE_LEFT}, {"->", TOKEN_MOVE_RIGHT},
-                {".", TOKEN_NOP}};
+                {".", TOKEN_NOP},        {"define-syntax", TOKEN_DEFINE_SYNTAX},
+                {"include", TOKEN_INCLUDE}};
 
 static const struct {
   const char c;
@@ -44,7 +45,7 @@ static const struct {
     {'(', TOKEN_LEFT_PARENTHESIS},    {')', TOKEN_RIGHT_PARENTHESIS},
     {'[', TOKEN_LEFT_SQUARE_BRACKET}, {']', TOKEN_RIGHT_SQUARE_BRACKET},
     {'{', TOKEN_LEFT_CURLY_BRACKET},  {'}', TOKEN_RIGHT_CURLY_BRACKET},
-    {'&', TOKEN_AMPERSAND},           {'\\', TOKEN_BACKSLASH},
+    {'%', TOKEN_PERCENT},             {'\\', TOKEN_BACKSLASH},
     {':', TOKEN_COLON}};
 
 typedef enum {

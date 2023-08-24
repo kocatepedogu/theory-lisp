@@ -23,6 +23,8 @@ libtlisp_la_SOURCES =\
     types/null.h\
     types/error.c\
     types/error.h\
+    types/internal.c\
+    types/internal.h\
     utils/init.c\
     utils/init.h\
     utils/string.c\
@@ -76,8 +78,6 @@ libtlisp_la_SOURCES =\
     interpreter/interpreter.h\
     builtin/builtin.c\
     builtin/builtin.h\
-    builtin/include.c\
-    builtin/include.h\
     builtin/object.c\
     builtin/object.h\
     builtin/io.c\
@@ -96,15 +96,16 @@ libtlisp_la_SOURCES =\
     builtin/error.h \
     builtin/math.c \
     builtin/math.h \
+    builtin/macro_utils.c \
+    builtin/macro_utils.h \
     automaton/automaton.c \
     automaton/automaton.h
 
 tlispdir = $(libdir)/tlisp
 dist_tlisp_DATA =\
-    lib/list.tl\
     lib/util.tl\
-    lib/primitives.tl\
-    lib/string.tl
+    lib/automata.tl \
+    lib/syntax.tl
 
 libtlisp_la_CFLAGS = -DLIBRARY_DIR='"$(tlispdir)"'
 

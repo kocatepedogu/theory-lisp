@@ -122,7 +122,7 @@ char *let_expr_tostring(exprptr self) {
 }
 
 static bool var_declaration_parse(tokenstreamptr tkns, listptr var_names,
-			          listptr var_values) {
+			          listptr var_values, stack_frame_ptr sf) {
   tokenptr left_p = next_tkn(tkns);
   if (left_p->type != TOKEN_LEFT_PARENTHESIS) {
     return parser_error(left_p, ERR_NO_BEGINNING_PARENTHESIS);
@@ -131,7 +131,7 @@ static bool var_declaration_parse(tokenstreamptr tkns, listptr var_names,
   if (var_name->type != TOKEN_IDENTIFIER) {
     return parser_error(var_name, ERR_NAME_IS_NOT_ID);
   }
-  exprptr var_value = expr_parse(tkns);
+  exprptr var_value = expr_parse(tkns, sf);
   if (var_value == NULL) {
     return false;
   }
@@ -155,7 +155,7 @@ static inline exprptr let_expr_parse_error(listptr names, listptr values) {
   return NULL;
 }
 
-exprptr let_expr_parse(tokenstreamptr tkns) {
+exprptr let_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr let_token = next_tkn(tkns);
   assert(let_token->type == TOKEN_LET);
 
@@ -167,7 +167,7 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
   listptr var_names = new_list();
   listptr var_values = new_list();
   while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
-    if (!var_declaration_parse(tkns, var_names, var_values)) {
+    if (!var_declaration_parse(tkns, var_names, var_values, sf)) {
       return let_expr_parse_error(var_names, var_values);
     }
   }
@@ -177,7 +177,7 @@ exprptr let_expr_parse(tokenstreamptr tkns) {
     return parser_error(right_p, ERR_NO_RIGHT_PARENTHESIS_IN_DECL_BLOCK);
   }
 
-  exprptr body = expr_parse(tkns);
+  exprptr body = expr_parse(tkns, sf);
   if (body == NULL) {
     return let_expr_parse_error(var_names, var_values);
   }

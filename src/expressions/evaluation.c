@@ -109,7 +109,7 @@ char *evaluation_expr_tostring(exprptr self) {
   }
 }
 
-exprptr evaluation_expr_parse(tokenstreamptr tkns) {
+exprptr evaluation_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr tkn = current_tkn(tkns);
   if (tkn->type == TOKEN_INTEGER) {
     return parser_error(tkn, ERR_INT_AS_PROCEDURE, tkn->value.integer);
@@ -121,14 +121,14 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns) {
     return parser_error(tkn, ERR_SYM_AS_PROCEDURE, tkn->value.character_sequence);
   }
 
-  exprptr proc_expr = expr_parse(tkns);
+  exprptr proc_expr = expr_parse(tkns, sf);
   if (proc_expr == NULL) {
     return NULL;
   }
 
   exprptr eval_expr = new_evaluation_expr(proc_expr, tkn);
   while (current_tkn(tkns)->type != TOKEN_RIGHT_PARENTHESIS) {
-    exprptr arg = expr_parse(tkns);
+    exprptr arg = expr_parse(tkns, sf);
     if (arg == NULL) {
       delete_expr(eval_expr);
       return NULL;

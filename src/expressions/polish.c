@@ -166,7 +166,7 @@ void pn_expr_add_captured_var(exprptr self, char *name) {
  *  3. or one of these with a captured variable list.
  *      Examples: {[x y] 1}, {[x y] + x y}
  */
-exprptr pn_expr_parse(tokenstreamptr tkns) {
+exprptr pn_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr first_token = current_tkn(tkns);
   if (first_token->type == TOKEN_RIGHT_CURLY_BRACKET) {
     return parser_error(first_token, "Polish notation expression cannot be empty.");
@@ -197,7 +197,7 @@ exprptr pn_expr_parse(tokenstreamptr tkns) {
   delete_list(captures);
 
   while (current_tkn(tkns)->type != TOKEN_RIGHT_CURLY_BRACKET) {
-    exprptr body_expr = expr_parse(tkns);
+    exprptr body_expr = expr_parse(tkns, sf);
     if (!body_expr) {
       delete_expr(expr);
       return NULL;

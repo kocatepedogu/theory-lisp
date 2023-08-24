@@ -89,7 +89,7 @@ void repl(stack_frame_ptr sf) {
     }
 
     tokenstreamptr tkns = scanner(line);
-    listptr parse_tree = parser(tkns);
+    listptr parse_tree = parser(tkns, sf);
     delete_tokenstream(tkns);
     
     if (parse_tree) {

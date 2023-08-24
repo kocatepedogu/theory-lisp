@@ -43,7 +43,7 @@ void cond_expr_add_case(exprptr self, exprptr condition,
 char *cond_expr_tostring(exprptr self);
 
 /* cond_expr parser */
-exprptr cond_expr_parse(tokenstreamptr tkns);
+exprptr cond_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is cond_expr */
 bool is_cond_expr(exprptr e);

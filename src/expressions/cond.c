@@ -106,7 +106,7 @@ char *cond_expr_tostring(exprptr self) {
   return unique_format("(cond %s)", cases);
 }
 
-exprptr cond_expr_parse(tokenstreamptr tkns) {
+exprptr cond_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr cond_token = next_tkn(tkns);
   assert(cond_token->type == TOKEN_COND);
 
@@ -117,12 +117,12 @@ exprptr cond_expr_parse(tokenstreamptr tkns) {
       delete_expr(cond_expr);
       return parser_error(left_p, ERR_NO_LEFT_PARENTHESIS);
     }
-    exprptr cond = expr_parse(tkns);
+    exprptr cond = expr_parse(tkns, sf);
     if (cond == NULL) {
       delete_expr(cond_expr);
       return NULL;
     }
-    exprptr true_case = expr_parse(tkns);
+    exprptr true_case = expr_parse(tkns, sf);
     if (true_case == NULL) {
       delete_expr(cond_expr);
       delete_expr(cond);

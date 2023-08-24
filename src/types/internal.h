@@ -17,34 +17,29 @@
  * with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/// @file set.h
+/// @file internal.h
 
-#ifndef THEORYLISP_EXPRESSIONS_SET_H
-#define THEORYLISP_EXPRESSIONS_SET_H
+/**
+ * Internal objects are used by parser to pass data to macros.
+ * They can contain any data.
+ */
 
-#include "expression.h"
+#ifndef THEORYLISP_TYPES_INTERNAL_H
+#define THEORYLISP_TYPES_INTERNAL_H
 
-#include "../types/object.h"
-#include "../utils/list.h"
-#include "../interpreter/interpreter.h"
-#include "../scanner/scanner.h"
+#include "object.h"
+#include "../utils/string.h"
 
-/* set_expr "new" operation */
-exprptr new_set_expr(const char *name, exprptr body, tokenptr tkn);
+objectptr make_internal(void *ptr);
 
-/* definiton_expr "delete" operation */
-void destroy_set_expr(exprptr self);
+void destroy_internal(objectptr obj);
 
-/* set_expr tostring implementation */
-char *set_expr_tostring(exprptr self);
+char *internal_tostring(objectptr obj);
 
-/* set_expr parser */
-exprptr set_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
+bool internal_equals(objectptr obj, objectptr other);
 
-/* true if e is set expression */
-bool is_set_expr(exprptr e);
+bool is_internal(objectptr obj);
 
-/* evaluates set expression */
-objectptr interpret_set(exprptr self, stack_frame_ptr ptr);
+void *internal_get_raw_data(objectptr self);
 
 #endif

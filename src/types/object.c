@@ -194,3 +194,11 @@ objectptr object_op_call_internal(objectptr obj, void *args, void *sf) {
 
   return make_error(ERR_UNSUPPORTED_OPERATION);
 }
+
+void *object_get_raw_data(objectptr obj) {
+  if (obj->type_id->vtable.get_raw_data) {
+    return obj->type_id->vtable.get_raw_data(obj);
+  }
+
+  return make_error(ERR_UNSUPPORTED_OPERATION);
+}

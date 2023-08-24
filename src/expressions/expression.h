@@ -42,7 +42,7 @@ void delete_expr(exprptr self);
 char *expr_tostring(exprptr self);
 
 /* Expression parser */
-exprptr expr_parse(tokenstreamptr tkns);
+exprptr expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* Expression interpreter */
 objectptr interpret_expr(exprptr self, stack_frame_ptr sf);

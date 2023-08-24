@@ -42,7 +42,7 @@ void let_expr_add_declaration(exprptr let_expr, const char *name,
 char *let_expr_tostring(exprptr self);
 
 /* let_expr parser */
-exprptr let_expr_parse(tokenstreamptr tkns);
+exprptr let_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is let_expr */
 bool is_let_expr(exprptr e);

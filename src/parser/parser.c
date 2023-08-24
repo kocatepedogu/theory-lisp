@@ -35,10 +35,10 @@ void *parser_error(token_t *tkn, const char *format, ...) {
   return NULL;
 }
 
-listptr parser(tokenstreamptr tkns) {
+listptr parser(tokenstreamptr tkns, stack_frame_ptr sf) {
   listptr parse_tree = new_list();
   while (current_tkn(tkns)->type != TOKEN_END_OF_FILE) {
-    exprptr e = expr_parse(tkns);
+    exprptr e = expr_parse(tkns, sf);
     if (e == NULL) {
       delete_parse_tree(parse_tree);
       return NULL;

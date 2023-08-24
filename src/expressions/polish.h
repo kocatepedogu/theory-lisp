@@ -39,7 +39,7 @@ char *pn_expr_tostring(exprptr self);
 void pn_expr_add_body_expr(exprptr self, exprptr body_expr);
 
 /* PN expression parser */
-exprptr pn_expr_parse(tokenstreamptr tkns);
+exprptr pn_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /* true if e is PN expression */
 bool is_pn_expr(exprptr e);

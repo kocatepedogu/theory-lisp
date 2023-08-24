@@ -47,7 +47,7 @@ void *parser_error(token_t *tkn, const char *format, ...);
  * parse tree is deallocated and NULL is returned. It will print an error
  * message before returning to the caller.
  */
-listptr parser(tokenstreamptr tkns);
+listptr parser(tokenstreamptr tkns, stack_frame_ptr sf);
 
 /**
  * Recursively deallocates the given parse tree.

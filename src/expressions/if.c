@@ -78,20 +78,20 @@ char *if_expr_tostring(exprptr self) {
   return result;
 }
 
-exprptr if_expr_parse(tokenstreamptr tkns) {
+exprptr if_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
   tokenptr if_token = next_tkn(tkns);
   assert(if_token->type == TOKEN_IF);
 
-  exprptr condition = expr_parse(tkns);
+  exprptr condition = expr_parse(tkns, sf);
   if (condition == NULL) {
     return NULL;
   }
-  exprptr true_case = expr_parse(tkns);
+  exprptr true_case = expr_parse(tkns, sf);
   if (true_case == NULL) {
     delete_expr(condition);
     return NULL;
   }
-  exprptr false_case = expr_parse(tkns);
+  exprptr false_case = expr_parse(tkns, sf);
   if (false_case == NULL) {
     delete_expr(condition);
     delete_expr(true_case);

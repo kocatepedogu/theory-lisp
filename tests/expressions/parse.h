@@ -12,7 +12,7 @@
 #define parse(e, input) \
   do { \
     tokenstreamptr _tokens = scanner(input); \
-    listptr _parse_tree = parser(_tokens); \
+    listptr _parse_tree = parser(_tokens, NULL); \
     if (_parse_tree == NULL) { \
       (e) = NULL; \
     } else { \

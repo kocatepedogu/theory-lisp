@@ -88,4 +88,7 @@ objectptr object_op_call(objectptr obj, size_t nargs, objectptr *args,
 
 objectptr object_op_call_internal(objectptr obj, void *args, void *sf);
 
+
+void *object_get_raw_data(objectptr obj);
+
 #endif
