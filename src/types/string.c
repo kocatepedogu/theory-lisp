@@ -34,11 +34,11 @@ static const object_type_t string_type_id = {{
     .tostring = string_tostring},
     "string"};
 
-inline bool is_string(objectptr obj) {
+bool is_string(objectptr obj) {
   return strcmp(string_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline string_t string_value(objectptr obj) {
+string_t string_value(objectptr obj) {
   assert(is_string(obj));
   return obj->value;
 }

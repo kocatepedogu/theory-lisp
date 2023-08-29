@@ -65,7 +65,7 @@ static const expr_vtable let_expr_vtable = {.destroy = destroy_let_expr,
 
 static const char let_expr_name[] = "let_expr";
 
-inline bool is_let_expr(exprptr e) {
+bool is_let_expr(exprptr e) {
   if (e == NULL) {
     return false;
   }

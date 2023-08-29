@@ -32,7 +32,7 @@ static const object_type_t internal_type_id = {{
     .get_raw_data = internal_get_raw_data},
     "internal"};
 
-inline bool is_internal(objectptr obj) {
+bool is_internal(objectptr obj) {
   return strcmp(internal_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

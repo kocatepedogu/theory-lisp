@@ -40,16 +40,16 @@ static const object_type_t pair_type_id = {{
     .tostring = pair_tostring,
 }, "pair"};
 
-inline bool is_pair(objectptr obj) {
+bool is_pair(objectptr obj) {
   return strcmp(pair_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline objectptr pair_first(objectptr obj) {
+objectptr pair_first(objectptr obj) {
   assert(is_pair(obj));
   return ((pair_t *)(obj->value))->first;
 }
 
-inline objectptr pair_second(objectptr obj) {
+objectptr pair_second(objectptr obj) {
   assert(is_pair(obj));
   return ((pair_t *)(obj->value))->second;
 }

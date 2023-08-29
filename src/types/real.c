@@ -42,24 +42,24 @@ static const object_type_t real_type_id = {{.destroy = destroy_real,
                                             .less = real_less},
                                             "real"};
 
-inline bool is_real(objectptr obj) {
+bool is_real(objectptr obj) {
   return strcmp(real_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline bool is_number(objectptr obj) {
+bool is_number(objectptr obj) {
   return is_real(obj) || is_integer(obj) || is_rational(obj);
 }
 
-inline real_t real_value(objectptr obj) {
+real_t real_value(objectptr obj) {
   assert(is_real(obj));
   return *(real_t *)obj->value;
 }
 
-inline real_t real_value_of_integer(objectptr obj) {
+real_t real_value_of_integer(objectptr obj) {
   return (real_t)int_value(obj);
 }
 
-inline real_t real_value_of_rational(objectptr obj) {
+real_t real_value_of_rational(objectptr obj) {
   rational_t val = rational_value(obj);
   return (real_t)val.x / (real_t)val.y;
 }

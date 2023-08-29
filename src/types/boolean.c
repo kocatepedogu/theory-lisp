@@ -41,7 +41,7 @@ inline boolean_t boolean_value(objectptr obj) {
   return *(boolean_t *)obj->value;
 }
 
-inline bool is_boolean(objectptr obj) {
+bool is_boolean(objectptr obj) {
   return strcmp(obj->type_id->type_name, boolean_type_id.type_name) == 0;
 }
 

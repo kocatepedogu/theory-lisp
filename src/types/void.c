@@ -32,7 +32,7 @@ static const object_type_t void_type_id = {{
     .equals = void_equals},
     "void"};
 
-inline bool is_void(objectptr obj) {
+bool is_void(objectptr obj) {
   return strcmp(void_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

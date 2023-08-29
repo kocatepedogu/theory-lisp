@@ -48,7 +48,7 @@ static const object_type_t procedure_type_id = {{
     .op_call_internal = procedure_op_call_internal},
     "procedure"};
 
-inline bool is_procedure(objectptr obj) {
+bool is_procedure(objectptr obj) {
   return strcmp(procedure_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

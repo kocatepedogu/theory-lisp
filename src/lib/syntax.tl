@@ -16,6 +16,19 @@
 ; along with Theory Lisp Library. If not, see <https://www.gnu.org/licenses/>.
 ;
 
+; Computes a value during parsing (before runtime)
+(define-syntax constexpr
+  (lambda (tkns)
+    (strcat
+      (eval (strcat (parse tkns))))))
+
+; Defines a variable available during parsing (before runtime)
+(define-syntax define-constexpr
+  (lambda (tkns)
+    (let ((name (pop-tkn tkns)))
+      (let ((define-expr (strcat "(define " name " " (parse tkns) " )")))
+        (begin (eval define-expr) "(void)")))))
+
 ; Syntax: (inc! x)
 ; increments a variable
 (define-syntax inc!

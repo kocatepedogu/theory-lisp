@@ -101,6 +101,7 @@ const builtin_function builtin_functions[] = {
     {"newline", builtin_newline, 0},
     {"tab", builtin_tab, 0},
     {"backspace", builtin_backspace, 0},
+    {"quotation-mark", builtin_quotation_mark, 0},
     {"i2s", builtin_i2s, 0, MAX_PN_ARITY, true},
     {"s2i", builtin_s2i, 1},
 

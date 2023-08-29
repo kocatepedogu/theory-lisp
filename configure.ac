@@ -1,6 +1,7 @@
 AC_INIT([theory-lisp], [0.1.0])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 AC_PROG_CC
+AC_PROG_CC_C99
 AM_PROG_AR
 LT_INIT
 AC_CONFIG_MACRO_DIRS([m4])

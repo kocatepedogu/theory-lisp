@@ -32,7 +32,7 @@ static const object_type_t null_type_id = {
      .equals = null_equals},
     "null"};
 
-inline bool is_null(objectptr obj) {
+bool is_null(objectptr obj) {
   return strcmp(null_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

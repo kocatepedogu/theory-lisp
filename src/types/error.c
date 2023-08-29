@@ -33,7 +33,7 @@ static const object_type_t error_type_id = {{.destroy = destroy_error,
 
 static const char normal_exit_message[] = "NORMAL_EXIT";
 
-inline bool is_error(objectptr obj) {
+bool is_error(objectptr obj) {
   return strcmp(error_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

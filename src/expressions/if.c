@@ -44,7 +44,7 @@ static const expr_vtable if_expr_vtable = {.destroy = destroy_if_expr,
                                            .to_string = if_expr_tostring,
                                            .interpret = interpret_if};
 
-inline bool is_if_expr(exprptr e) {
+bool is_if_expr(exprptr e) {
   if (e == NULL) {
     return false;
   }

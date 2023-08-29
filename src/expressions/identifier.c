@@ -39,7 +39,7 @@ static const expr_vtable identifier_expr_vtable = {
   .interpret = interpret_identifier
 };
 
-inline bool is_identifier_expr(exprptr e) {
+bool is_identifier_expr(exprptr e) {
   if (e == NULL) {
     return false;
   }

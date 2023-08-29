@@ -43,6 +43,8 @@ objectptr builtin_tab(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_backspace(size_t n, objectptr *args, stack_frame_ptr sf);
 
+objectptr builtin_quotation_mark(size_t n, objectptr *args, stack_frame_ptr sf);
+
 objectptr builtin_i2s(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_s2i(size_t n, objectptr *args, stack_frame_ptr sf);

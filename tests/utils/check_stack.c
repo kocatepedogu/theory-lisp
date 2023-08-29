@@ -53,6 +53,7 @@ START_TEST(test_stack_simple) {
   free(third_string);
   delete_stack(st);
 }
+END_TEST
 
 Suite *stack_suite(void) {
   Suite *s = suite_create("Stack");

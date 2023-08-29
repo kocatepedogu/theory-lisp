@@ -62,7 +62,7 @@ static const expr_vtable evaluation_expr_vtable = {
     .to_string = evaluation_expr_tostring,
     .interpret = interpret_evaluation};
 
-inline bool is_evaluation_expr(exprptr e) {
+bool is_evaluation_expr(exprptr e) {
   if (e == NULL) {
     return false;
   }

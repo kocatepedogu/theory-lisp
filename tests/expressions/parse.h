@@ -46,7 +46,7 @@
   do { \
     ck_assert(is_data_expr(expr)); \
     ck_assert(is_real(get_data_value(expr))); \
-    ck_assert_double_eq(real_value(get_data_value(expr)), value); \
+    ck_assert(real_value(get_data_value(expr)) == value); \
   } while(false)
 
 #define assert_identifier(expr, value) \

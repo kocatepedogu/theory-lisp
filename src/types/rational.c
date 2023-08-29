@@ -38,16 +38,16 @@ static const object_type_t rational_type_id = {{.destroy = destroy_rational,
                                                 .less = rational_less},
                                                "rational"};
 
-inline bool is_rational(objectptr obj) {
+bool is_rational(objectptr obj) {
   return strcmp(rational_type_id.type_name, obj->type_id->type_name) == 0;
 }
 
-inline rational_t rational_value(objectptr obj) {
+rational_t rational_value(objectptr obj) {
   assert(is_rational(obj));
   return *(rational_t *)obj->value;
 }
 
-static inline integer_t gcd(integer_t x, integer_t y) {
+static integer_t gcd(integer_t x, integer_t y) {
   if (x == 0) {
     return y;
   }

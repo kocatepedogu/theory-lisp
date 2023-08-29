@@ -55,8 +55,6 @@ typedef struct expr {
   size_t ref_count;
 } expr_t;
 
-typedef expr_t *exprptr;
-
 /* Expression base constructor */
 exprptr expr_base_new(void *data, const expr_vtable *vtable, const char *expr_name,
                  tokenptr tkn);

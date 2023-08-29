@@ -83,6 +83,11 @@ objectptr builtin_backspace(size_t n, objectptr *args, stack_frame_ptr sf) {
   return make_string("\b");
 }
 
+objectptr builtin_quotation_mark(size_t n, objectptr *args, stack_frame_ptr sf) {
+  assert(n == 0);
+  return make_string("\"");
+}
+
 objectptr builtin_i2s(size_t n, objectptr *args, stack_frame_ptr sf) {
   /* Only ASCII characters are allowed, and '\0' is forbidden
    * as it may cause problems in internal string operations */

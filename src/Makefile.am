@@ -111,4 +111,4 @@ libtlisp_la_CFLAGS = -DLIBRARY_DIR='"$(tlispdir)"'
 
 bin_PROGRAMS = tlisp
 tlisp_SOURCES = main.c
-tlisp_LDADD = libtlisp.la
+tlisp_LDADD = libtlisp.la -lm

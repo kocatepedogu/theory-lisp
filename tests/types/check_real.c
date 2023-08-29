@@ -15,7 +15,7 @@ START_TEST(test_real_common) {
   char *real_str = real_tostring(real_obj);
   real_t value1 = 0;
   sscanf(real_str, "%lf", &value1);
-  ck_assert_double_eq(value1, REAL_TEST_VALUE);
+  ck_assert(value1 == REAL_TEST_VALUE);
 
   objectptr copy_obj = clone_object(real_obj);
   ck_assert(is_real(copy_obj));
@@ -23,7 +23,7 @@ START_TEST(test_real_common) {
   char *copy_str = real_tostring(copy_obj);
   real_t value2 = 0;
   sscanf(copy_str, "%lf", &value2);
-  ck_assert_double_eq(value2, REAL_TEST_VALUE);
+  ck_assert(value2 == REAL_TEST_VALUE);
 
   ck_assert(real_equals(real_obj, copy_obj));
 
@@ -38,11 +38,11 @@ START_TEST(test_real_op_add) {
 
   objectptr sum1 = real_op_add(self, int2);
   ck_assert(is_real(sum1));
-  ck_assert_double_eq(real_value(sum1), 3.0);
+  ck_assert(real_value(sum1) == 3.0);
 
   objectptr sum2 = real_op_add(self, real2);
   ck_assert(is_real(sum2));
-  ck_assert_double_eq(real_value(sum2), 3.0);
+  ck_assert(real_value(sum2) == 3.0);
 
   delete_object(self);
   delete_object(int2);
@@ -58,11 +58,11 @@ START_TEST(test_real_op_mul) {
 
   objectptr product1 = real_op_mul(self, int2);
   ck_assert(is_real(product1));
-  ck_assert_double_eq(real_value(product1), 12.0);
+  ck_assert(real_value(product1) == 12.0);
 
   objectptr product2 = real_op_mul(self, real2);
   ck_assert(is_real(product2));
-  ck_assert_double_eq(real_value(product2), 12.0);
+  ck_assert(real_value(product2) == 12.0);
 
   delete_object(self);
   delete_object(int2);
@@ -78,11 +78,11 @@ START_TEST(test_real_op_sub) {
 
   objectptr diff1 = real_op_sub(self, int2);
   ck_assert(is_real(diff1));
-  ck_assert_double_eq(real_value(diff1), -1.0);
+  ck_assert(real_value(diff1) == -1.0);
 
   objectptr diff2 = real_op_sub(self, real2);
   ck_assert(is_real(diff2));
-  ck_assert_double_eq(real_value(diff2), -1.0);
+  ck_assert(real_value(diff2) == -1.0);
 
   delete_object(self);
   delete_object(int2);
@@ -98,11 +98,11 @@ START_TEST(test_real_op_div) {
 
   objectptr quotient1 = real_op_div(self, int2);
   ck_assert(is_real(quotient1));
-  ck_assert_double_eq(real_value(quotient1), 1.75);
+  ck_assert(real_value(quotient1) == 1.75);
 
   objectptr quotient2 = real_op_div(self, real2);
   ck_assert(is_real(quotient2));
-  ck_assert_double_eq(real_value(quotient2), 1.75);
+  ck_assert(real_value(quotient2) == 1.75);
 
   delete_object(self);
   delete_object(int2);

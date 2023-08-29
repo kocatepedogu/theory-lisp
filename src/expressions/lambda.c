@@ -76,7 +76,7 @@ static const expr_vtable lambda_expr_vtable = {
     .get_pn_arity = lambda_expr_get_pn_arity
 };
 
-inline bool is_lambda_expr(exprptr e) {
+bool is_lambda_expr(exprptr e) {
   if (e == NULL) {
     return false;
   }
@@ -177,7 +177,7 @@ char *lambda_expr_tostring(exprptr self) {
   char *body = expr_tostring(expr->body);
   char *result = NULL;
   if (expr->variadic) {
-    result = unique_format("(lambda\\%ld %s%s%s", expr->pn_arity, captures, params, body);
+    result = unique_format("(lambda\\%ld %s%s%s)", expr->pn_arity, captures, params, body);
   } else {
     result = unique_format("(lambda %s%s%s)", captures, params, body);
   }

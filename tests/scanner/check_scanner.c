@@ -58,7 +58,7 @@ START_TEST(test_numbers) {
   tokenptr t6 = next_tkn(tkns);
 
   ck_assert_int_eq(t1->type, TOKEN_REAL);
-  ck_assert_double_eq(t1->value.real, 2.25);
+  ck_assert(t1->value.real == 2.25);
 
   ck_assert_int_eq(t2->type, TOKEN_INTEGER);
   ck_assert_int_eq(t2->value.integer, 1234);
@@ -67,17 +67,15 @@ START_TEST(test_numbers) {
   ck_assert_int_eq(t3->value.integer, 0);
 
   ck_assert_int_eq(t4->type, TOKEN_REAL);
-  ck_assert_double_eq(t4->value.real, 0.0);
+  ck_assert(t4->value.real == 0.0);
 
   ck_assert_int_eq(t5->type, TOKEN_REAL);
-  ck_assert_double_eq(t5->value.real, 1.75);
+  ck_assert(t5->value.real == 1.75);
 
   ck_assert_int_eq(t6->type, TOKEN_END_OF_FILE);
 
   delete_tokenstream(tkns);
 } END_TEST
-
-#include <stdio.h>
 
 START_TEST(test_mixed_alphanumeric) {
   static const char words[] = "123abc \"first string word\" xyzt123 iflambda \"long string\" ";

@@ -27,6 +27,9 @@
 #include "../utils/string.h"
 #include "../utils/list.h"
 
+#define INITIAL_TOKEN_SIZE 128
+#define INITIAL_WORD_SIZE 128
+
 static const struct {
   const char *keyword;
   token_type_t type;
@@ -56,7 +59,8 @@ typedef enum {
 } scanner_state;
 
 typedef struct {
-  char word[WORD_SIZE];
+  char *word;
+  size_t word_capacity;
   size_t line;
   size_t column;
   size_t first_column_of_word;
@@ -72,10 +76,14 @@ static inline bool is_quote(char c) { return c == L'\"'; }
 
 static inline bool is_space(char c) { return isspace(c); }
 
-static inline void chrcat(char *str, char chr) {
-  size_t len = strlen(str);
-  str[len] = chr;
-  str[len + 1] = L'\0';
+static inline void chrcat(char **str, size_t *capacity, char chr) {
+  if (strlen(*str) == *capacity - 1) {
+    *str = realloc(*str, (*capacity *= 2));
+  }
+
+  size_t len = strlen(*str);
+  (*str)[len] = chr;
+  (*str)[len + 1] = '\0';
 }
 
 static bool token_special_character(token_type_t *type, token_value_t *value,
@@ -181,6 +189,7 @@ static bool token_identifier(token_type_t *type, token_value_t *value,
   }
 
   *type = TOKEN_IDENTIFIER;
+  value->character_sequence = malloc(strlen(word) + 1);
   strcpy(value->character_sequence, word);
 
   return true;
@@ -222,28 +231,38 @@ char *token_tostring(tokenptr token) {
 static bool get_tokens(listptr token_list, const char *str, size_t line_number,
                        size_t column_number) {
   size_t offset = 0;
-  char current_token[TOKEN_SIZE];
 
   while (offset < strlen(str)) {
-    memset(current_token, '\0', sizeof current_token);
+    size_t current_token_capacity = INITIAL_TOKEN_SIZE;
+    char *current_token = calloc(current_token_capacity, 1);
 
     token_type_t tkn_type = TOKEN_END_OF_FILE;
     token_value_t tkn_value;
 
     size_t previous_offset = offset;
     for (size_t i = offset; i < strlen(str); ++i) {
-      chrcat(current_token, str[i]);
+      chrcat(&current_token, &current_token_capacity, str[i]);
 
-      if (token_special_character(&tkn_type, &tkn_value, current_token) ||
-          token_keyword(&tkn_type, &tkn_value, current_token) ||
-          token_number(&tkn_type, &tkn_value, current_token) ||
-          token_boolean(&tkn_type, &tkn_value, current_token) ||
-          token_identifier(&tkn_type, &tkn_value, current_token)) {
+      token_type_t new_tkn_type = TOKEN_END_OF_FILE;
+      token_value_t new_tkn_value;
+
+      if (token_special_character(&new_tkn_type, &new_tkn_value, current_token) ||
+          token_keyword(&new_tkn_type, &new_tkn_value, current_token) ||
+          token_number(&new_tkn_type, &new_tkn_value, current_token) ||
+          token_boolean(&new_tkn_type, &new_tkn_value, current_token) ||
+          token_identifier(&new_tkn_type, &new_tkn_value, current_token)) {
+        if (tkn_type == TOKEN_IDENTIFIER) {
+          free(tkn_value.character_sequence);
+        }
+
+        tkn_type = new_tkn_type;
+        tkn_value = new_tkn_value;
         (offset = i + 1);
       }
     }
 
     if (tkn_type == TOKEN_END_OF_FILE) {
+      free(current_token);
       return false;
     }
 
@@ -253,6 +272,8 @@ static bool get_tokens(listptr token_list, const char *str, size_t line_number,
     token->line = line_number;
     token->column = column_number + previous_offset;
     list_add(token_list, token);
+
+    free(current_token);
   }
 
   return true;
@@ -270,6 +291,10 @@ static scanner_state scanner_state_whitespace(char c, scanner_position_data *p,
   }
 
   if (!is_space(c)) {
+    if (p->position_in_current_word == p->word_capacity - 1) {
+      p->word = realloc(p->word, (p->word_capacity *= 2));
+    }
+
     p->word[p->position_in_current_word++] = c;
     p->first_column_of_word = p->column;
     return ST_TOKEN;
@@ -287,13 +312,17 @@ static scanner_state scanner_state_string(char c, scanner_position_data *p,
     tkn->line = p->line;
     tkn->column = p->first_column_of_word;
     tkn->type = TOKEN_STRING;
+    tkn->value.character_sequence = malloc(strlen(p->word) + 1);
     strcpy(tkn->value.character_sequence, p->word);
     list_add(tokens, tkn);
 
-    memset(p->word, 0, sizeof p->word);
-
+    memset(p->word, 0, p->word_capacity);
     p->position_in_current_word = 0;
     return ST_WHITESPACE;
+  }
+
+  if (p->position_in_current_word == p->word_capacity - 1) {
+    p->word = realloc(p->word, (p->word_capacity *= 2));
   }
 
   p->word[p->position_in_current_word++] = c;
@@ -305,7 +334,7 @@ static scanner_state scanner_state_token(char c, scanner_position_data *p,
   if (is_semicolon(c) || is_space(c) || is_quote(c)) {
     p->word[p->position_in_current_word] = '\0';
     get_tokens(tokens, p->word, p->line, p->first_column_of_word);
-    memset(p->word, 0, sizeof p->word);
+    memset(p->word, 0, p->word_capacity);
     p->position_in_current_word = 0;
   }
 
@@ -344,9 +373,8 @@ tokenstreamptr scanner(const char *input) {
                                     .column = 1,
                                     .line = 1,
                                     .first_column_of_word = 1,
-                                    .word = {0}};
-
-  memset(position.word, 0, sizeof position.word);
+                                    .word_capacity = INITIAL_WORD_SIZE,
+                                    .word = calloc(INITIAL_WORD_SIZE, 1)};
 
   size_t length = strlen(input);
 
@@ -378,6 +406,7 @@ tokenstreamptr scanner(const char *input) {
 
   /* add the last token that was being processed when end of file was reached */
   get_tokens(token_list, position.word, position.line, position.column);
+  free(position.word);
 
   /* add a final token that denotes the end of the file */
   tokenptr token_eof = malloc(sizeof *token_eof);
@@ -396,7 +425,11 @@ tokenstreamptr scanner(const char *input) {
 
 void delete_tokenstream(tokenstreamptr tkns) {
   for (size_t i = 0; i < list_size(tkns->tokens); ++i) {
-    free(list_get(tkns->tokens, i));
+    tokenptr tkn = list_get(tkns->tokens, i);
+    if (tkn->type == TOKEN_IDENTIFIER || tkn->type == TOKEN_STRING) {
+      free(tkn->value.character_sequence);
+    }
+    free(tkn);
   }
   delete_list(tkns->tokens);
   free(tkns);

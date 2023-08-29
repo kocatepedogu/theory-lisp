@@ -45,7 +45,7 @@ START_TEST(test_integer_op_add) {
 
   objectptr sum2 = integer_op_add(self, real2);
   ck_assert(is_real(sum2));
-  ck_assert_double_eq(real_value(sum2), 3.0);
+  ck_assert(real_value(sum2) == 3.0);
 
   delete_object(self);
   delete_object(int2);
@@ -65,7 +65,7 @@ START_TEST(test_integer_op_mul) {
 
   objectptr product2 = integer_op_mul(self, real4);
   ck_assert(is_real(product2));
-  ck_assert_double_eq(real_value(product2), 12.0);
+  ck_assert(real_value(product2) == 12.0);
 
   delete_object(self);
   delete_object(int4);
@@ -85,7 +85,7 @@ START_TEST(test_integer_op_sub) {
 
   objectptr diff2 = integer_op_sub(self, real2);
   ck_assert(is_real(diff2));
-  ck_assert_double_eq(real_value(diff2), -1.0);
+  ck_assert(real_value(diff2) == -1.0);
 
   delete_object(self);
   delete_object(int2);
@@ -107,7 +107,7 @@ START_TEST(test_integer_op_div) {
 
   objectptr r2 = integer_op_div(self, real4);
   ck_assert(is_real(r2));
-  ck_assert_double_eq(real_value(r2), 3.5);
+  ck_assert(real_value(r2) == 3.5);
 
   delete_object(self);
   delete_object(int4);

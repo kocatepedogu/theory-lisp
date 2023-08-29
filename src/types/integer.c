@@ -39,7 +39,7 @@ static const object_type_t integer_type_id = {{.destroy = destroy_integer,
                                                .less = integer_less},
                                                "integer"};
 
-inline bool is_integer(objectptr obj) {
+bool is_integer(objectptr obj) {
   return strcmp(integer_type_id.type_name, obj->type_id->type_name) == 0;
 }
 

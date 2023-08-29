@@ -25,9 +25,7 @@
 #include "../utils/list.h"
 #include "../types/object.h"
 #include "../scanner/scanner.h"
-
-struct stack_frame;
-typedef struct stack_frame *stack_frame_ptr;
+#include "../interpreter/stack_frame.h"
 
 struct expr;
 typedef struct expr *exprptr;

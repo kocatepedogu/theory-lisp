@@ -28,10 +28,6 @@
 #include "../utils/list.h"
 #include "../utils/string.h"
 
-#define WORD_SIZE 128
-#define TOKEN_SIZE 128
-#define CHARSEQ_SIZE 128
-
 typedef enum {
   /// include
   TOKEN_INCLUDE,
@@ -95,7 +91,7 @@ typedef enum {
 } token_type_t;
 
 typedef union {
-  char character_sequence[CHARSEQ_SIZE];
+  char *character_sequence;
   bool boolean;
   long integer;
   double real;

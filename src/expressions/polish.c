@@ -55,7 +55,7 @@ static const expr_vtable pn_expr_vtable = {
   .get_pn_arity = pn_expr_get_pn_arity,
 };
 
-inline bool is_pn_expr(exprptr e) {
+bool is_pn_expr(exprptr e) {
   return strcmp(e->expr_name, pn_expr_name) == 0;
 }
 

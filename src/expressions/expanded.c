@@ -35,7 +35,7 @@ static const expr_vtable expanded_expr_vtable = {
   .interpret = interpret_expanded_expr
 };
 
-inline bool is_expanded_expression(exprptr e) {
+bool is_expanded_expression(exprptr e) {
   if (e == NULL) {
     return false;
   }
