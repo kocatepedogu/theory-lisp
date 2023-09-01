@@ -47,6 +47,7 @@
 #include "let.h"
 #include "polish.h"
 #include "set.h"
+#include "try_catch.h"
 
 /* Parser error messages */
 #define ERR_UNEXPECTED_EOF "Unexpected end of file"
@@ -255,7 +256,10 @@ static exprptr parenthesized_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf)
 
   if (tkn->type == TOKEN_RIGHT_PARENTHESIS) {
     (void)next_tkn(tkns);
-    return new_data_expr(make_null(), tkn);
+    objectptr null_obj = make_null();
+    exprptr result = new_data_expr(null_obj, tkn);
+    delete_object(null_obj);
+    return result;
   }
 
   exprptr subexpr = NULL;
@@ -286,6 +290,9 @@ static exprptr parenthesized_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf)
       break;
     case TOKEN_AUTOMATON:
       subexpr = automaton_expr_parse(tkns, sf);
+      break;
+    case TOKEN_TRY:
+      subexpr = try_catch_expr_parse(tkns, sf);
       break;
     case TOKEN_IDENTIFIER:
       /* Check if a macro with the given name exists. In case a macro is found,

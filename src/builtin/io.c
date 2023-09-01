@@ -137,6 +137,8 @@ objectptr builtin_display(size_t n, objectptr *args, stack_frame_ptr sf) {
     }
   }
 
+  fflush(stdout);
+
   return make_void();
 }
 
@@ -165,6 +167,8 @@ objectptr builtin_putchar(size_t n, objectptr *args, stack_frame_ptr sf) {
       return make_error("putchar argument is not an integer.");
     }
   }
+
+  fflush(stdout);
 
   return make_void();
 }

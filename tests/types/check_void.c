@@ -8,12 +8,12 @@ START_TEST(test_void_all) {
   objectptr void_obj = make_void();
   ck_assert(is_void(void_obj));
   char *str1 = void_tostring(void_obj);
-  ck_assert_str_eq(str1, "#<void>");
+  ck_assert_str_eq(str1, "(void)");
 
   objectptr copy_obj = clone_object(void_obj);
   ck_assert(is_void(void_obj));
   char *str2 = void_tostring(copy_obj);
-  ck_assert_str_eq(str2, "#<void>");
+  ck_assert_str_eq(str2, "(void)");
 
   ck_assert(void_equals(void_obj, copy_obj));
 

@@ -66,6 +66,8 @@ libtlisp_la_SOURCES =\
     expressions/polish.h\
     expressions/automaton.c\
     expressions/automaton.h\
+    expressions/try_catch.c\
+    expressions/try_catch.h\
     expressions/common.c\
     expressions/common.h\
     parser/parser.c\

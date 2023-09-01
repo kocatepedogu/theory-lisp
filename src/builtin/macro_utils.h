@@ -30,6 +30,8 @@ objectptr builtin_peek_tkn(size_t n, objectptr *args, stack_frame_ptr sf);
 
 objectptr builtin_pop_tkn(size_t n, objectptr *args, stack_frame_ptr sf);
 
+objectptr builtin_prev_tkn(size_t n, objectptr *args, stack_frame_ptr sf);
+
 objectptr builtin_parse(size_t n, objectptr *args, stack_frame_ptr sf);
 
 #endif

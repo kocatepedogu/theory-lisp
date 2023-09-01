@@ -44,7 +44,7 @@ void destroy_void(objectptr self) { assert(is_void(self)); }
 
 char *void_tostring(objectptr self) {
   assert(is_void(self));
-  return strdup("#<void>");
+  return strdup("(void)");
 }
 
 bool void_equals(objectptr self, objectptr other) {

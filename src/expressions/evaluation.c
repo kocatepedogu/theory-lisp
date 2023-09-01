@@ -141,7 +141,7 @@ exprptr evaluation_expr_parse(tokenstreamptr tkns, stack_frame_ptr sf) {
 
 static objectptr interpret_args(listptr arglist, size_t *argsize,
                                stack_frame_ptr sf, objectptr **args) {
-  objectptr error = make_null();
+  objectptr error = NULL;
 
   listptr evaluated_arglist = new_list();
   for (size_t i = 0; i < list_size(arglist); ++i) {
@@ -149,25 +149,36 @@ static objectptr interpret_args(listptr arglist, size_t *argsize,
 
     if (is_expanded_expression(expr)) {
       objectptr list_object = interpret_expr(expr->data, sf);
-      if (!is_error(error) && is_error(list_object)) {
-        assign_object(&error, clone_object(list_object));
+      if (is_error(list_object)) {
+        error = list_object;
+        break;
       }
 
       if (!cons_list_to_internal_list(list_object, evaluated_arglist)) {
-        if (!is_error(error)) {
-          assign_object(&error, make_error(ERR_EXPANDED_NOT_LIST));
-        }
+        error = make_error(ERR_EXPANDED_NOT_LIST);
+        delete_object(list_object);
+        break;
       }
 
       delete_object(list_object);
     } else {
       objectptr value = interpret_expr(expr, sf);
-      if (!is_error(error) && is_error(value)) {
-        assign_object(&error, clone_object(value));
+      if (is_error(value)) {
+        error = value;
+        break;
       }
 
       list_add(evaluated_arglist, value);
     }
+  }
+
+  if (error) {
+    for (size_t i = 0; i < list_size(evaluated_arglist); i++) {
+      delete_object(list_get(evaluated_arglist, i));
+    }
+
+    delete_list(evaluated_arglist);
+    return error;
   }
 
   *argsize = list_size(evaluated_arglist);
@@ -178,7 +189,7 @@ static objectptr interpret_args(listptr arglist, size_t *argsize,
   }
 
   delete_list(evaluated_arglist);
-  return error;
+  return NULL;
 }
 
 static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
@@ -194,12 +205,12 @@ static bool interpret_builtin_call(exprptr procexpr, stack_frame_ptr sf,
 
       if (func->variadic && func->arity > argsize) {
         objectptr error = make_error(ERR_ARITY_AT_LEAST, name, func->arity, argsize);
-        assign_object(result, error);
+        *result = error;
       } else if (!func->variadic && func->arity != argsize) {
         objectptr error = make_error(ERR_ARITY, name, func->arity, argsize);
-        assign_object(result, error);
+        *result = error;
       } else {
-        assign_object(result, func->func(argsize, evaluated_args, sf));
+        *result = func->func(argsize, evaluated_args, sf);
       }
     }
   }
@@ -228,17 +239,31 @@ objectptr interpret_evaluation(exprptr self, stack_frame_ptr sf) {
   size_t argsize = 0;
 
   objectptr *args = NULL;
-  if (!is_error(result = interpret_args(arglist, &argsize, sf, &args))) {
-    if (!interpret_builtin_call(proc, sf, argsize, args, &result)) {
-      assign_object(&result, interpret_proc_call(proc, sf, argsize, args));
-    }
+
+  /* Evaluate arguments before calling the function.
+   * All arguments must be fully evaluated before the function is called.
+   * If an error occurs while evaluating arguments, the error is returned. */
+  objectptr error = NULL;
+  if ((error = interpret_args(arglist, &argsize, sf, &args)) != NULL) {
+    result = error;
+    goto leave;
   }
 
+  /* If the first argument is a name (identifier), try to find a builtin function with
+   * that name. */
+  if (interpret_builtin_call(proc, sf, argsize, args, &result)) {
+    goto leave;
+  }
+
+  /* If a builtin function is not found, the expression is
+   * recognized as a call to a user-defined function. */
+  result = interpret_proc_call(proc, sf, argsize, args);
+
+  /* Delete arguments from the memory. */
+leave:
   for (size_t i = 0; i < argsize; ++i) {
     delete_object(args[i]);
   }
   free(args);
   return result;
-
-  return NULL;
 }

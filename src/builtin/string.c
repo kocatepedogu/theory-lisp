@@ -30,6 +30,10 @@
 
 objectptr builtin_strlen(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
+  if (!is_string(*args)) {
+    return make_error("strlen argumetn is not a string");
+  }
+
   return string_length(*args);
 }
 
@@ -65,6 +69,10 @@ objectptr builtin_strcar(size_t n, objectptr *args, stack_frame_ptr sf) {
 
 objectptr builtin_strcdr(size_t n, objectptr *args, stack_frame_ptr sf) {
   assert(n == 1);
+  if (!is_string(*args)) {
+    return make_error("strcdr argument is not a string");
+  }
+
   return make_string(&string_value(*args)[1]);
 }
 

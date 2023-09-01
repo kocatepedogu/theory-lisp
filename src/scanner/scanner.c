@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../utils/string.h"
 #include "../utils/list.h"
+#include "../utils/string.h"
 
 #define INITIAL_TOKEN_SIZE 128
 #define INITIAL_WORD_SIZE 128
@@ -33,23 +33,28 @@
 static const struct {
   const char *keyword;
   token_type_t type;
-} keywords[] = {{"let", TOKEN_LET},      {"lambda", TOKEN_LAMBDA},
-                {"if", TOKEN_IF},        {"define", TOKEN_DEFINE},
-                {"cond", TOKEN_COND},    {"null", TOKEN_NULL},
-                {"set!", TOKEN_SET},     {"automaton", TOKEN_AUTOMATON},
-                {"<-", TOKEN_MOVE_LEFT}, {"->", TOKEN_MOVE_RIGHT},
-                {".", TOKEN_NOP},        {"define-syntax", TOKEN_DEFINE_SYNTAX},
-                {"include", TOKEN_INCLUDE}};
+} keywords[] = {
+    {"let", TOKEN_LET},         {"lambda", TOKEN_LAMBDA},
+    {"if", TOKEN_IF},           {"define", TOKEN_DEFINE},
+    {"cond", TOKEN_COND},       {"null", TOKEN_NULL},
+    {"set!", TOKEN_SET},        {"automaton", TOKEN_AUTOMATON},
+    {"<-", TOKEN_MOVE_LEFT},    {"->", TOKEN_MOVE_RIGHT},
+    {".", TOKEN_NOP},           {"define-syntax", TOKEN_DEFINE_SYNTAX},
+    {"include", TOKEN_INCLUDE}, {"try", TOKEN_TRY},
+    {"catch", TOKEN_CATCH}};
 
 static const struct {
   const char c;
   token_type_t type;
-} special_characters[] = {
-    {'(', TOKEN_LEFT_PARENTHESIS},    {')', TOKEN_RIGHT_PARENTHESIS},
-    {'[', TOKEN_LEFT_SQUARE_BRACKET}, {']', TOKEN_RIGHT_SQUARE_BRACKET},
-    {'{', TOKEN_LEFT_CURLY_BRACKET},  {'}', TOKEN_RIGHT_CURLY_BRACKET},
-    {'%', TOKEN_PERCENT},             {'\\', TOKEN_BACKSLASH},
-    {':', TOKEN_COLON}};
+} special_characters[] = {{'(', TOKEN_LEFT_PARENTHESIS},
+                          {')', TOKEN_RIGHT_PARENTHESIS},
+                          {'[', TOKEN_LEFT_SQUARE_BRACKET},
+                          {']', TOKEN_RIGHT_SQUARE_BRACKET},
+                          {'{', TOKEN_LEFT_CURLY_BRACKET},
+                          {'}', TOKEN_RIGHT_CURLY_BRACKET},
+                          {'%', TOKEN_PERCENT},
+                          {'\\', TOKEN_BACKSLASH},
+                          {':', TOKEN_COLON}};
 
 typedef enum {
   ST_WHITESPACE,
@@ -131,7 +136,8 @@ static bool token_boolean(token_type_t *type, token_value_t *value,
   return false;
 }
 
-static bool token_number(token_type_t *type, token_value_t *value, const char *word) {
+static bool token_number(token_type_t *type, token_value_t *value,
+                         const char *word) {
   char *endptr = NULL;
 
   /* Integers */
@@ -246,7 +252,8 @@ static bool get_tokens(listptr token_list, const char *str, size_t line_number,
       token_type_t new_tkn_type = TOKEN_END_OF_FILE;
       token_value_t new_tkn_value;
 
-      if (token_special_character(&new_tkn_type, &new_tkn_value, current_token) ||
+      if (token_special_character(&new_tkn_type, &new_tkn_value,
+                                  current_token) ||
           token_keyword(&new_tkn_type, &new_tkn_value, current_token) ||
           token_number(&new_tkn_type, &new_tkn_value, current_token) ||
           token_boolean(&new_tkn_type, &new_tkn_value, current_token) ||
@@ -445,4 +452,8 @@ tokenptr current_tkn(tokenstreamptr tkns) {
 
 tokenptr ahead_tkn(tokenstreamptr tkns) {
   return list_get(tkns->tokens, tkns->index + 1);
+}
+
+tokenptr prev_tkn(tokenstreamptr tkns) {
+  return list_get(tkns->tokens, --tkns->index);
 }

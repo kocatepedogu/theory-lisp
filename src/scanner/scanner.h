@@ -68,6 +68,10 @@ typedef enum {
   TOKEN_DEFINE,
   /// define-syntax
   TOKEN_DEFINE_SYNTAX,
+  /// try
+  TOKEN_TRY,
+  /// catch
+  TOKEN_CATCH,
   /// set!
   TOKEN_SET,
   /// if
@@ -140,5 +144,7 @@ tokenptr next_tkn(tokenstreamptr tkns);
 tokenptr current_tkn(tokenstreamptr tkns);
 
 tokenptr ahead_tkn(tokenstreamptr tkns);
+
+tokenptr prev_tkn(tokenstreamptr tkns);
 
 #endif

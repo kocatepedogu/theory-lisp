@@ -38,7 +38,12 @@ objectptr builtin_peek_tkn(size_t n, objectptr *args, stack_frame_ptr sf) {
   }
 
   tokenstreamptr tkns = internal_get_raw_data(*args);
-  char *str = token_tostring(current_tkn(tkns));
+  tokenptr tkn = current_tkn(tkns);
+  if (tkn->type == TOKEN_END_OF_FILE) {
+    //return make_error("END OF FILE");
+  }
+
+  char *str = token_tostring(tkn);
   objectptr result = make_string(str);
   free(str);
   return result;
@@ -51,7 +56,25 @@ objectptr builtin_pop_tkn(size_t n, objectptr *args, stack_frame_ptr sf) {
   }
 
   tokenstreamptr tkns = internal_get_raw_data(*args);
+  tokenptr tkn = current_tkn(tkns);
+  if (tkn->type == TOKEN_END_OF_FILE) {
+    //return make_error("END OF FILE");
+  }
+
   char *str = token_tostring(next_tkn(tkns));
+  objectptr result = make_string(str);
+  free(str);
+  return result;
+}
+
+objectptr builtin_prev_tkn(size_t n, objectptr *args, stack_frame_ptr sf) {
+  assert(n == 1);
+  if (!is_internal(*args)) {
+    return make_error("prev-tkn requires an internal object.");
+  }
+
+  tokenstreamptr tkns = internal_get_raw_data(*args);
+  char *str = token_tostring(prev_tkn(tkns));
   objectptr result = make_string(str);
   free(str);
   return result;
@@ -63,7 +86,13 @@ objectptr builtin_parse(size_t n, objectptr *args, stack_frame_ptr sf) {
     return make_error("parse requires an internal object.");
   }
 
-  exprptr expression = expr_parse(internal_get_raw_data(*args), sf);
+  tokenstreamptr tkns = internal_get_raw_data(*args);
+  tokenptr tkn = current_tkn(tkns);
+  if (tkn->type == TOKEN_END_OF_FILE) {
+    //return make_error("END OF FILE");
+  }
+
+  exprptr expression = expr_parse(tkns, sf);
   if (expression == NULL) {
     return make_error("A parser error has occured");
   }

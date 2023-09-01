@@ -43,6 +43,7 @@ const builtin_function builtin_functions[] = {
     /* Utility functions for macros */
     {"peek-tkn", builtin_peek_tkn, 1},
     {"pop-tkn", builtin_pop_tkn, 1},
+    {"prev-tkn", builtin_prev_tkn, 1},
     {"parse", builtin_parse, 1},
 
     /* IO functions */
@@ -200,6 +201,7 @@ void define_builtin_function_wrappers(stack_frame_ptr sf) {
     delete_expr(lambda);
   }
 }
+
 
 objectptr builtin_begin(size_t n, objectptr *args, stack_frame_ptr sf) {
   if (n == 0) {

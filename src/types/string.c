@@ -116,7 +116,7 @@ objectptr string_charat(objectptr obj, size_t index) {
   }
 
   delete_object(strlen_obj);
-  char *result_string = "0";
+  char result_string[] = "0";
   result_string[0] = string_value(obj)[index];
   return make_string(result_string);
 }
