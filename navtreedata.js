@@ -25,10 +25,11 @@
 var NAVTREE =
 [
   [ "Theory Lisp", "index.html", [
-    [ "Dependencies", "index.html#autotoc_md53", null ],
-    [ "Installation", "index.html#autotoc_md54", null ],
-    [ "Usage", "index.html#autotoc_md55", null ],
-    [ "Example Code", "index.html#autotoc_md56", null ],
+    [ "Documentation", "index.html#autotoc_md53", null ],
+    [ "Dependencies", "index.html#autotoc_md54", null ],
+    [ "Installation", "index.html#autotoc_md55", null ],
+    [ "Usage", "index.html#autotoc_md56", null ],
+    [ "Example Code", "index.html#autotoc_md57", null ],
     [ "Builtin Functions", "md_src_doc_builtins.html", [
       [ "IO Functions", "md_src_doc_builtins.html#autotoc_md1", [
         [ "load", "md_src_doc_builtins.html#autotoc_md2", null ],
@@ -101,9 +102,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"lambda_8h.html#a91f48e6ce4a575d941d1288b72eb115d",
-"stack_8h.html#a199f94b0953a8df934353b0639db16c2",
-"types_2object_8h.html#acb056d6c2dd81a721718712659292910"
+"lambda_8h.html#a7cef3113c70b030f82970ae7080c7a8a",
+"stack_8h.html",
+"types_2object_8h.html#ac95a4ea70c479b1f35f62f0baac2fe92"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
