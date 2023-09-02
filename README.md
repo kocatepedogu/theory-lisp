@@ -2,7 +2,7 @@
 
 Theory Lisp is a simple language for simulating theoretical models of computation. Its syntax and functionality are similar to Lisp, but it is not truely a Lisp dialect. 
 
-The language is dynamically typed, dynamically scoped, and fully interpreted. Code can be represented as data, and it is possible to dynamically generate and execute code at runtime. The interpeter uses a recursive descent parser. Arbitrary user-defined expressions (even expressions that does not have a list form) can be used by extending the parser with macros. Both imperative macros and pattern matching macros are available.
+The language is dynamically typed, dynamically scoped, and fully interpreted. Code can be represented as data, and it is possible to dynamically generate and execute code at runtime. The interpeter uses a recursive descent parser. Arbitrary user-defined expressions (even expressions that does not have list form) can be used by extending the parser with macros. Both imperative macros and pattern matching macros are available.
 
 In addition to functional and imperative Lisp forms, Theory Lisp provides special syntax for designing automatons. The syntax can be used for designing finite state machines, single-tape or multi-tape Turing machines and (very simple) Markov chains. Composite machines can be constructed from simpler machines by using the smaller machines as base machines. The goal of the language is to be a self-contained educational tool for simulating automatons. The further development will be on adding different models of computation.
 

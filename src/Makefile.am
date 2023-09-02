@@ -105,9 +105,12 @@ libtlisp_la_SOURCES =\
 
 tlispdir = $(libdir)/tlisp
 dist_tlisp_DATA =\
-    lib/util.tl\
+    lib/macro.tl\
+    lib/util.tl \
+    lib/collection.tl \
+    lib/match.tl \
     lib/automata.tl \
-    lib/syntax.tl
+    lib/library.tl
 
 libtlisp_la_CFLAGS = -DLIBRARY_DIR='"$(tlispdir)"'
 

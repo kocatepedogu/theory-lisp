@@ -16,3 +16,9 @@
 ; along with Theory Lisp Library. If not, see <https://www.gnu.org/licenses/>.
 ;
 
+(include "macro.tl")
+(include "util.tl")
+(include "collection.tl")
+(include "match.tl")
+(include "automata.tl")
+

@@ -28,7 +28,7 @@
   (lambda (...)
     (let ((result -1))
       (begin
-        (mod3sum (make-tape &va_args))
+        (mod3sum (make-tape %va_args))
         result)
     )
   )
