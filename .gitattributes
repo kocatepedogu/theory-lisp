@@ -1,1 +1,3 @@
-* .tl linguist-language=scheme
+*.tl linguist-language=scheme
+*.c linguist-language=C
+*.h linguist-language=C
