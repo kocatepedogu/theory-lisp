@@ -138,3 +138,35 @@ REPL currently does not support entering multi-line code.
 ```
 
 There is a more complex Turing machine example together with a detailed state diagram in the examples directory. The examples here are just for demonstrating the general syntax. Pattern matching macro examples are also available in the examples.
+
+## License
+
+Theory Lisp is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Theory Lisp is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License along
+with Theory Lisp. If not, see <https://www.gnu.org/licenses/>.
+
+## Theory Lisp Library License
+
+Theory Lisp Library refers only to the sources with tl extension under src/lib directory.
+
+Theory Lisp Library is free software: you can redistribute it
+and/or modify it under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation, either version 3 of
+the License, or (at your option) any later version.
+
+Theory Lisp Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Theory Lisp Library. If not, see <https://www.gnu.org/licenses/>.
